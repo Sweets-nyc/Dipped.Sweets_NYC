@@ -2,11 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!-- Changed viewport meta tag to render at a fixed width (e.g., 1200px) and scale down.
-         This will make the page look like the desktop version, but smaller, on mobile devices.
-         Media queries for responsive layout changes on smaller screens will effectively be ignored
-         because the browser will always render the 'desktop' width before scaling. -->
-    <meta name="viewport" content="width=1200, initial-scale=1.0">
+    <!-- Reverted viewport meta tag to 'width=device-width' to allow media queries
+         to correctly apply styles based on the actual device screen width.
+         This enables the navigation bar to be specifically targeted for larger sizing on mobile. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dipped Sweetss NYC - Handcrafted Dipped Treats</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -20,12 +19,13 @@
             font-family: 'Inter', sans-serif;
             background-color: #FFF8F0; /* Creamy white */
             color: #333333; /* Dark grey */
+            overflow-x: hidden; /* Prevent horizontal scrolling */
         }
         h1, h2, h3, h4 {
             font-family: 'Fredoka One', cursive;
         }
         .container-main {
-            max-width: 1200px;
+            max-width: 1200px; /* Limits content width on large screens */
             margin: 0 auto;
             padding: 0 1.5rem;
         }
@@ -36,8 +36,7 @@
             box-shadow: 0 10px 30px -10px rgba(0,0,0,0.1);
         }
         .logo-text {
-            /* Adjusted font size to make space for navigation */
-            font-size: 2.25rem; /* Equivalent to Tailwind's text-4xl */
+            font-size: 2.25rem; /* Equivalent to Tailwind's text-4xl on desktop */
             color: #6F4E37; /* Chocolate Brown */
             text-shadow: 2px 2px 5px rgba(0,0,0,0.1);
         }
@@ -46,7 +45,7 @@
             font-weight: 600;
             transition: color 0.3s ease-in-out, transform 0.2s ease-in-out;
             position: relative; /* Needed for dropdown positioning */
-            padding: 0.5rem 1rem; /* Default padding for nav links */
+            padding: 0.5rem 1rem; /* Default padding for nav links on desktop */
         }
         .nav-link:hover {
             color: #F8A4B8; /* Soft Pink */
@@ -55,7 +54,7 @@
         .hero-title {
             font-size: 5rem;
             color: #6F4E37; /* Chocolate Brown */
-            text-shadow: 3px 3px 8px rgba(0,0,0,0.15);
+            text-shadow: 3px 33px 8px rgba(0,0,0,0.15);
         }
         .hero-tagline {
             font-size: 1.5rem;
@@ -118,7 +117,7 @@
             color: #F8A4B8; /* Soft Pink */
         }
 
-        /* Dropdown specific styles - MODIFIED FOR SMOOTHER HOVER */
+        /* Dropdown specific styles */
         .dropdown-menu {
             display: none;
             position: absolute;
@@ -130,7 +129,6 @@
             z-index: 100; /* Ensure it's above other content */
             border-radius: 0.75rem; /* rounded-xl */
             padding: 0.5rem 0;
-            /* Removed margin-top to eliminate the gap */
         }
 
         /* The nav-link parent div now controls dropdown visibility */
@@ -152,17 +150,7 @@
             color: #E28FA0; /* Darker Pink */
         }
 
-        /*
-           Removed most media queries for layout changes on smaller screens.
-           With 'width=1200' in the viewport meta tag, the browser will render the page
-           as if it's 1200px wide, and then scale that entire rendering to fit the
-           device screen. This effectively makes the mobile view a scaled-down
-           version of the desktop view, as requested by the user.
-           Keeping general base styles for consistency.
-        */
-
-        /* Responsive Adjustments - These will largely be overridden by the fixed viewport width
-           on mobile, but remain for true window resizing on larger screens. */
+        /* Responsive Adjustments: These will apply when the *actual* screen width is smaller. */
         @media (max-width: 1024px) {
             .hero-title {
                 font-size: 4rem;
@@ -175,40 +163,40 @@
             }
         }
 
-        /* Media queries for smaller screens will primarily affect desktop browser resizing,
-           not mobile devices with the fixed viewport width.
-           Retaining some simple adjustments like column flex direction for the header/footer
-           to ensure they look good if a desktop browser window is made very narrow. */
+        /* Specific mobile styling for navigation - applies when screen is 768px or less */
         @media (max-width: 768px) {
-            /* Increased size for logo and nav links on mobile devices */
+            .header-bg {
+                border-bottom-left-radius: 2rem; /* Slightly smaller radius for mobile */
+                border-bottom-right-radius: 2rem;
+            }
             .logo-text {
-                font-size: 3.5rem; /* Made larger for better visibility on scaled mobile */
-                margin-bottom: 1.5rem; /* Added some space */
+                font-size: 3.5rem; /* Significantly larger logo for mobile */
+                margin-bottom: 1.5rem;
             }
             .navbar-nav {
                 flex-direction: column;
-                gap: 1.8rem; /* Increased gap between nav items */
+                gap: 1.8rem; /* Increased space between nav items */
                 width: 100%;
             }
             .nav-link {
                 width: 100%;
                 text-align: center;
-                font-size: 1.8rem; /* Made larger for better tap targets and readability */
-                padding: 1rem 1.5rem; /* Increased padding for larger touch area */
+                font-size: 2.2rem; /* Much larger font size for navigation links */
+                padding: 1.2rem 1.5rem; /* Larger padding for easier tapping */
             }
             .dropdown-menu {
-                position: static;
+                position: static; /* Stack dropdown items normally on mobile */
                 width: 100%;
                 box-shadow: none;
-                margin-top: 0;
+                margin-top: 0.5rem; /* Small margin for visual separation */
                 border-radius: 0;
                 padding: 0;
                 border-top: 1px solid #F8E6DD;
             }
             .dropdown-item {
-                padding-left: 2rem;
+                padding: 1rem 2rem; /* Larger padding for dropdown items */
                 text-align: center;
-                font-size: 1.5rem; /* Adjusted dropdown item size */
+                font-size: 1.8rem; /* Larger font for dropdown items */
             }
             .hero-section {
                 padding: 4rem 1rem;
@@ -220,8 +208,7 @@
                 font-size: 1.1rem;
             }
             .sweet-grid {
-                /* On actual desktop screen resize, this will still adjust */
-                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Slightly larger cards for mobile */
             }
             .section-heading {
                 font-size: 2.5rem;
@@ -244,23 +231,24 @@
             }
         }
 
+        /* Even smaller mobile screens (e.g., older phones, very narrow viewports) */
         @media (max-width: 480px) {
             .logo-text {
-                font-size: 3rem; /* Slightly smaller on very small phones */
-                margin-bottom: 1.2rem;
+                font-size: 3rem; /* Slightly smaller on very small phones, but still large */
+                margin-bottom: 1rem;
             }
             .nav-link {
-                font-size: 1.5rem;
-                padding: 0.9rem 1.2rem;
+                font-size: 1.8rem; /* Adjust for very small screens */
+                padding: 1rem 1rem;
             }
             .dropdown-item {
-                font-size: 1.4rem; /* Adjusted dropdown item size for very small screens */
+                font-size: 1.6rem; /* Adjust dropdown item size for very small screens */
             }
             .hero-title {
-                font-size: 2.5rem;
+                font-size: 2.2rem;
             }
             .hero-tagline {
-                font-size: 1rem;
+                font-size: 0.9rem;
             }
             .cta-button {
                 padding: 0.8rem 1.5rem;
@@ -816,11 +804,12 @@
                 let htmlContent = '';
                 let filteredSweets = [];
 
+                // Logic for populating the main menu and category menus
                 if (filterType === 'MainMenuDefault') {
-                    // For the main menu, show ALL sweets data by default
-                    filteredSweets = sweetsData; // No filtering here
+                    // Display ALL items on the main menu, ignoring the displayOnMainMenu flag
+                    filteredSweets = sweetsData;
                 } else {
-                    // For specific category selections, show all items of that category
+                    // For specific category selections, filter items by that category
                     filteredSweets = sweetsData.filter(sweet => sweet.category === filterType);
                 }
 
@@ -1029,3 +1018,4 @@
     </script>
 </body>
 </html>
+

@@ -179,50 +179,123 @@
                 border-bottom-right-radius: 2rem;
             }
             .logo-text {
-                font-size: 4.8rem; /* Significantly larger logo for mobile */
-                margin-bottom: 2rem;
+                font-size: 5.5rem; /* Significantly larger logo for mobile */
+                margin-bottom: 2.5rem;
             }
             .navbar-nav {
                 flex-direction: column;
-                gap: 2.5rem; /* Increased space between nav items */
+                gap: 3rem; /* Increased space between nav items */
                 width: 100%;
             }
             .nav-link {
                 width: 100%;
                 text-align: center;
-                font-size: 3.2rem; /* Much larger font size for navigation links */
-                padding: 1.6rem 1.5rem; /* Larger padding for easier tapping */
+                font-size: 3.8rem; /* Much larger font size for navigation links */
+                padding: 1.8rem 1.5rem; /* Larger padding for easier tapping */
             }
             .dropdown-menu {
                 position: static; /* Stack dropdown items normally on mobile */
                 width: 100%;
                 box-shadow: none;
-                margin-top: 1rem; /* Small margin for visual separation */
+                margin-top: 1.2rem; /* Small margin for visual separation */
                 border-radius: 0;
                 padding: 0;
                 border-top: 1px solid #F8E6DD;
             }
             .dropdown-item {
-                padding: 1.4rem 2rem; /* Larger padding for dropdown items */
+                padding: 1.6rem 2rem; /* Larger padding for dropdown items */
                 text-align: center;
-                font-size: 2.8rem; /* Larger font for dropdown items */
+                font-size: 3.2rem; /* Larger font for dropdown items */
             }
             /* Adjust other text elements to be readable relative to scaled content */
             .hero-title {
+                font-size: 4.8rem;
+            }
+            .hero-tagline {
+                font-size: 2rem;
+            }
+            .cta-button {
+                font-size: 1.8rem;
+                padding: 1.4rem 3rem;
+            }
+            .section-heading {
                 font-size: 4.2rem;
+            }
+            .sweet-card {
+                padding: 2.5rem;
+            }
+            .sweet-title {
+                font-size: 2.5rem;
+            }
+            .sweet-description {
+                font-size: 1.6rem;
+            }
+            .sweet-price {
+                font-size: 2.2rem;
+            }
+            .order-button {
+                font-size: 1.6rem;
+                padding: 1.2rem 2.2rem;
+            }
+            .contact-info p, .contact-details-group span, form label {
+                font-size: 1.6rem;
+            }
+            .contact-info i {
+                font-size: 3.5rem;
+            }
+            form input, form textarea, form button {
+                font-size: 1.5rem;
+                padding: 1.5rem;
+            }
+            .footer-logo .logo-text {
+                font-size: 4.5rem;
+            }
+            .footer-link {
+                font-size: 2rem;
+            }
+            .footer-links-group h4 {
+                font-size: 3rem;
+            }
+            .footer-links-group .flex.justify-center.md\:justify-start.gap-6.text-3xl i {
+                font-size: 4.5rem;
+            }
+            /* Ensuring catch-all Tailwind classes are overridden to be larger */
+            .text-sm {
+                font-size: 1.5rem !important;
+            }
+            .text-lg {
+                font-size: 1.8rem !important;
+            }
+            .text-xl {
+                font-size: 2.2rem !important;
+            }
+        }
+
+        /* Even smaller mobile screens (e.g., older phones, very narrow viewports) */
+        @media (max-width: 480px) {
+            .logo-text {
+                font-size: 4.8rem;
+                margin-bottom: 2rem;
+            }
+            .nav-link {
+                font-size: 3.2rem;
+                padding: 1.6rem 1.2rem;
+            }
+            .dropdown-item {
+                font-size: 2.8rem;
+            }
+            .hero-title {
+                font-size: 4rem;
             }
             .hero-tagline {
                 font-size: 1.8rem;
             }
             .cta-button {
                 font-size: 1.6rem;
-                padding: 1.3rem 2.8rem;
+                padding: 1.3rem 2.5rem;
             }
             .section-heading {
                 font-size: 3.8rem;
-            }
-            .sweet-card {
-                padding: 2.2rem;
             }
             .sweet-title {
                 font-size: 2.2rem;
@@ -235,102 +308,29 @@
             }
             .order-button {
                 font-size: 1.5rem;
-                padding: 1.1rem 2rem;
-            }
-            .contact-info p, .contact-details-group span, form label {
-                font-size: 1.4rem;
-            }
-            .contact-info i {
-                font-size: 3.2rem;
-            }
-            form input, form textarea, form button {
-                font-size: 1.3rem;
-                padding: 1.3rem;
-            }
-            .footer-logo .logo-text {
-                font-size: 4.2rem;
-            }
-            .footer-link {
-                font-size: 1.8rem;
-            }
-            .footer-links-group h4 {
-                font-size: 2.8rem;
-            }
-            .footer-links-group .flex.justify-center.md\:justify-start.gap-6.text-3xl i {
-                font-size: 4.2rem;
-            }
-            /* Ensuring catch-all Tailwind classes are overridden to be larger */
-            .text-sm {
-                font-size: 1.3rem !important;
-            }
-            .text-lg {
-                font-size: 1.6rem !important;
-            }
-            .text-xl {
-                font-size: 2rem !important;
-            }
-        }
-
-        /* Even smaller mobile screens (e.g., older phones, very narrow viewports) */
-        @media (max-width: 480px) {
-            .logo-text {
-                font-size: 4.2rem;
-                margin-bottom: 1.8rem;
-            }
-            .nav-link {
-                font-size: 2.8rem;
-                padding: 1.4rem 1.2rem;
-            }
-            .dropdown-item {
-                font-size: 2.4rem;
-            }
-            .hero-title {
-                font-size: 3.6rem;
-            }
-            .hero-tagline {
-                font-size: 1.5rem;
-            }
-            .cta-button {
-                font-size: 1.4rem;
-                padding: 1.2rem 2.2rem;
-            }
-            .section-heading {
-                font-size: 3.2rem;
-            }
-            .sweet-title {
-                font-size: 2rem;
-            }
-            .sweet-description {
-                font-size: 1.3rem;
-            }
-            .sweet-price {
-                font-size: 1.8rem;
-            }
-            .order-button {
-                font-size: 1.3rem;
-                padding: 1rem 1.6rem;
+                padding: 1.1rem 1.8rem;
             }
             .contact-info p, .contact-details-group span {
-                font-size: 1.3rem;
+                font-size: 1.5rem;
             }
             .contact-info i {
-                font-size: 3rem;
+                font-size: 3.2rem;
             }
             form input, form textarea, form button {
-                font-size: 1.2rem;
-                padding: 1.2rem;
+                font-size: 1.4rem;
+                padding: 1.4rem;
             }
             .footer-logo .logo-text {
-                font-size: 3.8rem;
+                font-size: 4.2rem;
             }
             .footer-link {
-                font-size: 1.6rem;
+                font-size: 1.8rem;
             }
             .footer-links-group h4 {
-                font-size: 2.5rem;
+                font-size: 2.8rem;
             }
             .footer-links-group .flex.justify-center.md\:justify-start.gap-6.text-3xl i {
-                font-size: 3.8rem;
+                font-size: 4.2rem;
             }
         }
     </style>

@@ -268,32 +268,32 @@
 
             /* Sweet card grid: still aiming for multiple columns, but smaller */
             .sweet-grid {
-                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* Allow more columns with smaller min-width */
-                gap: 0.75rem; /* Further reduced gap */
+                grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); /* Allow more columns with smaller min-width */
+                gap: 0.6rem; /* Further reduced gap */
             }
             .sweet-card {
-                padding: 0.8rem; /* Reduce padding inside cards */
-                border-radius: 1.5rem; /* Slightly smaller border radius */
+                padding: 0.7rem; /* Reduce padding inside cards */
+                border-radius: 1.4rem; /* Slightly smaller border radius */
             }
             .sweet-card .sweet-image {
-                border-radius: 1rem;
+                border-radius: 0.9rem;
             }
             .sweet-card .sweet-title {
-                font-size: 1.1rem; /* Smaller title */
-                margin-bottom: 0.25rem; /* Reduce space */
+                font-size: 1rem; /* Smaller title */
+                margin-bottom: 0.2rem; /* Reduce space */
             }
-            .sweet-card .text-lg.mb-4.flex-grow { /* Description text */
-                font-size: 0.8rem; /* Significantly smaller description */
-                margin-bottom: 0.5rem; /* Reduce space */
+            .sweet-card .text-gray-600.text-lg.mb-4.flex-grow { /* Description text */
+                font-size: 0.75rem; /* Significantly smaller description */
+                margin-bottom: 0.4rem; /* Reduce space */
             }
             .sweet-card .sweet-price {
-                font-size: 1rem; /* Smaller price */
-                margin-bottom: 0.5rem; /* Reduce space */
+                font-size: 0.9rem; /* Smaller price */
+                margin-bottom: 0.4rem; /* Reduce space */
             }
             .sweet-card .order-button {
-                font-size: 0.75rem; /* Smaller button text */
-                padding: 0.4rem 0.6rem; /* Smaller button padding */
-                border-radius: 1rem; /* Smaller button radius */
+                font-size: 0.7rem; /* Smaller button text */
+                padding: 0.3rem 0.5rem; /* Smaller button padding */
+                border-radius: 0.9rem; /* Smaller button radius */
             }
         }
 
@@ -302,50 +302,52 @@
                 padding: 3rem 1rem; /* Reduce hero section padding */
             }
             .hero-title {
-                font-size: 2.8rem; /* Even smaller */
+                font-size: 2.5rem; /* Even smaller */
             }
             .hero-tagline {
-                font-size: 1rem;
+                font-size: 0.9rem;
             }
             .section-heading {
-                font-size: 2.2rem;
+                font-size: 2rem;
             }
             /* Ensure sweet-grid still allows multiple columns, perhaps even more compactly */
             .sweet-grid {
-                 grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); /* Tighter grid */
-                 gap: 0.5rem; /* Tighter gap */
+                 grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); /* Tighter grid, aims for 3 columns on most phones */
+                 gap: 0.4rem; /* Tighter gap */
             }
             .sweet-card {
-                padding: 0.6rem; /* Even less padding */
-                border-radius: 1rem;
+                padding: 0.5rem; /* Even less padding */
+                border-radius: 0.9rem;
             }
             .sweet-card .sweet-title {
-                font-size: 1rem;
+                font-size: 0.9rem;
+                margin-bottom: 0.15rem;
             }
             .sweet-card .text-lg.mb-4.flex-grow { /* Description text */
-                font-size: 0.7rem; /* Very small description */
-                margin-bottom: 0.2rem;
+                font-size: 0.65rem; /* Very small description */
+                margin-bottom: 0.15rem;
             }
             .sweet-card .sweet-price {
-                font-size: 0.9rem;
+                font-size: 0.8rem;
+                margin-bottom: 0.2rem;
             }
             .sweet-card .order-button {
-                font-size: 0.65rem;
-                padding: 0.3rem 0.5rem;
+                font-size: 0.6rem;
+                padding: 0.25rem 0.45rem;
             }
             .contact-info {
-                gap: 1.5rem;
+                gap: 1rem;
             }
             .contact-info p, .contact-info a {
-                font-size: 1rem; /* Adjust contact info text */
+                font-size: 0.9rem; /* Adjust contact info text */
             }
             .contact-info i {
-                font-size: 1.5rem; /* Adjust contact icon size */
+                font-size: 1.4rem; /* Adjust contact icon size */
             }
             .footer-grid {
                 grid-template-columns: 1fr;
                 text-align: center;
-                gap: 1.5rem; /* Reduced footer gap */
+                gap: 1.2rem; /* Reduced footer gap */
             }
             .footer-logo {
                 text-align: center;
@@ -357,164 +359,178 @@
 
         @media (max-width: 480px) { /* Most common smartphones */
             .logo-text {
-                font-size: 1.5rem; /* Make logo even smaller */
+                font-size: 1.3rem; /* Make logo even smaller */
             }
             .hero-title {
-                font-size: 2.2rem; /* Significantly smaller hero title */
-                margin-bottom: 0.5rem; /* Reduce spacing */
+                font-size: 1.8rem; /* Significantly smaller hero title */
+                margin-bottom: 0.4rem; /* Reduce spacing */
             }
             .hero-tagline {
-                font-size: 0.9rem; /* Smaller tagline */
-                margin-bottom: 0.75rem; /* Reduce spacing */
+                font-size: 0.8rem; /* Smaller tagline */
+                margin-bottom: 0.6rem; /* Reduce spacing */
             }
             .cta-button {
-                padding: 0.6rem 1.2rem; /* Smaller CTA button */
-                font-size: 0.9rem;
+                padding: 0.5rem 1rem; /* Smaller CTA button */
+                font-size: 0.8rem;
             }
             .section-heading {
-                font-size: 2rem; /* Smaller section headings */
-                margin-bottom: 1rem; /* Reduce spacing */
+                font-size: 1.8rem; /* Smaller section headings */
+                margin-bottom: 0.8rem; /* Reduce spacing */
             }
             .sweet-grid {
-                grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); /* Push for 3-4 columns on most phones */
-                gap: 0.3rem; /* Very tight gap */
+                grid-template-columns: repeat(auto-fit, minmax(70px, 1fr)); /* Push for 3-4 columns on most phones */
+                gap: 0.2rem; /* Very tight gap */
             }
             .sweet-card {
-                padding: 0.5rem; /* Minimal padding */
-                border-radius: 0.8rem; /* Smallest radius */
+                padding: 0.4rem; /* Minimal padding */
+                border-radius: 0.7rem; /* Smallest radius */
             }
             .sweet-card .sweet-image {
-                margin-bottom: 0.25rem; /* Reduce image margin */
-                border-radius: 0.5rem; /* Smallest image radius */
+                margin-bottom: 0.15rem; /* Reduce image margin */
+                border-radius: 0.4rem; /* Smallest image radius */
             }
             .sweet-card .sweet-title {
-                font-size: 0.9rem; /* Very small title */
+                font-size: 0.8rem; /* Very small title */
                 margin-bottom: 0.1rem;
             }
             .sweet-card .text-gray-600.text-lg.mb-4.flex-grow { /* Description text */
-                font-size: 0.6rem; /* Tiny description text */
-                margin-bottom: 0.2rem;
+                font-size: 0.55rem; /* Tiny description text */
+                margin-bottom: 0.1rem;
                 /* Add word-break to prevent overflow for long descriptions */
                 word-break: break-word;
             }
             .sweet-card .sweet-price {
-                font-size: 0.8rem; /* Very small price */
-                margin-bottom: 0.25rem;
+                font-size: 0.7rem; /* Very small price */
+                margin-bottom: 0.15rem;
             }
             .sweet-card .order-button {
-                font-size: 0.6rem; /* Smallest button text */
-                padding: 0.25rem 0.5rem; /* Smallest button padding */
-                border-radius: 0.75rem;
+                font-size: 0.5rem; /* Smallest button text */
+                padding: 0.2rem 0.4rem; /* Smallest button padding */
+                border-radius: 0.6rem;
             }
 
             /* Contact & Order form sections adjustments */
             .contact-info, .contact-details-group {
-                gap: 1rem; /* Reduce spacing in contact info */
+                gap: 0.8rem; /* Reduce spacing in contact info */
             }
             .contact-info p, .contact-info a {
-                font-size: 0.9rem; /* Smaller contact info text */
+                font-size: 0.8rem; /* Smaller contact info text */
             }
             .contact-info i {
-                font-size: 1.2rem; /* Smaller contact icon size */
+                font-size: 1.1rem; /* Smaller contact icon size */
             }
             /* Explicitly target and scale form container for padding */
             .max-w-xl.mx-auto.bg-white.p-10.rounded-3xl.shadow-xl.mt-16.space-y-6 {
-                padding: 1rem; /* Reduce form padding */
-                border-radius: 1.5rem;
-                margin-top: 1rem; /* Reduce top margin for forms */
+                padding: 0.8rem; /* Reduce form padding */
+                border-radius: 1.2rem;
+                margin-top: 0.8rem; /* Reduce top margin for forms */
             }
             .max-w-xl.mx-auto.bg-white.p-10.rounded-3xl.shadow-xl.mt-16.space-y-6 h3 {
-                font-size: 1.5rem; /* Smaller form heading */
-                margin-bottom: 0.75rem;
+                font-size: 1.3rem; /* Smaller form heading */
+                margin-bottom: 0.6rem;
             }
             .max-w-xl.mx-auto.bg-white.p-10.rounded-3xl.shadow-xl.mt-16.space-y-6 .text-lg.font-medium.text-gray-700.mb-2 {
-                font-size: 0.9rem; /* Smaller label text */
-                margin-bottom: 0.25rem;
+                font-size: 0.8rem; /* Smaller label text */
+                margin-bottom: 0.2rem;
             }
             .max-w-xl.mx-auto.bg-white.p-10.rounded-3xl.shadow-xl.mt-16.space-y-6 input,
             .max-w-xl.mx-auto.bg-white.p-10.rounded-3xl.shadow-xl.mt-16.space-y-6 textarea {
-                padding: 0.75rem; /* Smaller input padding */
-                font-size: 0.9rem;
-            }
-            .max-w-xl.mx-auto.bg-white.p-10.rounded-3xl.shadow-xl.mt-16.space-y-6 .cta-button {
-                padding: 0.75rem 1.2rem;
-                font-size: 1rem;
-            }
-            .newsletter-form {
-                gap: 0.5rem; /* Tighter gap in newsletter form */
-            }
-            .footer-bg {
-                padding-top: 1rem; /* Reduce footer padding */
-                padding-bottom: 1rem;
-            }
-            .footer-logo h3 {
-                font-size: 2rem; /* Smaller footer logo */
-            }
-            .footer-links-group h4 {
-                font-size: 1.5rem; /* Smaller footer headings */
-            }
-            .footer-links-group ul li a {
-                font-size: 0.9rem; /* Smaller footer links */
-            }
-            .footer-links-group .flex.justify-center.md\:justify-start.gap-6.text-3xl {
-                gap: 0.75rem; /* Smaller social icon gap */
-                font-size: 2rem; /* Smaller social icons */
-            }
-        }
-        /* Further reduction for extremely small screens (e.g., iPhone SE 1st gen, older small Androids) */
-        @media (max-width: 375px) {
-            .hero-title {
-                font-size: 1.8rem; /* Even smaller hero title */
-            }
-            .hero-tagline {
-                font-size: 0.8rem; /* Even smaller tagline */
-            }
-            .cta-button {
-                padding: 0.5rem 1rem; /* Even smaller CTA button */
-                font-size: 0.8rem;
-            }
-            .section-heading {
-                font-size: 1.8rem; /* Even smaller section headings */
-            }
-            .sweet-grid {
-                grid-template-columns: repeat(auto-fit, minmax(75px, 1fr)); /* Very tight grid */
-                gap: 0.2rem; /* Minimal gap */
-            }
-            .sweet-card {
-                padding: 0.4rem; /* Minimal card padding */
-                border-radius: 0.7rem;
-            }
-            .sweet-card .sweet-image {
-                margin-bottom: 0.15rem;
-                border-radius: 0.4rem;
-            }
-            .sweet-card .sweet-title {
-                font-size: 0.8rem; /* Tiny title */
-            }
-            .sweet-card .text-gray-600.text-lg.mb-4.flex-grow {
-                font-size: 0.55rem; /* Almost smallest readable text */
-            }
-            .sweet-card .sweet-price {
-                font-size: 0.7rem; /* Tiny price */
-            }
-            .sweet-card .order-button {
-                font-size: 0.55rem; /* Tiny button text */
-                padding: 0.2rem 0.4rem;
-            }
-            .contact-info p, .contact-info a {
-                font-size: 0.8rem;
-            }
-            .contact-info i {
-                font-size: 1.1rem;
-            }
-            .max-w-xl.mx-auto.bg-white.p-10.rounded-3xl.shadow-xl.mt-16.space-y-6 input,
-            .max-w-xl.mx-auto.bg-white.p-10.rounded-3xl.shadow-xl.mt-16.space-y-6 textarea {
-                padding: 0.6rem;
+                padding: 0.6rem; /* Smaller input padding */
                 font-size: 0.8rem;
             }
             .max-w-xl.mx-auto.bg-white.p-10.rounded-3xl.shadow-xl.mt-16.space-y-6 .cta-button {
                 padding: 0.6rem 1rem;
                 font-size: 0.9rem;
+            }
+            .newsletter-form {
+                gap: 0.4rem; /* Tighter gap in newsletter form */
+            }
+            .footer-bg {
+                padding-top: 0.8rem; /* Reduce footer padding */
+                padding-bottom: 0.8rem;
+                border-top-left-radius: 1.5rem;
+                border-top-right-radius: 1.5rem;
+            }
+            .footer-logo h3 {
+                font-size: 1.8rem; /* Smaller footer logo */
+            }
+            .footer-links-group h4 {
+                font-size: 1.3rem; /* Smaller footer headings */
+            }
+            .footer-links-group ul li a {
+                font-size: 0.8rem; /* Smaller footer links */
+            }
+            .footer-links-group .flex.justify-center.md\:justify-start.gap-6.text-3xl {
+                gap: 0.6rem; /* Smaller social icon gap */
+                font-size: 1.8rem; /* Smaller social icons */
+            }
+        }
+        /* Further reduction for extremely small screens (e.g., iPhone SE 1st gen, older small Androids) */
+        @media (max-width: 375px) {
+            .hero-title {
+                font-size: 1.5rem; /* Even smaller hero title */
+            }
+            .hero-tagline {
+                font-size: 0.7rem; /* Even smaller tagline */
+            }
+            .cta-button {
+                padding: 0.4rem 0.8rem; /* Even smaller CTA button */
+                font-size: 0.7rem;
+            }
+            .section-heading {
+                font-size: 1.5rem; /* Even smaller section headings */
+            }
+            .sweet-grid {
+                grid-template-columns: repeat(auto-fit, minmax(65px, 1fr)); /* Very tight grid, aims for 4-5 columns */
+                gap: 0.15rem; /* Minimal gap */
+            }
+            .sweet-card {
+                padding: 0.3rem; /* Minimal card padding */
+                border-radius: 0.6rem;
+            }
+            .sweet-card .sweet-image {
+                margin-bottom: 0.1rem;
+                border-radius: 0.3rem;
+            }
+            .sweet-card .sweet-title {
+                font-size: 0.7rem; /* Tiny title */
+            }
+            .sweet-card .text-gray-600.text-lg.mb-4.flex-grow {
+                font-size: 0.5rem; /* Almost smallest readable text */
+            }
+            .sweet-card .sweet-price {
+                font-size: 0.6rem; /* Tiny price */
+            }
+            .sweet-card .order-button {
+                font-size: 0.45rem; /* Tiny button text */
+                padding: 0.15rem 0.3rem;
+            }
+            .contact-info p, .contact-info a {
+                font-size: 0.7rem;
+            }
+            .contact-info i {
+                font-size: 1rem;
+            }
+            .max-w-xl.mx-auto.bg-white.p-10.rounded-3xl.shadow-xl.mt-16.space-y-6 input,
+            .max-w-xl.mx-auto.bg-white.p-10.rounded-3xl.shadow-xl.mt-16.space-y-6 textarea {
+                padding: 0.5rem;
+                font-size: 0.7rem;
+            }
+            .max-w-xl.mx-auto.bg-white.p-10.rounded-3xl.shadow-xl.mt-16.space-y-6 .cta-button {
+                padding: 0.5rem 0.8rem;
+                font-size: 0.8rem;
+            }
+            .footer-logo h3 {
+                font-size: 1.5rem;
+            }
+            .footer-links-group h4 {
+                font-size: 1.2rem;
+            }
+            .footer-links-group ul li a {
+                font-size: 0.75rem;
+            }
+            .footer-links-group .flex.justify-center.md\:justify-start.gap-6.text-3xl {
+                font-size: 1.5rem;
             }
         }
     </style>

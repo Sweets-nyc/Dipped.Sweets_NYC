@@ -2,18 +2,18 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Changed viewport meta tag to render at a fixed width (e.g., 1200px) and scale down.
+         This will make the page look like the desktop version, but smaller, on mobile devices.
+         Media queries for responsive layout changes on smaller screens will effectively be ignored
+         because the browser will always render the 'desktop' width before scaling. -->
+    <meta name="viewport" content="width=1200, initial-scale=1.0">
     <title>Dipped Sweetss NYC - Handcrafted Dipped Treats</title>
-
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-
     <!-- Google Fonts - Fredoka One (for headings), Inter (for body) -->
     <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
     <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
     <!-- Custom CSS for Dipped Sweetss NYC -->
     <style>
         body {
@@ -78,8 +78,6 @@
             border-radius: 2rem;
             box-shadow: 0 15px 30px -10px rgba(0,0,0,0.08);
             transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-            /* Adjustments for compact display on mobile */
-            padding: 1rem; /* Reduce default padding */
         }
         .sweet-card:hover {
             transform: translateY(-10px) rotate(-1deg);
@@ -88,17 +86,12 @@
         .sweet-image {
             border-radius: 1.5rem;
             box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-            /* Ensure image scales down with card */
-            max-width: 100%;
-            height: auto;
         }
         .sweet-title {
             color: #6F4E37; /* Chocolate Brown */
-            font-size: 1.5rem; /* Smaller title on smaller cards */
         }
         .sweet-price {
             color: #E0B400; /* Golden Yellow */
-            font-size: 1.25rem; /* Smaller price on smaller cards */
         }
         .order-button {
             background-color: #E0B400; /* Golden Yellow */
@@ -124,7 +117,7 @@
             color: #F8A4B8; /* Soft Pink */
         }
 
-        /* Dropdown specific styles */
+        /* Dropdown specific styles - MODIFIED FOR SMOOTHER HOVER */
         .dropdown-menu {
             display: none;
             position: absolute;
@@ -136,19 +129,12 @@
             z-index: 100; /* Ensure it's above other content */
             border-radius: 0.75rem; /* rounded-xl */
             padding: 0.5rem 0;
-            max-height: 0; /* Changed from display:none to max-height/opacity for smooth transition */
-            opacity: 0;
-            overflow: hidden;
-            pointer-events: none; /* Prevent interaction when hidden */
-            transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+            /* Removed margin-top to eliminate the gap */
         }
 
-        /* Desktop: Show dropdown on parent hover */
+        /* The nav-link parent div now controls dropdown visibility */
         .nav-link.group:hover .dropdown-menu {
-            max-height: 300px; /* Arbitrary large enough height */
-            opacity: 1;
-            pointer-events: auto;
-            display: block; /* Ensure it appears */
+            display: block;
         }
 
         .dropdown-item {
@@ -159,421 +145,140 @@
             text-align: left;
             transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
         }
+
         .dropdown-item:hover {
             background-color: #F8E6DD; /* Light peach hover */
             color: #E28FA0; /* Darker Pink */
         }
 
-        /* --- Responsive Adjustments --- */
+        /*
+           Removed most media queries for layout changes on smaller screens.
+           With 'width=1200' in the viewport meta tag, the browser will render the page
+           as if it's 1200px wide, and then scale that entire rendering to fit the
+           device screen. This effectively makes the mobile view a scaled-down
+           version of the desktop view, as requested by the user.
+           Keeping general base styles for consistency.
+        */
 
-        /* Hamburger button hidden by default */
-        .hamburger-button {
-            display: none;
+        /* Responsive Adjustments - These will largely be overridden by the fixed viewport width
+           on mobile, but remain for true window resizing on larger screens. */
+        @media (max-width: 1024px) {
+            .hero-title {
+                font-size: 4rem;
+            }
+            .hero-tagline {
+                font-size: 1.3rem;
+            }
+            .section-heading {
+                font-size: 3rem;
+            }
         }
 
-        @media (max-width: 1023px) { /* Tablets and larger phones (landscape) */
+        /* Media queries for smaller screens will primarily affect desktop browser resizing,
+           not mobile devices with the fixed viewport width.
+           Retaining some simple adjustments like column flex direction for the header/footer
+           to ensure they look good if a desktop browser window is made very narrow. */
+        @media (max-width: 768px) {
             .logo-text {
-                font-size: 2rem; /* Smaller logo on tablet */
+                font-size: 2.5rem;
             }
-
-            .header-bg .container-main {
-                flex-direction: row; /* Keep logo and hamburger on one line */
-                justify-content: space-between; /* Space between logo and hamburger */
-                padding: 0 1rem; /* Slightly less padding for tablet container */
-            }
-
-            /* Show hamburger button */
-            .hamburger-button {
-                display: block;
-                font-size: 2rem; /* Large icon for easy tap */
-                color: #6F4E37;
-                cursor: pointer;
-                background: none;
-                border: none;
-                padding: 0.5rem;
-                border-radius: 0.5rem;
-                transition: background-color 0.2s ease-in-out;
-            }
-            .hamburger-button:hover {
-                background-color: rgba(0,0,0,0.05);
-            }
-
-            /* Mobile navigation menu - Adjusted for better containment */
             .navbar-nav {
                 flex-direction: column;
-                width: 90%; /* Smaller width to prevent stretching */
-                max-width: 300px; /* Maximum width for the menu */
-                margin: 0 auto; /* Center the menu */
-                max-height: 0; /* Hidden by default */
-                overflow: hidden;
-                opacity: 0;
-                transition: max-height 0.5s ease-in-out, opacity 0.3s ease-in-out;
-                align-items: center; /* Center links in column */
-                padding-top: 0; /* No padding when closed */
-                background-color: #F8E6DD; /* Add background for the dropdown */
-                border-radius: 1rem; /* Rounded corners for the menu */
-                box-shadow: 0 5px 15px rgba(0,0,0,0.1); /* Subtle shadow */
+                gap: 1rem;
+                width: 100%;
             }
-
-            /* When menu is open */
-            .navbar-nav.nav-open {
-                max-height: 500px; /* Sufficient height to show all links */
-                opacity: 1;
-                padding: 1rem 0; /* Add padding when open to space links */
-            }
-
             .nav-link {
-                width: 100%; /* Full width for nav links */
-                text-align: center; /* Center align nav links */
-                padding: 0.75rem 0; /* Add vertical padding */
+                width: 100%;
+                text-align: center;
             }
-
-            /* Mobile dropdown menu */
-            .nav-link.group .dropdown-menu {
-                position: static; /* Stack dropdown items normally for mobile */
+            .dropdown-menu {
+                position: static;
                 width: 100%;
                 box-shadow: none;
+                margin-top: 0;
                 border-radius: 0;
                 padding: 0;
-                background-color: #F8F0E6; /* Slightly different background for dropdown */
-                max-height: 0; /* Control with JS class */
-                opacity: 0;
-                pointer-events: none;
-                transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+                border-top: 1px solid #F8E6DD;
             }
-
-            /* Mobile: Toggle dropdown via JS class, not :hover */
-            .nav-link.group:hover .dropdown-menu {
-                display: none; /* Disable hover effect for mobile */
-            }
-            .nav-link.group.dropdown-open .dropdown-menu {
-                max-height: 300px;
-                opacity: 1;
-                pointer-events: auto;
-                display: block; /* Ensure it appears */
-            }
-
             .dropdown-item {
-                padding-left: 2rem; /* Indent dropdown items */
-                text-align: center; /* Center align dropdown items on mobile */
-                border-top: 1px solid #F8E6DD; /* Separator for items */
+                padding-left: 2rem;
+                text-align: center;
             }
-
+            .hero-section {
+                padding: 4rem 1rem;
+            }
             .hero-title {
-                font-size: 2.8rem; /* Adjusted for tablets */
+                font-size: 3rem;
+            }
+            .hero-tagline {
+                font-size: 1.1rem;
+            }
+            .sweet-grid {
+                /* On actual desktop screen resize, this will still adjust */
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            }
+            .section-heading {
+                font-size: 2.5rem;
+            }
+            .contact-info {
+                flex-direction: column;
+                align-items: center;
+                gap: 1.5rem;
+            }
+            .footer-grid {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 2rem;
+            }
+            .footer-logo {
+                text-align: center;
+            }
+            .footer-links-group {
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo-text {
+                font-size: 2rem;
+            }
+            .hero-title {
+                font-size: 2.5rem;
             }
             .hero-tagline {
                 font-size: 1rem;
             }
-            .section-heading {
-                font-size: 2.2rem;
-            }
-
-            /* Sweet card grid: even more aggressively scaled for multiple columns */
-            .sweet-grid {
-                grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); /* Aim for 3-4 columns on tablets/larger phones */
-                gap: 0.4rem; /* Reduced gap */
-            }
-            .sweet-card {
-                padding: 0.5rem; /* Reduced padding inside cards */
-                border-radius: 1rem; /* Smaller border radius */
-            }
-            .sweet-card .sweet-image {
-                height: 80px; /* Fixed height for image */
-                object-fit: cover; /* Ensures image covers area without distorting */
-                border-radius: 0.7rem;
-                margin-bottom: 0.2rem;
-            }
-            .sweet-card .sweet-title {
-                font-size: 0.85rem; /* Smaller title */
-                margin-bottom: 0.1rem; /* Reduced space */
-                line-height: 1.2; /* Tighter line height */
-            }
-            .sweet-card .sweet-description { /* Targeted specific class for description */
-                font-size: 0.6rem; /* Significantly smaller description */
-                margin-bottom: 0.2rem; /* Reduced space */
-                line-height: 1.2; /* Tighter line height */
-                word-break: break-word; /* Ensure long words break */
-            }
-            .sweet-card .sweet-price {
-                font-size: 0.75rem; /* Smaller price */
-                margin-bottom: 0.2rem; /* Reduced space */
-            }
-            .sweet-card .order-button {
-                font-size: 0.55rem; /* Smaller button text */
-                padding: 0.2rem 0.35rem; /* Smaller button padding */
-                border-radius: 0.7rem; /* Smaller button radius */
-            }
-        }
-
-        @media (max-width: 767px) { /* Most common smartphones */
-            .hero-section {
-                padding: 2rem 0.5rem; /* Further reduce hero section padding */
-            }
-            .hero-title {
-                font-size: 2rem; /* Even smaller */
-                margin-bottom: 0.4rem;
-            }
-            .hero-tagline {
-                font-size: 0.75rem;
-                margin-bottom: 0.6rem;
-            }
             .cta-button {
-                padding: 0.4rem 0.8rem;
-                font-size: 0.7rem;
-            }
-            .section-heading {
-                font-size: 1.6rem;
-                margin-bottom: 0.8rem; /* Adjust heading margin */
-            }
-            /* Ensure sweet-grid aggressively aims for 3 columns on most phones */
-            .sweet-grid {
-                 grid-template-columns: repeat(auto-fit, minmax(75px, 1fr)); /* Aims for 3-4 columns on most phones */
-                 gap: 0.25rem; /* Tighter gap */
+                padding: 0.8rem 1.5rem;
+                font-size: 1.1rem;
             }
             .sweet-card {
-                padding: 0.3rem; /* Even less padding */
-                border-radius: 0.7rem;
+                padding: 1.5rem;
+                border-radius: 1.5rem;
             }
-            .sweet-card .sweet-image {
-                height: 70px; /* Smaller fixed height for image */
-                margin-bottom: 0.1rem;
+            .sweet-image {
+                border-radius: 1rem;
             }
-            .sweet-card .sweet-title {
-                font-size: 0.75rem;
-                margin-bottom: 0.05rem;
-            }
-            .sweet-card .sweet-description {
-                font-size: 0.55rem; /* Very small description */
-                margin-bottom: 0.1rem;
-            }
-            .sweet-card .sweet-price {
-                font-size: 0.65rem;
-                margin-bottom: 0.1rem;
-            }
-            .sweet-card .order-button {
-                font-size: 0.45rem;
-                padding: 0.15rem 0.3rem;
-            }
-            .contact-info {
-                gap: 0.6rem;
-            }
-            .contact-info p, .contact-info a {
-                font-size: 0.75rem; /* Adjust contact info text */
-            }
-            .contact-info i {
-                font-size: 1.1rem; /* Adjust contact icon size */
-            }
-            .max-w-xl.mx-auto.bg-white.p-10.rounded-3xl.shadow-xl.mt-16.space-y-6 {
-                padding: 0.8rem;
-                margin-top: 1rem;
-            }
-            .max-w-xl.mx-auto.bg-white.p-10.rounded-3xl.shadow-xl.mt-16.space-y-6 h3 {
+            .sweet-title {
                 font-size: 1.3rem;
-                margin-bottom: 0.8rem;
             }
-            .max-w-xl.mx-auto.bg-white.p-10.rounded-3xl.shadow-xl.mt-16.space-y-6 input,
-            .max-w-xl.mx-auto.bg-white.p-10.rounded-3xl.shadow-xl.mt-16.space-y-6 textarea {
-                padding: 0.6rem;
-                font-size: 0.8rem;
+            .sweet-price {
+                font-size: 1.1rem;
             }
-            .max-w-xl.mx-auto.bg-white.p-10.rounded-3xl.shadow-xl.mt-16.space-y-6 .cta-button {
-                padding: 0.6rem 1rem;
+            .order-button {
+                padding: 0.7rem 1.2rem;
                 font-size: 0.9rem;
-            }
-            .footer-grid {
-                gap: 0.8rem; /* Reduced footer gap */
-            }
-            .footer-logo h3 {
-                font-size: 1.8rem;
-            }
-            .footer-links-group h4 {
-                font-size: 1.3rem;
-            }
-            .footer-links-group ul li a {
-                font-size: 0.75rem;
-            }
-            .footer-links-group .flex.justify-center.md\:justify-start.gap-6.text-3xl {
-                font-size: 2rem;
-            }
-        }
-
-        @media (max-width: 480px) { /* Smaller smartphones (e.g., iPhone 8/SE, many Androids) */
-            .logo-text {
-                font-size: 1rem; /* Make logo even smaller */
-            }
-            .hero-title {
-                font-size: 1.4rem; /* Significantly smaller hero title */
-                margin-bottom: 0.2rem; /* Reduce spacing */
-            }
-            .hero-tagline {
-                font-size: 0.65rem; /* Smaller tagline */
-                margin-bottom: 0.4rem; /* Reduce spacing */
-            }
-            .cta-button {
-                padding: 0.3rem 0.6rem; /* Smaller CTA button */
-                font-size: 0.65rem;
-            }
-            .section-heading {
-                font-size: 1.4rem; /* Smaller section headings */
-                margin-bottom: 0.5rem; /* Reduce spacing */
-            }
-            .sweet-grid {
-                grid-template-columns: repeat(auto-fit, minmax(65px, 1fr)); /* Push for 3-4 columns on most phones */
-                gap: 0.15rem; /* Very tight gap */
-            }
-            .sweet-card {
-                padding: 0.2rem; /* Minimal padding */
-                border-radius: 0.6rem; /* Smallest radius */
-            }
-            .sweet-card .sweet-image {
-                height: 60px; /* Even smaller fixed height */
-                margin-bottom: 0.05rem; /* Reduce image margin */
-                border-radius: 0.3rem; /* Smallest image radius */
-            }
-            .sweet-card .sweet-title {
-                font-size: 0.65rem; /* Very small title */
-                margin-bottom: 0.05rem; /* Minimal margin */
-            }
-            .sweet-card .sweet-description { /* Targeted specific class for description */
-                font-size: 0.45rem; /* Tiny description text */
-                margin-bottom: 0.05rem;
-            }
-            .sweet-card .sweet-price {
-                font-size: 0.55rem; /* Very small price */
-                margin-bottom: 0.05rem;
-            }
-            .sweet-card .order-button {
-                font-size: 0.4rem; /* Smallest button text */
-                padding: 0.1rem 0.2rem; /* Smallest button padding */
-                border-radius: 0.4rem;
-            }
-
-            /* Contact & Order form sections adjustments */
-            .container-main {
-                padding: 0 0.5rem; /* Reduce main container padding to maximize horizontal space */
-            }
-            .contact-info, .contact-details-group {
-                gap: 0.4rem; /* Reduce spacing in contact info */
-            }
-            .contact-info p, .contact-info a {
-                font-size: 0.65rem; /* Smaller contact info text */
-            }
-            .contact-info i {
-                font-size: 0.9rem; /* Smaller contact icon size */
-            }
-            .max-w-xl.mx-auto.bg-white.p-10.rounded-3xl.shadow-xl.mt-16.space-y-6 {
-                padding: 0.6rem; /* Reduce form padding */
-                border-radius: 0.8rem;
-                margin-top: 0.6rem; /* Reduce top margin for forms */
-            }
-            .max-w-xl.mx-auto.bg-white.p-10.rounded-3xl.shadow-xl.mt-16.space-y-6 h3 {
-                font-size: 1rem; /* Smaller form heading */
-                margin-bottom: 0.4rem;
-            }
-            .max-w-xl.mx-auto.bg-white.p-10.rounded-3xl.shadow-xl.mt-16.space-y-6 .text-lg.font-medium.text-gray-700.mb-2 {
-                font-size: 0.65rem; /* Smaller label text */
-                margin-bottom: 0.1rem;
-            }
-            .max-w-xl.mx-auto.bg-white.p-10.rounded-3xl.shadow-xl.mt-16.space-y-6 input,
-            .max-w-xl.mx-auto.bg-white.p-10.rounded-3xl.shadow-xl.mt-16.space-y-6 textarea {
-                padding: 0.4rem; /* Smaller input padding */
-                font-size: 0.65rem;
-            }
-            .max-w-xl.mx-auto.bg-white.p-10.rounded-3xl.shadow-xl.mt-16.space-y-6 .cta-button {
-                padding: 0.4rem 0.6rem;
-                font-size: 0.7rem;
             }
             .newsletter-form {
-                gap: 0.25rem; /* Tighter gap in newsletter form */
+                flex-direction: column;
+                gap: 1rem;
+            }
+            .newsletter-input, .newsletter-button {
+                width: 100%;
             }
             .footer-bg {
-                padding-top: 0.5rem; /* Reduce footer padding */
-                padding-bottom: 0.5rem;
-                border-top-left-radius: 1rem;
-                border-top-right-radius: 1rem;
-            }
-            .footer-logo h3 {
-                font-size: 1.4rem; /* Smaller footer logo */
-            }
-            .footer-links-group h4 {
-                font-size: 1rem; /* Smaller footer headings */
-            }
-            .footer-links-group ul li a {
-                font-size: 0.65rem; /* Smaller footer links */
-            }
-            .footer-links-group .flex.justify-center.md\:justify-start.gap-6.text-3xl {
-                gap: 0.4rem; /* Smaller social icon gap */
-                font-size: 1.6rem; /* Smaller social icons */
-            }
-        }
-        /* Further reduction for extremely small screens (e.g., iPhone SE 1st gen, older small Androids) */
-        @media (max-width: 375px) {
-            .hero-title {
-                font-size: 1.2rem; /* Even smaller hero title */
-            }
-            .hero-tagline {
-                font-size: 0.55rem; /* Even smaller tagline */
-            }
-            .cta-button {
-                padding: 0.25rem 0.5rem; /* Even smaller CTA button */
-                font-size: 0.55rem;
-            }
-            .section-heading {
-                font-size: 1.2rem; /* Even smaller section headings */
-            }
-            .sweet-grid {
-                grid-template-columns: repeat(auto-fit, minmax(55px, 1fr)); /* Very tight grid, aims for 4-5 columns */
-                gap: 0.1rem; /* Minimal gap */
-            }
-            .sweet-card {
-                padding: 0.15rem; /* Minimal card padding */
-                border-radius: 0.4rem;
-            }
-            .sweet-card .sweet-image {
-                height: 50px; /* Smallest image height */
-                margin-bottom: 0.05rem;
-                border-radius: 0.2rem;
-            }
-            .sweet-card .sweet-title {
-                font-size: 0.55rem; /* Tiny title */
-            }
-            .sweet-card .sweet-description {
-                font-size: 0.4rem; /* Almost smallest readable text */
-            }
-            .sweet-card .sweet-price {
-                font-size: 0.45rem; /* Tiny price */
-            }
-            .sweet-card .order-button {
-                font-size: 0.3rem; /* Tiny button text */
-                padding: 0.08rem 0.15rem;
-            }
-            .contact-info p, .contact-info a {
-                font-size: 0.55rem;
-            }
-            .contact-info i {
-                font-size: 0.8rem;
-            }
-            .max-w-xl.mx-auto.bg-white.p-10.rounded-3xl.shadow-xl.mt-16.space-y-6 input,
-            .max-w-xl.mx-auto.bg-white.p-10.rounded-3xl.shadow-xl.mt-16.space-y-6 textarea {
-                padding: 0.3rem;
-                font-size: 0.55rem;
-            }
-            .max-w-xl.mx-auto.bg-white.p-10.rounded-3xl.shadow-xl.mt-16.space-y-6 .cta-button {
-                padding: 0.3rem 0.5rem;
-                font-size: 0.6rem;
-            }
-            .footer-logo h3 {
-                font-size: 1.2rem;
-            }
-            .footer-links-group h4 {
-                font-size: 0.9rem;
-            }
-            .footer-links-group ul li a {
-                font-size: 0.6rem;
-            }
-            .footer-links-group .flex.justify-center.md\:justify-start.gap-6.text-3xl {
-                font-size: 1.4rem;
+                border-top-left-radius: 2rem;
+                border-top-right-radius: 2rem;
             }
         }
     </style>
@@ -581,22 +286,15 @@
 <body>
     <header class="header-bg py-6">
         <div class="container-main flex flex-col md:flex-row justify-between items-center">
-            <div class="mb-4 md:mb-0 flex-shrink-0">
+            <div class="mb-4 md:mb-0">
                 <a href="#home" class="logo-text text-center block" onclick="showSection('home-menu-combined'); return false;">Dipped Sweetss NYC</a>
             </div>
-
-            <!-- Hamburger menu button (visible only on mobile/tablet) -->
-            <button class="hamburger-button focus:outline-none lg:hidden" aria-label="Toggle navigation" id="hamburger-button">
-                <i class="fas fa-bars"></i>
-            </button>
-
-            <nav class="navbar-nav flex-grow lg:flex lg:flex-wrap lg:justify-center lg:gap-4" id="mobile-menu">
+            <nav class="navbar-nav flex flex-wrap justify-center gap-4">
                 <a href="#home" class="nav-link text-lg" onclick="showSection('home-menu-combined'); return false;">Home</a>
                 <a href="#menu" class="nav-link text-lg" onclick="showSection('menu-only-section'); populateSweetMenu('MainMenuDefault', 'sweet-menu-grid-alt'); return false;">Menu</a>
-
-                <!-- Categories Dropdown - structure adjusted for mobile toggling -->
-                <div class="nav-link text-lg group relative" id="categories-dropdown-toggle">
-                    <a href="#menu" class="inline-flex items-center justify-center lg:justify-start w-full" onclick="toggleMobileDropdown(event); return false;">
+                <!-- Categories Dropdown -->
+                <div class="nav-link text-lg group">
+                    <a href="#menu" class="inline-flex items-center" onclick="showSection('menu-only-section'); return false;">
                         Categories <i class="fas fa-chevron-down ml-2 text-base"></i>
                     </a>
                     <div class="dropdown-menu">
@@ -608,7 +306,6 @@
                         <a href="#menu" class="dropdown-item" data-category="Individual Sample Cups" onclick="showSection('menu-only-section'); populateSweetMenu('Individual Sample Cups', 'sweet-menu-grid-alt'); return false;">Individual Sample Cups</a>
                     </div>
                 </div>
-
                 <a href="#create-order" class="nav-link text-lg" onclick="showSection('create-order-section'); return false;">Create Your Order</a>
                 <a href="#contact" class="nav-link text-lg" onclick="showSection('contact-section'); return false;">Contact</a>
                 <a href="#about" class="nav-link text-lg" onclick="showSection('about-section'); return false;">About Us</a>
@@ -618,7 +315,7 @@
 
     <main>
         <!-- Combined Home and Menu Section (visible by default) -->
-        <section id="home-menu-combined" class="py-20 bg-gradient-to-br from-\[#FFF8F0\] to-\[#FCEBCC\] rounded-b-\[4rem\]">
+        <section id="home-menu-combined" class="py-20 bg-gradient-to-br from-[#FFF8F0] to-[#FCEBCC] rounded-b-[4rem]">
             <!-- Hero Section content -->
             <div id="home-content" class="hero-section text-center pb-20">
                 <div class="container-main">
@@ -634,6 +331,7 @@
                     </a>
                 </div>
             </div>
+
             <!-- Menu Section content - now part of the default view -->
             <div id="menu-content" class="py-20">
                 <div class="container-main">
@@ -655,8 +353,9 @@
             </div>
         </section>
 
+
         <!-- About Us Section -->
-        <section id="about-section" class="py-20 bg-gradient-to-tl from-\[#F8E6DD\] to-\[#FFF8F0\] rounded-t-\[4rem\]" style="display:none;">
+        <section id="about-section" class="py-20 bg-gradient-to-tl from-[#F8E6DD] to-[#FFF8F0] rounded-t-[4rem]" style="display:none;">
             <div class="container-main text-center">
                 <h2 class="section-heading text-5xl mb-10">Our Story: A Passion for Sweetness</h2>
                 <div class="max-w-3xl mx-auto text-lg leading-relaxed text-gray-700 space-y-6">
@@ -685,43 +384,45 @@
                 </p>
                 <div class="contact-info flex flex-col items-center gap-6 md:flex-row md:justify-center md:gap-10 text-xl font-medium text-gray-800">
                     <p class="flex items-center gap-3">
-                        <i class="fas fa-envelope text-\[#F8A4B8\] text-2xl"></i>
-                        <a href="mailto:hello@dippedsweetssnyc.com" class="hover:text-\[#E28FA0\] transition-colors duration-300">hello@dippedsweetssnyc.com</a>
+                        <i class="fas fa-envelope text-[#F8A4B8] text-2xl"></i>
+                        <a href="mailto:hello@dippedsweetssnyc.com" class="hover:text-[#E28FA0] transition-colors duration-300">hello@dippedsweetssnyc.com</a>
                     </p>
                     <p class="flex items-center gap-3">
-                        <i class="fas fa-phone-alt text-\[#F8A4B8\] text-2xl"></i>
-                        <a href="tel:+1-212-555-DIPS" class="hover:text-\[#E28FA0\] transition-colors duration-300">+1 (212) 555-DIPS</a>
+                        <i class="fas fa-phone-alt text-[#F8A4B8] text-2xl"></i>
+                        <a href="tel:+1-212-555-DIPS" class="hover:text-[#E28FA0] transition-colors duration-300">+1 (212) 555-DIPS</a>
                     </p>
                     <p class="flex items-center gap-3">
-                        <i class="fab fa-instagram text-\[#F8A4B8\] text-2xl"></i>
-                        <a href="https://www.instagram.com/dippedsweets_nyc/" target="\_blank" rel="noopener noreferrer" class="hover:text-\[#E28FA0\] transition-colors duration-300">@dippedsweetss_nyc</a>
+                        <i class="fab fa-instagram text-[#F8A4B8] text-2xl"></i>
+                        <a href="https://www.instagram.com/dippedsweets_nyc/" target="_blank" rel="noopener noreferrer" class="hover:text-[#E28FA0] transition-colors duration-300">@dippedsweetss_nyc</a>
                     </p>
                 </div>
+
                 <div class="contact-details-group max-w-2xl mx-auto text-lg text-gray-700 space-y-6">
                     <p class="flex items-start md:items-center gap-3 text-left">
-                        <i class="fas fa-map-marker-alt text-\[#F8A4B8\] text-2xl mt-1 md:mt-0 flex-shrink-0"></i>
+                        <i class="fas fa-map-marker-alt text-[#F8A4B8] text-2xl mt-1 md:mt-0 flex-shrink-0"></i>
                         <span class="text-gray-700">Delivering across The Bronx, Upper East Side & Upper West Side Manhattan, and Astoria, Queens!</span>
                     </p>
                     <p class="flex items-start md:items-center gap-3 text-left">
-                        <i class="fas fa-clock text-\[#F8A4B8\] text-2xl mt-1 md:mt-0 flex-shrink-0"></i>
+                        <i class="fas fa-clock text-[#F8A4B8] text-2xl mt-1 md:mt-0 flex-shrink-0"></i>
                         <span class="text-gray-700">
-                            <span class="font-bold text-\[#6F4E37\]">Business Hours (Suggested):</span><br>
+                            <span class="font-bold text-[#6F4E37]">Business Hours (Suggested):</span><br>
                             Mon-Fri: 11:00 AM - 7:00 PM<br>
                             Sat-Sun: 12:00 PM - 5:00 PM<br>
-                            <span class="text-sm italic text-gray-600">\*Hours for delivery may vary based on order volume and specific arrangements.\*</span>
+                            <span class="text-sm italic text-gray-600">*Hours for delivery may vary based on order volume and specific arrangements.*</span>
                         </span>
                     </p>
                 </div>
+
                 <form class="max-w-xl mx-auto bg-white p-10 rounded-3xl shadow-xl mt-16 space-y-6">
-                    <h3 class="text-3xl font-bold text-\[#6F4E37\] mb-6">Send Us a Message</h3>
+                    <h3 class="text-3xl font-bold text-[#6F4E37] mb-6">Send Us a Message</h3>
                     <div>
-                        <input type="text" placeholder="Your Name" class="w-full p-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-\[#F8A4B8\]">
+                        <input type="text" placeholder="Your Name" class="w-full p-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F8A4B8]">
                     </div>
                     <div>
-                        <input type="email" placeholder="Your Email" class="w-full p-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-\[#F8A4B8\]">
+                        <input type="email" placeholder="Your Email" class="w-full p-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F8A4B8]">
                     </div>
                     <div>
-                        <textarea placeholder="Your Message" rows="6" class="w-full p-4 border border-gray-300 rounded-xl resize-y focus:outline-none focus:ring-2 focus:ring-\[#F8A4B8\]"></textarea>
+                        <textarea placeholder="Your Message" rows="6" class="w-full p-4 border border-gray-300 rounded-xl resize-y focus:outline-none focus:ring-2 focus:ring-[#F8A4B8]"></textarea>
                     </div>
                     <button type="submit" class="cta-button w-full px-6 py-3 rounded-full text-xl shadow-md">
                         Send Sweet Message <i class="fas fa-paper-plane ml-2"></i>
@@ -731,37 +432,42 @@
         </section>
 
         <!-- Create Your Order Section -->
-        <section id="create-order-section" class="py-20 bg-gradient-to-br from-\[#FFF8F0\] to-\[#FCEBCC\]" style="display:none;">
+        <section id="create-order-section" class="py-20 bg-gradient-to-br from-[#FFF8F0] to-[#FCEBCC]" style="display:none;">
             <div class="container-main text-center">
                 <h2 class="section-heading text-5xl mb-10">Craft Your Perfect Order!</h2>
                 <p class="text-lg text-gray-700 max-w-2xl mx-auto mb-12">
                     Looking for something unique or planning a special event? Tell us what you envision, and we'll make it a reality.
                 </p>
+
                 <form id="customOrderForm" class="max-w-xl mx-auto bg-white p-10 rounded-3xl shadow-xl mt-16 space-y-6">
-                    <h3 class="text-3xl font-bold text-\[#6F4E37\] mb-6">Tell Us About Your Custom Order</h3>
+                    <h3 class="text-3xl font-bold text-[#6F4E37] mb-6">Tell Us About Your Custom Order</h3>
+
                     <!-- IMPORTANT CLARIFICATION -->
-                    <p class="text-lg text-gray-800 font-semibold bg-\[#F8E6DD\] p-4 rounded-xl border border-\[#F8A4B8\] shadow-sm mb-6">
-                        <i class="fas fa-info-circle text-\[#F8A4B8\] mr-2"></i> This is an **inquiry form**. No payment is required now. We'll contact you to discuss details and calculate the final cost after you send your request!
+                    <p class="text-lg text-gray-800 font-semibold bg-[#F8E6DD] p-4 rounded-xl border border-[#F8A4B8] shadow-sm mb-6">
+                        <i class="fas fa-info-circle text-[#F8A4B8] mr-2"></i> This is an **inquiry form**. No payment is required now. We'll contact you to discuss details and calculate the final cost after you send your request!
                     </p>
+
                     <!-- Order Details -->
                     <div>
                         <label for="orderDetails" class="block text-left text-lg font-medium text-gray-700 mb-2">What treats are you dreaming of?</label>
-                        <textarea id="orderDetails" name="orderDetails" rows="8" placeholder="e.g., 3 dozen chocolate dipped strawberries with gold flakes, 2 dozen custom themed cake pops for a birthday party..." class="w-full p-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-\[#F8A4B8\]"></textarea>
+                        <textarea id="orderDetails" name="orderDetails" rows="8" placeholder="e.g., 3 dozen chocolate dipped strawberries with gold flakes, 2 dozen custom themed cake pops for a birthday party..." class="w-full p-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F8A4B8]"></textarea>
                     </div>
+
                     <!-- Order Type -->
                     <div class="text-left">
                         <label class="block text-lg font-medium text-gray-700 mb-3">Is this for a simple order or a larger event?</label>
                         <div class="flex flex-col sm:flex-row gap-4">
                             <div class="flex items-center">
-                                <input type="radio" id="orderTypeSimple" name="orderType" value="simple" class="h-5 w-5 text-\[#F8A4B8\] focus:ring-\[#F8A4B8\] border-gray-300 rounded" checked onchange="handleOrderTypeChange()">
+                                <input type="radio" id="orderTypeSimple" name="orderType" value="simple" class="h-5 w-5 text-[#F8A4B8] focus:ring-[#F8A4B8] border-gray-300 rounded" checked onchange="handleOrderTypeChange()">
                                 <label for="orderTypeSimple" class="ml-2 text-lg text-gray-700">Simple / Individual Order</label>
                             </div>
                             <div class="flex items-center">
-                                <input type="radio" id="orderTypeParty" name="orderType" value="party" class="h-5 w-5 text-\[#F8A4B8\] focus:ring-\[#F8A4B8\] border-gray-300 rounded" onchange="handleOrderTypeChange()">
+                                <input type="radio" id="orderTypeParty" name="orderType" value="party" class="h-5 w-5 text-[#F8A4B8] focus:ring-[#F8A4B8] border-gray-300 rounded" onchange="handleOrderTypeChange()">
                                 <label for="orderTypeParty" class="ml-2 text-lg text-gray-700">Party / Event Order</label>
                             </div>
                         </div>
                     </div>
+
                     <!-- New: Select from Our Menu -->
                     <div>
                         <label class="block text-left text-lg font-medium text-gray-700 mb-4">Or, Select from Our Existing Menu:</label>
@@ -770,67 +476,74 @@
                         </div>
                         <p class="text-sm text-gray-600 mt-2 text-left">Scroll horizontally to see all options!</p>
                     </div>
+
                     <!-- Selected Items Summary -->
-                    <div id="selectedItemsSummary" class="bg-gray-100 p-4 rounded-xl border border-gray-200 min-h-\[100px\]">
-                        <h4 class="text-xl font-bold text-\[#6F4E37\] mb-3 text-left">Your Selections:</h4>
+                    <div id="selectedItemsSummary" class="bg-gray-100 p-4 rounded-xl border border-gray-200 min-h-[100px]">
+                        <h4 class="text-xl font-bold text-[#6F4E37] mb-3 text-left">Your Selections:</h4>
                         <ul id="selectedItemsList" class="list-none text-left text-gray-700 space-y-2">
                             <!-- Selected items will appear here -->
                             <li id="no-items-message">No items selected yet.</li>
                         </ul>
                     </div>
+
                     <!-- Inspiration Photos Upload -->
                     <div>
                         <label for="inspirationPhotos" class="block text-left text-lg font-medium text-gray-700 mb-2">Inspiration Photos (Optional)</label>
                         <p class="text-sm text-gray-600 mb-2 text-left">Have a design, color scheme, or vision in mind? Upload up to 5 photos!</p>
-                        <input type="file" id="inspirationPhotos" name="inspirationPhotos" accept="image/\*" multiple class="w-full p-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-\[#F8A4B8\] file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-\[#F8A4B8\] file:text-white hover:file:bg-\[#E28FA0\]">
+                        <input type="file" id="inspirationPhotos" name="inspirationPhotos" accept="image/*" multiple class="w-full p-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F8A4B8] file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#F8A4B8] file:text-white hover:file:bg-[#E28FA0]">
                     </div>
+
                     <!-- Contact Information -->
                     <div>
                         <label for="orderName" class="block text-left text-lg font-medium text-gray-700 mb-2">Your Name</label>
-                        <input type="text" id="orderName" name="orderName" placeholder="Your Name" class="w-full p-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-\[#F8A4B8\]">
+                        <input type="text" id="orderName" name="orderName" placeholder="Your Name" class="w-full p-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F8A4B8]">
                     </div>
                     <div>
                         <label for="orderEmail" class="block text-left text-lg font-medium text-gray-700 mb-2">Your Email</label>
-                        <input type="email" id="orderEmail" name="orderEmail" placeholder="Your Email" class="w-full p-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-\[#F8A4B8\]">
+                        <input type="email" id="orderEmail" name="orderEmail" placeholder="Your Email" class="w-full p-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F8A4B8]">
                     </div>
                     <div>
                         <label for="orderPhone" class="block text-left text-lg font-medium text-gray-700 mb-2">Your Phone (Optional)</label>
-                        <input type="tel" id="orderPhone" name="orderPhone" placeholder="Your Phone Number" class="w-full p-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-\[#F8A4B8\]">
+                        <input type="tel" id="orderPhone" name="orderPhone" placeholder="Your Phone Number" class="w-full p-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F8A4B8]">
                     </div>
+
                     <!-- Preferred Contact Method -->
                     <div class="text-left">
                         <label class="block text-lg font-medium text-gray-700 mb-3">Preferred Contact Method:</label>
                         <div class="flex flex-col sm:flex-row gap-4">
                             <div class="flex items-center">
-                                <input type="radio" id="contactText" name="contactMethod" value="Text Message" class="h-5 w-5 text-\[#F8A4B8\] focus:ring-\[#F8A4B8\] border-gray-300 rounded" checked>
+                                <input type="radio" id="contactText" name="contactMethod" value="Text Message" class="h-5 w-5 text-[#F8A4B8] focus:ring-[#F8A4B8] border-gray-300 rounded" checked>
                                 <label for="contactText" class="ml-2 text-lg text-gray-700">Text Message</label>
                             </div>
                             <div class="flex items-center">
-                                <input type="radio" id="contactPhone" name="contactMethod" value="Phone Call" class="h-5 w-5 text-\[#F8A4B8\] focus:ring-\[#F8A4B8\] border-gray-300 rounded">
+                                <input type="radio" id="contactPhone" name="contactMethod" value="Phone Call" class="h-5 w-5 text-[#F8A4B8] focus:ring-[#F8A4B8] border-gray-300 rounded">
                                 <label for="contactPhone" class="ml-2 text-lg text-gray-700">Phone Call</label>
                             </div>
                             <div class="flex items-center">
-                                <input type="radio" id="contactEmail" name="contactMethod" value="Email" class="h-5 w-5 text-\[#F8A4B8\] focus:ring-\[#F8A4B8\] border-gray-300 rounded">
+                                <input type="radio" id="contactEmail" name="contactMethod" value="Email" class="h-5 w-5 text-[#F8A4B8] focus:ring-[#F8A4B8] border-gray-300 rounded">
                                 <label for="contactEmail" class="ml-2 text-lg text-gray-700">Email</label>
                             </div>
                         </div>
                     </div>
+
+
                     <button type="submit" class="cta-button w-full px-6 py-3 rounded-full text-xl shadow-md">
                         Send Your Custom Order Request <i class="fas fa-cookie-bite ml-2"></i>
                     </button>
                 </form>
             </div>
         </section>
+
     </main>
 
-    <footer class="footer-bg py-12 text-white text-center rounded-t-\[4rem\]">
+    <footer class="footer-bg py-12 text-white text-center rounded-t-[4rem]">
         <div class="container-main grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
             <div class="footer-logo">
-                <h3 class="logo-text text-4xl font-extrabold text-\[#FFF8F0\] mb-4">Dipped Sweetss NYC</h3>
+                <h3 class="logo-text text-4xl font-extrabold text-[#FFF8F0] mb-4">Dipped Sweetss NYC</h3>
                 <p class="text-sm text-gray-200">&copy; 2025 Dipped Sweetss NYC. All rights reserved.</p>
             </div>
             <div class="footer-links-group">
-                <h4 class="text-2xl font-bold mb-4 text-\[#F8A4B8\]">Quick Links</h4>
+                <h4 class="text-2xl font-bold mb-4 text-[#F8A4B8]">Quick Links</h4>
                 <ul class="space-y-2 text-lg">
                     <li><a href="#home" class="footer-link" onclick="showSection('home-menu-combined'); return false;">Home</a></li>
                     <li><a href="#menu" class="footer-link" onclick="showSection('menu-only-section'); populateSweetMenu('MainMenuDefault', 'sweet-menu-grid-alt'); return false;">Menu</a></li>
@@ -840,11 +553,11 @@
                 </ul>
             </div>
             <div class="footer-links-group">
-                <h4 class="text-2xl font-bold mb-4 text-\[#F8A4B8\]">Follow Us!</h4>
+                <h4 class="text-2xl font-bold mb-4 text-[#F8A4B8]">Follow Us!</h4>
                 <div class="flex justify-center md:justify-start gap-6 text-3xl">
-                    <a href="#" aria-label="Instagram" class="footer-link hover:text-\[#E0B400\]"><i class="fab fa-instagram"></i></a>
-                    <a href="#" aria-label="Facebook" class="footer-link hover:text-\[#E0B400\]"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" aria-label="TikTok" class="footer-link hover:text-\[#E0B400\]"><i class="fab fa-tiktok"></i></a>
+                    <a href="#" aria-label="Instagram" class="footer-link hover:text-[#E0B400]"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="Facebook" class="footer-link hover:text-[#E0B400]"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" aria-label="TikTok" class="footer-link hover:text-[#E0B400]"><i class="fab fa-tiktok"></i></a>
                 </div>
             </div>
         </div>
@@ -993,8 +706,8 @@
                 img: "a67682b1-e2ad-4e9b-8dce-a834af8df359.jpeg",
                 title: "Mini Dipped Cupcakes",
                 description: "Delightful mini cupcakes, frosted and then partially dipped in chocolate.",
-                simplePrice: "$3.00/each",
-                partyPrice: "$2.67/each",
+                simplePrice: "$3.00/each", // Adjusted from $36.00/dozen
+                partyPrice: "$2.67/each", // Adjusted from $32.00/dozen
                 category: "Rice Crispy & Dipped Cupcakes",
                 displayOnMainMenu: true
             },
@@ -1026,7 +739,7 @@
                 displayOnMainMenu: true
             },
             {
-                img: "b5b46884-95db-49c8-82e8-62ea5bdf01f69.jpeg",
+                img: "b5b46884-95db-49c8-82e8-6ea5bdf01f69.jpeg",
                 title: "Creme Brulee Cups (Sample)",
                 description: "Creamy custard with a crisp caramelized sugar topping, served in individual cups.",
                 simplePrice: "$6.00/each",
@@ -1054,12 +767,6 @@
             allSections.forEach(section => {
                 section.style.display = 'none'; // Hide all sections
             });
-
-            // Hide the mobile menu whenever a section is navigated to
-            const mobileMenu = document.getElementById('mobile-menu');
-            if (mobileMenu.classList.contains('nav-open')) {
-                mobileMenu.classList.remove('nav-open');
-            }
 
             if (sectionId === 'home-menu-combined') {
                 // When "Home" is clicked, show the combined home/menu section
@@ -1094,6 +801,7 @@
             if (sweetMenuGrid) {
                 let htmlContent = '';
                 let filteredSweets = [];
+
                 if (filterType === 'MainMenuDefault') {
                     // For the main menu, show only items marked for main menu display
                     filteredSweets = sweetsData.filter(sweet => sweet.displayOnMainMenu === true);
@@ -1108,12 +816,14 @@
                 } else {
                     filteredSweets.forEach(sweet => {
                         htmlContent += `
-                            <div class="sweet-card flex flex-col items-center text-center">
-                                <img src="${sweet.img}" alt="${sweet.title}" onerror="this.onerror=null;this.src='https://placehold.co/300x200/F8E6DD/6F4E37?text=Image+Not+Found';" class="sweet-image">
-                                <h3 class="sweet-title">${sweet.title}</h3>
-                                <p class="sweet-description">${sweet.description}</p>
-                                <span class="sweet-price">${sweet.simplePrice}</span> <!-- Always show simplePrice on main menu -->
-                                <button class="order-button">Order Now</button>
+                            <div class="sweet-card p-6 flex flex-col items-center text-center">
+                                <img src="${sweet.img}" alt="${sweet.title}" onerror="this.onerror=null;this.src='https://placehold.co/300x200/F8E6DD/6F4E37?text=Image+Not+Found';" class="sweet-image w-full h-auto mb-4">
+                                <h3 class="sweet-title text-3xl font-bold mb-2">${sweet.title}</h3>
+                                <p class="text-gray-600 text-lg mb-4 flex-grow">
+                                    ${sweet.description}
+                                </p>
+                                <span class="sweet-price text-2xl font-extrabold mb-4">${sweet.simplePrice}</span> <!-- Always show simplePrice on main menu -->
+                                <button class="order-button px-6 py-3 rounded-full text-lg shadow-md">Order Now</button>
                             </div>
                         `;
                     });
@@ -1137,11 +847,11 @@
                 htmlContent += `
                     <div class="flex-none w-64 sweet-card p-4 text-center snap-center">
                         <img src="${sweet.img}" alt="${sweet.title}" onerror="this.onerror=null;this.src='https://placehold.co/200x150/F8E6DD/6F4E37?text=Image';" class="sweet-image w-full h-32 object-cover mb-3 rounded-lg">
-                        <h4 class="font-bold text-lg text-\[#6F4E37\] mb-1">${sweet.title}</h4>
-                        <p class="text-sm text-gray-600 mb-2">Price: <span class="font-semibold text-\[#E0B400\]">${priceToDisplay}</span></p>
+                        <h4 class="font-bold text-lg text-[#6F4E37] mb-1">${sweet.title}</h4>
+                        <p class="text-sm text-gray-600 mb-2">Price: <span class="font-semibold text-[#E0B400]">${priceToDisplay}</span></p>
                         <div class="flex items-center justify-center gap-2 mt-2">
-                            <input type="number" id="${quantityInputId}" value="1" min="1" class="w-16 p-2 border border-gray-300 rounded-md text-center focus:outline-none focus:ring-1 focus:ring-\[#F8A4B8\]">
-                            <button type="button" onclick="addToOrder('${sweet.title.replace(/'/g, "\\'")}', '${quantityInputId}')" class="bg-\[#E0B400\] text-white px-3 py-2 rounded-full text-sm font-semibold hover:bg-\[#FFD700\] transition-colors">Add</button>
+                            <input type="number" id="${quantityInputId}" value="1" min="1" class="w-16 p-2 border border-gray-300 rounded-md text-center focus:outline-none focus:ring-1 focus:ring-[#F8A4B8]">
+                            <button type="button" onclick="addToOrder('${sweet.title.replace(/'/g, "\\'")}', '${quantityInputId}')" class="bg-[#E0B400] text-white px-3 py-2 rounded-full text-sm font-semibold hover:bg-[#FFD700] transition-colors">Add</button>
                         </div>
                     </div>
                 `;
@@ -1186,7 +896,6 @@
             if (items.length === 0) {
                 summaryHtml = '<li id="no-items-message">No items selected yet.</li>';
             } else {
-                summaryHtml = ''; // Clear the "no items" message
                 items.forEach(item => {
                     summaryHtml += `
                         <li class="flex justify-between items-center py-1 bg-white p-2 rounded-lg shadow-sm mb-1">
@@ -1209,6 +918,7 @@
             populateOrderMenuSelection(); // Re-populate menu items with new prices
         }
 
+
         // Function for smooth scrolling without changing section visibility
         function smoothScrollTo(targetId) {
             const targetElement = document.getElementById(targetId);
@@ -1220,22 +930,6 @@
             }
         }
 
-        // --- Mobile Navigation Toggle Functions ---
-        function toggleMobileMenu() {
-            const mobileMenu = document.getElementById('mobile-menu');
-            mobileMenu.classList.toggle('nav-open');
-        }
-
-        function toggleMobileDropdown(event) {
-            // Check if the current viewport width is less than 1024px (lg breakpoint in Tailwind)
-            if (window.innerWidth < 1024) {
-                event.preventDefault(); // Prevent default link behavior only on mobile
-                const parentGroup = document.getElementById('categories-dropdown-toggle');
-                parentGroup.classList.toggle('dropdown-open');
-            }
-            // If on desktop, allow the default link behavior (no dropdown toggle click necessary)
-        }
-
         document.addEventListener('DOMContentLoaded', function() {
             // Initially show the combined home and menu section
             showSection('home-menu-combined');
@@ -1243,21 +937,10 @@
             populateOrderMenuSelection(); // Populate the menu selection for the order form
             updateOrderSummary(); // Initialize empty summary
 
-            // Event listener for hamburger button
-            const hamburgerButton = document.getElementById('hamburger-button');
-            if (hamburgerButton) {
-                hamburgerButton.addEventListener('click', toggleMobileMenu);
-            }
-
             // Event listeners for dropdown category selection
             document.querySelectorAll('.dropdown-item').forEach(item => {
                 item.addEventListener('click', function(e) {
-                    // This listener is also called by showSection, which already hides the menu
-                    // We only need to ensure the mobile menu is closed when a dropdown item is clicked.
-                    const mobileMenu = document.getElementById('mobile-menu');
-                    if (mobileMenu.classList.contains('nav-open')) {
-                        mobileMenu.classList.remove('nav-open');
-                    }
+                    e.preventDefault(); // Prevent default link behavior
                     const category = this.dataset.category; // Get the category from data-category attribute
                     showSection('menu-only-section'); // Ensure the menu-only section is shown
                     populateSweetMenu(category, 'sweet-menu-grid-alt'); // Filter sweets by the selected category for the menu-only grid
@@ -1275,7 +958,8 @@
                     const orderName = document.getElementById('orderName').value;
                     const orderEmail = document.getElementById('orderEmail').value;
                     const orderPhone = document.getElementById('orderPhone').value;
-                    const contactMethod = document.querySelector('input[name="contactMethod']:checked').value; // Get preferred contact method
+                    const contactMethod = document.querySelector('input[name="contactMethod"]:checked').value; // Get preferred contact method
+
                     const inspirationPhotosInput = document.getElementById('inspirationPhotos');
                     const inspirationPhotoNames = [];
                     if (inspirationPhotosInput.files.length > 0) {
@@ -1291,7 +975,8 @@
                         price: item.priceUsed // Use the price that was active when added
                     }));
 
-                    // Basic validation (using console.error for this example)
+
+                    // Basic validation
                     if (!orderDetails && selectedMenuOrder.length === 0) {
                         console.error("Validation Error: Please provide order details or select items from the menu.");
                         // In a real application, you'd show a user-friendly message on the page.
@@ -1301,6 +986,7 @@
                         console.error("Validation Error: Please fill in Your Name and Your Email.");
                         return;
                     }
+
 
                     // For demonstration, log the form data
                     console.log("Custom Order Request Submitted:");
@@ -1313,7 +999,8 @@
                     console.log("Inspiration Photos:", inspirationPhotoNames.length > 0 ? inspirationPhotoNames.join(', ') : "No photos uploaded");
                     console.log("Selected Menu Items:", selectedMenuOrder);
 
-                    // For this example, we's just log and reset the form.
+
+                    // For this example, we'll just log and reset the form.
                     console.log("Form submission simulated successfully. (In a live app, this data would be sent to a backend.)");
                     customOrderForm.reset();
                     // Clear selected items after submission

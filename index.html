@@ -252,8 +252,10 @@
             .section-heading {
                 font-size: 3rem; /* Adjusted for smaller screens */
             }
+            /* Adjusted sweet-grid for smaller screens: allow multiple columns */
             .sweet-grid {
-                grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Slightly wider cards */
+                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); /* Allow 2+ columns on phones */
+                gap: 1rem; /* Reduce gap for tighter fit on mobile */
             }
         }
 
@@ -267,8 +269,10 @@
             .hero-tagline {
                 font-size: 1.1rem;
             }
+            /* Ensure sweet-grid still allows multiple columns, perhaps even more compactly */
             .sweet-grid {
-                grid-template-columns: 1fr; /* Single column on very small screens */
+                 grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* Even smaller min-width for very small screens */
+                 gap: 0.75rem; /* Even smaller gap */
             }
             .section-heading {
                 font-size: 2.5rem;
@@ -306,21 +310,21 @@
                 font-size: 1.1rem;
             }
             .sweet-card {
-                padding: 1.5rem;
+                padding: 1rem; /* Smaller padding on very small cards */
                 border-radius: 1.5rem;
             }
             .sweet-image {
-                border-radius: 1rem;
+                border-radius: 0.75rem; /* Smaller image radius */
             }
             .sweet-title {
-                font-size: 1.3rem;
+                font-size: 1.2rem; /* Smaller title font */
             }
             .sweet-price {
-                font-size: 1.1rem;
+                font-size: 1rem; /* Smaller price font */
             }
             .order-button {
-                padding: 0.7rem 1.2rem;
-                font-size: 0.9rem;
+                padding: 0.6rem 1rem;
+                font-size: 0.8rem;
             }
             .newsletter-form {
                 flex-direction: column;
@@ -333,6 +337,8 @@
                 border-top-left-radius: 2rem;
                 border-top-right-radius: 2rem;
             }
+            /* Force single column for extremely narrow screens if necessary, or just rely on minmax */
+            /* Removed explicit 1fr here to let minmax handle it dynamically */
         }
     </style>
 </head>

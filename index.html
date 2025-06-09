@@ -2,10 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!-- Viewport meta tag changed to width=device-width to ensure proper mobile responsiveness.
-         This tells the browser to match the viewport width to the device's actual width,
-         allowing CSS media queries and relative units (rem) to work as intended for scaling. -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Viewport meta tag set to a fixed width (e.g., 1200px) and initial-scale to 1.0.
+         This forces mobile browsers to render the page at 1200px and then scale the
+         entire rendered content to fit the device's screen. This preserves the desktop
+         layout on mobile, making it appear 'smaller' but consistent. -->
+    <meta name="viewport" content="width=1200, initial-scale=1.0">
     <title>Dipped Sweetss NYC - Handcrafted Dipped Treats</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -153,9 +154,11 @@
         }
 
         /* Responsive Adjustments: These will apply when the *actual device screen width* is smaller. */
-        /* IMPORTANT: 'width=device-width' in viewport meta tag makes these media queries work correctly. */
+        /* IMPORTANT: Setting width=1200 in viewport meta tag means the entire page is scaled.
+           These mobile media queries now target a larger effective resolution,
+           but will still influence how elements appear relative to the scaled view. */
 
-        /* Styles for medium-sized screens (e.g., tablets in landscape, large phones) */
+        /* Styles for screens smaller than desktop, but still larger than a phone */
         @media (max-width: 1024px) {
             .hero-title {
                 font-size: 3.5rem; /* Slightly smaller hero title */
@@ -166,76 +169,174 @@
             .section-heading {
                 font-size: 2.8rem;
             }
+            /* Adjust content to maintain desktop-like columns */
+            .sweet-grid {
+                grid-template-columns: repeat(3, minmax(300px, 1fr)); /* Maintain 3 columns */
+                gap: 1.5rem;
+                overflow-x: hidden; /* Prevent horizontal scrolling unless explicitly needed */
+            }
+            .sweet-card {
+                min-width: 300px;
+            }
         }
 
-        /* Specific mobile styling for navigation and other text - applies when screen is 768px or less */
+        /* Specific mobile styling - these will now be scaled down with the rest of the page.
+           We are making them large in 'desktop' pixels so they appear reasonably sized
+           when scaled to a phone screen. */
         @media (max-width: 768px) {
             body {
-                /* Base font size for mobile body text. Affects elements not explicitly sized with rem */
-                font-size: 1.1rem;
+                /* Set a larger base font for the entire scaled page content for better readability */
+                font-size: 1.2rem;
             }
             .header-bg {
-                border-bottom-left-radius: 2rem; /* Slightly smaller radius for mobile */
-                border-bottom-right-radius: 2rem;
+                border-bottom-left-radius: 3rem; /* Slightly smaller radius for phones */
+                border-bottom-right-radius: 3rem;
             }
             .logo-text {
-                /* Increased substantially for mobile visibility */
-                font-size: 2.8rem !important; /* Adjusted to be very visible but not excessively large */
-                margin-bottom: 1.5rem !important;
+                /* Make logo very large in the 1200px context so it's readable when scaled down */
+                font-size: 3.5rem !important;
+                margin-bottom: 2rem !important;
             }
             .navbar-nav {
-                flex-direction: column; /* Stack nav items vertically on mobile */
-                gap: 1rem; /* Space between nav items */
-                width: 100%;
+                flex-direction: row; /* Keep horizontal on this scaled view */
+                gap: 1.5rem; /* Sufficient spacing */
+                width: auto; /* Allow nav to take natural width */
+                flex-wrap: wrap; /* Allow wrapping if needed */
+                justify-content: center; /* Center nav items */
             }
             .nav-link {
-                width: 100%;
-                text-align: center;
-                /* Increased font size for tap targets and readability on phone */
-                font-size: 1.8rem !important; /* Clearly legible and tappable */
-                padding: 1rem 1.5rem !important; /* Larger padding for easier tapping */
+                /* Make nav links large in the 1200px context */
+                font-size: 2rem !important; /* Significantly larger */
+                padding: 0.8rem 1.5rem !important; /* Increased padding for tap targets */
+                min-width: 120px; /* Ensure a minimum tap area */
+                text-align: center; /* Center text within links */
             }
             .dropdown-menu {
-                position: static; /* Stack dropdown items normally on mobile (not absolute) */
-                width: 100%;
-                box-shadow: none; /* Remove shadow for static stacking */
-                margin-top: 0.5rem; /* Small margin for visual separation */
-                border-radius: 0;
-                padding: 0;
-                border-top: 1px solid #F8E6DD; /* Add a subtle separator */
+                /* Dropdown will still be absolute and scaled down */
+                min-width: 200px;
+                font-size: 1.8rem !important; /* Larger font within dropdown */
+                padding: 0.8rem 0;
             }
             .dropdown-item {
-                /* Increased font size for dropdown items */
-                padding: 0.8rem 2rem !important; /* Larger padding for dropdown items */
+                font-size: 1.6rem !important; /* Larger dropdown item font */
+                padding: 0.8rem 1.5rem !important;
                 text-align: center;
-                font-size: 1.6rem !important; /* Clearly legible */
             }
-            /* Adjust other text elements to be readable on mobile */
+            /* Adjust other key elements to be larger in the scaled view */
             .hero-title {
-                font-size: 3rem; /* Adjusted for better mobile fit */
+                font-size: 4.5rem;
             }
             .hero-tagline {
-                font-size: 1.5rem;
+                font-size: 1.8rem;
             }
             .cta-button {
-                font-size: 1.3rem;
+                font-size: 1.6rem;
+                padding: 1.2rem 2.5rem;
+            }
+            .section-heading {
+                font-size: 3rem;
+            }
+            .sweet-grid {
+                /* Ensure multi-column display by setting explicit grid columns and allowing horizontal scroll for the entire grid */
+                grid-template-columns: repeat(3, minmax(320px, 1fr)); /* Keep 3 columns, with sufficient min-width for content */
+                overflow-x: auto; /* Enable horizontal scrolling on the grid itself */
+                -webkit-overflow-scrolling: touch;
+                padding-bottom: 1.5rem; /* Space for scrollbar */
+                gap: 1.5rem; /* Keep a decent gap */
+            }
+            .sweet-card {
+                padding: 1.5rem;
+                min-width: 320px; /* Ensure cards are wide enough */
+            }
+            .sweet-title {
+                font-size: 1.8rem;
+            }
+            .sweet-description {
+                font-size: 1.1rem;
+            }
+            .sweet-price {
+                font-size: 1.6rem;
+            }
+            .order-button {
+                font-size: 1.2rem;
+                padding: 1rem 2rem;
+            }
+            .contact-info p, .contact-details-group span, form label {
+                font-size: 1.2rem;
+            }
+            .contact-info i {
+                font-size: 2.5rem;
+            }
+            form input, form textarea, form button {
+                font-size: 1.1rem;
+                padding: 1.1rem;
+            }
+            .footer-logo .logo-text {
+                font-size: 3rem;
+            }
+            .footer-link {
+                font-size: 1.2rem;
+            }
+            .footer-links-group h4 {
+                font-size: 2rem;
+            }
+            .footer-links-group .flex.justify-center.md\:justify-start.gap-6.text-3xl i {
+                font-size: 2.5rem;
+            }
+            /* Ensure tailwind defaults are overridden correctly when scaled */
+            .text-sm {
+                font-size: 1.1rem !important;
+            }
+            .text-lg {
+                font-size: 1.3rem !important;
+            }
+            .text-xl {
+                font-size: 1.5rem !important;
+            }
+        }
+
+        /* Even smaller mobile screens (e.g., very narrow phone viewports) */
+        @media (max-width: 480px) {
+            body {
+                font-size: 1.1rem; /* Slightly smaller base font for very tiny screens */
+            }
+            .logo-text {
+                font-size: 3rem !important;
+                margin-bottom: 1.5rem !important;
+            }
+            .nav-link {
+                font-size: 1.8rem !important; /* Adjusted slightly smaller for very narrow screens */
+                padding: 0.7rem 1.2rem !important;
+            }
+            .dropdown-menu {
+                min-width: 180px;
+                font-size: 1.6rem !important;
+                padding: 0.7rem 0;
+            }
+            .dropdown-item {
+                font-size: 1.4rem !important;
+                padding: 0.6rem 1rem !important;
+            }
+            .hero-title {
+                font-size: 4rem;
+            }
+            .hero-tagline {
+                font-size: 1.6rem;
+            }
+            .cta-button {
+                font-size: 1.4rem;
                 padding: 1rem 2rem;
             }
             .section-heading {
                 font-size: 2.5rem;
             }
-            /* Force sweet-grid to show 3 columns and enable horizontal scrolling */
             .sweet-grid {
-                display: grid;
-                grid-template-columns: repeat(3, minmax(320px, 1fr)); /* Force 3 columns, each at least 320px wide */
-                overflow-x: auto; /* Enable horizontal scrolling */
-                -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-                padding-bottom: 1rem; /* Space for scrollbar */
-                gap: 1.5rem; /* Slightly larger gap */
+                grid-template-columns: repeat(3, minmax(280px, 1fr)); /* Adjusted min-width for very small screens */
+                gap: 1rem; /* Slightly reduced gap */
             }
             .sweet-card {
-                padding: 1.5rem; /* Increased padding */
-                min-width: 320px; /* Ensure cards maintain a minimum width */
+                padding: 1.2rem;
+                min-width: 280px; /* Adjusted min-width for very small screens */
             }
             .sweet-title {
                 font-size: 1.6rem;
@@ -250,113 +351,27 @@
                 font-size: 1.1rem;
                 padding: 0.8rem 1.5rem;
             }
-            .contact-info p, .contact-details-group span, form label {
-                font-size: 1.1rem;
-            }
-            .contact-info i {
-                font-size: 2rem;
-            }
-            form input, form textarea, form button {
-                font-size: 1rem;
-                padding: 1rem;
-            }
-            .footer-logo .logo-text {
-                font-size: 2.5rem;
-            }
-            .footer-link {
-                font-size: 1.1rem;
-            }
-            .footer-links-group h4 {
-                font-size: 1.8rem;
-            }
-            .footer-links-group .flex.justify-center.md\:justify-start.gap-6.text-3xl i {
-                font-size: 2.2rem;
-            }
-            /* Ensuring catch-all Tailwind classes are overridden to be readable */
-            .text-sm {
-                font-size: 1.1rem !important;
-            }
-            .text-lg {
-                font-size: 1.2rem !important;
-            }
-            .text-xl {
-                font-size: 1.4rem !important;
-            }
-        }
-
-        /* Even smaller mobile screens (e.g., older phones, very narrow viewports) */
-        @media (max-width: 480px) {
-            body {
-                font-size: 0.9rem; /* Slightly smaller base font for very tiny screens */
-            }
-            .logo-text {
-                font-size: 2.5rem !important;
-                margin-bottom: 1rem !important;
-            }
-            .nav-link {
-                font-size: 1.6rem !important; /* Adjusted slightly smaller for very narrow screens */
-                padding: 0.8rem 1rem !important;
-            }
-            .dropdown-item {
-                font-size: 1.4rem !important;
-                padding: 0.7rem 1.2rem !important;
-            }
-            .hero-title {
-                font-size: 2.5rem;
-            }
-            .hero-tagline {
-                font-size: 1.2rem;
-            }
-            .cta-button {
-                font-size: 1.2rem;
-                padding: 0.9rem 1.8rem;
-            }
-            .section-heading {
-                font-size: 2.2rem;
-            }
-            /* Force sweet-grid to show 3 columns and enable horizontal scrolling */
-            .sweet-grid {
-                grid-template-columns: repeat(3, minmax(280px, 1fr)); /* Adjusted min-width for very small screens */
-                gap: 1rem; /* Slightly reduced gap */
-            }
-            .sweet-card {
-                padding: 1rem;
-                min-width: 280px; /* Adjusted min-width for very small screens */
-            }
-            .sweet-title {
-                font-size: 1.4rem;
-            }
-            .sweet-description {
-                font-size: 0.9rem;
-            }
-            .sweet-price {
-                font-size: 1.2rem;
-            }
-            .order-button {
-                font-size: 1rem;
-                padding: 0.7rem 1.2rem;
-            }
             .contact-info p, .contact-details-group span {
-                font-size: 1rem;
+                font-size: 1.1rem;
             }
             .contact-info i {
-                font-size: 1.8rem;
-            }
-            form input, form textarea, form button {
-                font-size: 0.9rem;
-                padding: 0.9rem;
-            }
-            .footer-logo .logo-text {
                 font-size: 2.2rem;
             }
-            .footer-link {
+            form input, form textarea, form button {
                 font-size: 1rem;
+                padding: 1rem;
+            }
+            .footer-logo .logo-text {
+                font-size: 2.5rem;
+            }
+            .footer-link {
+                font-size: 1.1rem;
             }
             .footer-links-group h4 {
-                font-size: 1.6rem;
+                font-size: 1.8rem;
             }
             .footer-links-group .flex.justify-center.md\:justify-start.gap-6.text-3xl i {
-                font-size: 2rem;
+                font-size: 2.2rem;
             }
         }
     </style>

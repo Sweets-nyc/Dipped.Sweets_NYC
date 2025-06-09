@@ -216,8 +216,8 @@
             /* Adjust sweet-grid to be responsive and fit better */
             .sweet-grid {
                 display: grid;
-                /* Allow auto-fit for columns, min 160px per column, 2 columns often on most phones */
-                grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+                /* Allow auto-fit for columns, min 140px per column, 2 columns often on most phones */
+                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
                 overflow-x: hidden; /* No horizontal scrolling here, let content reflow */
                 -webkit-overflow-scrolling: touch;
                 padding-bottom: 0; /* Remove extra padding, let default flow */
@@ -226,7 +226,7 @@
                 margin: 0; /* No explicit margin needed */
             }
             .sweet-card {
-                padding: 1rem; /* Reduced padding for compactness */
+                padding: 0.8rem; /* Reduced padding for compactness */
                 min-width: unset; /* Remove explicit min-width to allow more flexibility */
                 width: auto; /* Allow auto sizing within grid */
             }
@@ -334,28 +334,28 @@
             }
             /* Adjust sweet-grid for very small screens */
             .sweet-grid {
-                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); /* Allow even smaller min-width for 2 columns */
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* Allow even smaller min-width for 2 columns */
                 gap: 0.8rem; /* Further reduced gap */
             }
             .sweet-card {
-                padding: 0.8rem; /* Further reduced padding */
+                padding: 0.6rem; /* Further reduced padding */
                 min-width: unset; /* Ensure maximum flexibility */
             }
             .sweet-image {
                 height: 100px; /* Slightly smaller image height */
             }
             .sweet-title {
-                font-size: 1.1rem;
+                font-size: 1rem; /* Even smaller title */
             }
             .sweet-description {
-                font-size: 0.75rem;
+                font-size: 0.7rem; /* Even smaller description */
             }
             .sweet-price {
-                font-size: 1rem;
+                font-size: 0.9rem; /* Even smaller price */
             }
             .order-button {
-                font-size: 0.8rem;
-                padding: 0.5rem 0.8rem;
+                font-size: 0.75rem; /* Even smaller button */
+                padding: 0.4rem 0.7rem;
             }
             .contact-info p, .contact-details-group span {
                 font-size: 1rem;

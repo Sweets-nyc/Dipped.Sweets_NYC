@@ -2,11 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!-- Viewport meta tag set to a fixed width (e.g., 1200px) and initial-scale to 1.0.
-         This forces mobile browsers to render the page at 1200px and then scale the
-         entire rendered content to fit the device's screen. This preserves the desktop
-         layout on mobile, making it appear 'smaller' but consistent. -->
-    <meta name="viewport" content="width=1200, initial-scale=1.0">
+    <!-- Reverted viewport meta tag to 'width=device-width' to allow media queries
+         to correctly apply styles based on the actual device screen width.
+         This enables the navigation bar to be specifically targeted for larger sizing on mobile. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dipped Sweetss NYC - Handcrafted Dipped Treats</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -20,7 +19,7 @@
             font-family: 'Inter', sans-serif;
             background-color: #FFF8F0; /* Creamy white */
             color: #333333; /* Dark grey */
-            overflow-x: hidden; /* Prevent horizontal scrolling if content tries to exceed viewport */
+            overflow-x: hidden; /* Prevent horizontal scrolling */
             font-size: 1rem; /* Base font size for desktop */
         }
         h1, h2, h3, h4 {
@@ -48,7 +47,6 @@
             transition: color 0.3s ease-in-out, transform 0.2s ease-in-out;
             position: relative; /* Needed for dropdown positioning */
             padding: 0.5rem 1rem; /* Default padding for nav links on desktop */
-            font-size: 1.125rem; /* Tailwind's text-lg equivalent */
         }
         .nav-link:hover {
             color: #F8A4B8; /* Soft Pink */
@@ -153,8 +151,7 @@
             color: #E28FA0; /* Darker Pink */
         }
 
-        /* Responsive Adjustments: These will apply when the *actual device screen width* is smaller. */
-        /* This allows specific elements like nav to be larger relative to the scaled content. */
+        /* Responsive Adjustments: These will apply when the *actual* screen width is smaller. */
         @media (max-width: 1024px) {
             .hero-title {
                 font-size: 3.5rem; /* Slightly smaller hero title */
@@ -167,180 +164,165 @@
             }
         }
 
-        /* Specific mobile styling for navigation and other text - applies when screen is 768px or less */
+        /* Specific mobile styling - applies when screen is 768px or less */
         @media (max-width: 768px) {
             body {
-                font-size: 1.3rem; /* Base font size for mobile body text - overall increase */
+                font-size: 1.15rem; /* Base font size for mobile body text */
             }
             .header-bg {
                 border-bottom-left-radius: 2rem; /* Slightly smaller radius for mobile */
                 border-bottom-right-radius: 2rem;
             }
             .logo-text {
-                font-size: 4.5rem; /* Significantly larger logo for mobile */
-                margin-bottom: 2rem;
+                font-size: 3.8rem; /* Significantly larger logo for mobile */
+                margin-bottom: 1.5rem;
             }
             .navbar-nav {
                 flex-direction: column;
-                gap: 2.5rem; /* Increased space between nav items */
+                gap: 1.8rem; /* Increased space between nav items */
                 width: 100%;
             }
             .nav-link {
                 width: 100%;
                 text-align: center;
-                font-size: 3rem; /* Much larger font size for navigation links */
-                padding: 1.5rem 1.5rem; /* Larger padding for easier tapping */
+                font-size: 2.5rem; /* Much larger font size for navigation links */
+                padding: 1.2rem 1.5rem; /* Larger padding for easier tapping */
             }
             .dropdown-menu {
                 position: static; /* Stack dropdown items normally on mobile */
                 width: 100%;
                 box-shadow: none;
-                margin-top: 1rem; /* Small margin for visual separation */
+                margin-top: 0.5rem; /* Small margin for visual separation */
                 border-radius: 0;
                 padding: 0;
                 border-top: 1px solid #F8E6DD;
             }
             .dropdown-item {
-                padding: 1.2rem 2rem; /* Larger padding for dropdown items */
+                padding: 1rem 2rem; /* Larger padding for dropdown items */
                 text-align: center;
-                font-size: 2.5rem; /* Larger font for dropdown items */
+                font-size: 2rem; /* Larger font for dropdown items */
             }
             .hero-title {
-                font-size: 4rem; /* Larger hero title on mobile */
+                font-size: 3.5rem; /* Larger hero title on mobile */
             }
             .hero-tagline {
-                font-size: 1.6rem; /* Larger hero tagline */
+                font-size: 1.4rem; /* Larger hero tagline */
             }
             .cta-button {
-                font-size: 1.5rem; /* Larger CTA button text */
-                padding: 1.2rem 2.5rem;
+                font-size: 1.3rem; /* Larger CTA button text */
+                padding: 1rem 2rem;
             }
             .section-heading {
-                font-size: 3.5rem; /* Larger section headings */
+                font-size: 3rem; /* Larger section headings */
             }
             .sweet-card {
-                padding: 2rem; /* Increased padding for cards */
+                padding: 1.8rem; /* Increased padding for cards */
             }
             .sweet-title {
-                font-size: 2rem; /* Larger sweet title */
+                font-size: 1.8rem; /* Larger sweet title */
             }
             .sweet-description {
-                font-size: 1.3rem; /* Larger description text */
+                font-size: 1.15rem; /* Larger description text */
             }
             .sweet-price {
-                font-size: 1.8rem; /* Larger price text */
+                font-size: 1.6rem; /* Larger price text */
             }
             .order-button {
-                font-size: 1.3rem; /* Larger order button text */
-                padding: 1rem 1.8rem;
+                font-size: 1.2rem; /* Larger order button text */
+                padding: 0.9rem 1.5rem;
             }
-            .contact-info p, .contact-details-group span, form label {
-                font-size: 1.3rem; /* Larger contact info and form labels */
+            .contact-info p, .contact-details-group span {
+                font-size: 1.2rem; /* Larger contact info text */
             }
             .contact-info i {
-                font-size: 3rem; /* Larger contact icons */
+                font-size: 2.5rem; /* Larger contact icons */
             }
             form input, form textarea, form button {
-                font-size: 1.2rem; /* Larger form elements */
-                padding: 1.2rem;
+                font-size: 1.15rem; /* Larger form elements */
+                padding: 1rem;
             }
             .footer-logo .logo-text {
-                font-size: 4rem; /* Larger footer logo */
+                font-size: 3.5rem; /* Larger footer logo */
             }
             .footer-link {
-                font-size: 1.6rem; /* Larger footer links */
+                font-size: 1.4rem; /* Larger footer links */
             }
             .footer-links-group h4 {
-                font-size: 2.5rem; /* Larger footer sub-headings */
+                font-size: 2.2rem; /* Larger footer sub-headings */
             }
             .footer-links-group .flex.justify-center.md\:justify-start.gap-6.text-3xl i {
-                font-size: 4rem; /* Larger social media icons */
+                font-size: 3.5rem; /* Larger social media icons */
             }
-            /* Ensure these catch-all classes are adjusted */
-            .text-sm {
-                font-size: 1.2rem !important;
+            .text-sm { /* Catch-all for smaller text that might need boosting */
+                font-size: 1.1rem !important;
             }
-            .text-lg {
-                font-size: 1.5rem !important;
-            }
-            .text-xl {
-                font-size: 1.8rem !important;
+            .text-lg { /* General text adjustments for larger defaults */
+                font-size: 1.4rem !important;
             }
         }
 
         /* Even smaller mobile screens (e.g., older phones, very narrow viewports) */
         @media (max-width: 480px) {
             body {
-                font-size: 1.2rem; /* Slightly smaller base font for very small screens */
+                font-size: 1.1rem; /* Slightly smaller base font for very small screens */
             }
             .logo-text {
-                font-size: 3.8rem;
-                margin-bottom: 1.5rem;
-            }
-            .nav-link {
-                font-size: 2.5rem;
-                padding: 1.2rem 1.2rem;
-            }
-            .dropdown-item {
-                font-size: 2.2rem;
-            }
-            .hero-title {
                 font-size: 3.2rem;
             }
-            .hero-tagline {
-                font-size: 1.4rem;
+            .nav-link {
+                font-size: 2rem;
+                padding: 1rem 1.2rem;
             }
-            .cta-button {
-                font-size: 1.3rem;
-                padding: 1.1rem 2rem;
-            }
-            .section-heading {
-                font-size: 3rem;
-            }
-            .sweet-title {
+            .dropdown-item {
                 font-size: 1.8rem;
             }
-            .sweet-description {
-                font-size: 1.2rem;
-            }
-            .sweet-price {
-                font-size: 1.6rem;
-            }
-            .order-button {
-                font-size: 1.2rem;
-                padding: 0.9rem 1.5rem;
-            }
-            .contact-info p, .contact-details-group span, form label {
-                font-size: 1.2rem;
-            }
-            .contact-info i {
+            .hero-title {
                 font-size: 2.8rem;
             }
-            form input, form textarea, form button {
-                font-size: 1.15rem;
-                padding: 1.1rem;
+            .hero-tagline {
+                font-size: 1.2rem;
             }
-            .footer-logo .logo-text {
-                font-size: 3.5rem;
+            .cta-button {
+                font-size: 1.2rem;
+                padding: 0.9rem 1.8rem;
             }
-            .footer-link {
+            .section-heading {
+                font-size: 2.5rem;
+            }
+            .sweet-title {
+                font-size: 1.6rem;
+            }
+            .sweet-description {
+                font-size: 1.05rem;
+            }
+            .sweet-price {
                 font-size: 1.4rem;
             }
-            .footer-links-group h4 {
+            .order-button {
+                font-size: 1.1rem;
+                padding: 0.8rem 1.4rem;
+            }
+            .contact-info p, .contact-details-group span {
+                font-size: 1.1rem;
+            }
+            .contact-info i {
                 font-size: 2.2rem;
             }
+            form input, form textarea, form button {
+                font-size: 1.1rem;
+                padding: 0.9rem;
+            }
+            .footer-logo .logo-text {
+                font-size: 3rem;
+            }
+            .footer-link {
+                font-size: 1.2rem;
+            }
+            .footer-links-group h4 {
+                font-size: 2rem;
+            }
             .footer-links-group .flex.justify-center.md\:justify-start.gap-6.text-3xl i {
-                font-size: 3.5rem;
-            }
-            /* Specific text adjustments for very small screens */
-            .text-sm {
-                font-size: 1.1rem !important;
-            }
-            .text-lg {
-                font-size: 1.3rem !important;
-            }
-            .text-xl {
-                font-size: 1.6rem !important;
+                font-size: 3.2rem;
             }
         }
     </style>
@@ -924,7 +906,7 @@
 
         function addToOrder(itemTitle, quantityInputId) {
             const quantityInput = document.getElementById(quantityInputId);
-            let quantity = parseInt(quantityInput.value, 10);
+            let quantity = parseInt(quantity.value, 10);
             if (isNaN(quantity) || quantity < 1) {
                 quantity = 1; // Default to 1 if invalid
             }
@@ -1017,7 +999,7 @@
                     e.preventDefault(); // Prevent default form submission
 
                     const orderDetails = document.getElementById('orderDetails').value;
-                    const orderType = document.querySelector('input[name="orderType']:checked').value;
+                    const orderType = document.querySelector('input[name="orderType"]:checked').value;
                     const orderName = document.getElementById('orderName').value;
                     const orderEmail = document.getElementById('orderEmail').value;
                     const orderPhone = document.getElementById('orderPhone').value;

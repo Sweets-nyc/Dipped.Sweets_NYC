@@ -182,19 +182,19 @@
         @media (max-width: 768px) {
             /* Increased size for logo and nav links on mobile devices */
             .logo-text {
-                font-size: 3rem; /* Made larger for better visibility on scaled mobile */
-                margin-bottom: 1rem; /* Added some space */
+                font-size: 3.5rem; /* Made larger for better visibility on scaled mobile */
+                margin-bottom: 1.5rem; /* Added some space */
             }
             .navbar-nav {
                 flex-direction: column;
-                gap: 1.5rem; /* Increased gap between nav items */
+                gap: 1.8rem; /* Increased gap between nav items */
                 width: 100%;
             }
             .nav-link {
                 width: 100%;
                 text-align: center;
-                font-size: 1.5rem; /* Made larger for better tap targets and readability */
-                padding: 0.8rem 1rem; /* Increased padding for larger touch area */
+                font-size: 1.8rem; /* Made larger for better tap targets and readability */
+                padding: 1rem 1.5rem; /* Increased padding for larger touch area */
             }
             .dropdown-menu {
                 position: static;
@@ -208,7 +208,7 @@
             .dropdown-item {
                 padding-left: 2rem;
                 text-align: center;
-                font-size: 1.3rem; /* Adjusted dropdown item size */
+                font-size: 1.5rem; /* Adjusted dropdown item size */
             }
             .hero-section {
                 padding: 4rem 1rem;
@@ -246,11 +246,15 @@
 
         @media (max-width: 480px) {
             .logo-text {
-                font-size: 2.5rem; /* Slightly smaller on very small phones */
+                font-size: 3rem; /* Slightly smaller on very small phones */
+                margin-bottom: 1.2rem;
             }
             .nav-link {
-                font-size: 1.3rem;
-                padding: 0.7rem 1rem;
+                font-size: 1.5rem;
+                padding: 0.9rem 1.2rem;
+            }
+            .dropdown-item {
+                font-size: 1.4rem; /* Adjusted dropdown item size for very small screens */
             }
             .hero-title {
                 font-size: 2.5rem;
@@ -813,8 +817,8 @@
                 let filteredSweets = [];
 
                 if (filterType === 'MainMenuDefault') {
-                    // For the main menu, show only items marked for main menu display
-                    filteredSweets = sweetsData.filter(sweet => sweet.displayOnMainMenu === true);
+                    // For the main menu, show ALL sweets data by default
+                    filteredSweets = sweetsData; // No filtering here
                 } else {
                     // For specific category selections, show all items of that category
                     filteredSweets = sweetsData.filter(sweet => sweet.category === filterType);

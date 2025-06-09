@@ -78,6 +78,8 @@
             border-radius: 2rem;
             box-shadow: 0 15px 30px -10px rgba(0,0,0,0.08);
             transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            /* Adjustments for compact display on mobile */
+            padding: 1rem; /* Reduce default padding */
         }
         .sweet-card:hover {
             transform: translateY(-10px) rotate(-1deg);
@@ -86,12 +88,17 @@
         .sweet-image {
             border-radius: 1.5rem;
             box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            /* Ensure image scales down with card */
+            max-width: 100%;
+            height: auto;
         }
         .sweet-title {
             color: #6F4E37; /* Chocolate Brown */
+            font-size: 1.5rem; /* Smaller title on smaller cards */
         }
         .sweet-price {
             color: #E0B400; /* Golden Yellow */
+            font-size: 1.25rem; /* Smaller price on smaller cards */
         }
         .order-button {
             background-color: #E0B400; /* Golden Yellow */
@@ -190,23 +197,28 @@
                 background-color: rgba(0,0,0,0.05);
             }
 
-            /* Mobile navigation menu */
+            /* Mobile navigation menu - Adjusted for better containment */
             .navbar-nav {
                 flex-direction: column;
-                width: 100%;
+                width: 90%; /* Smaller width to prevent stretching */
+                max-width: 300px; /* Maximum width for the menu */
+                margin: 0 auto; /* Center the menu */
                 max-height: 0; /* Hidden by default */
                 overflow: hidden;
                 opacity: 0;
                 transition: max-height 0.5s ease-in-out, opacity 0.3s ease-in-out;
                 align-items: center; /* Center links in column */
                 padding-top: 0; /* No padding when closed */
+                background-color: #F8E6DD; /* Add background for the dropdown */
+                border-radius: 1rem; /* Rounded corners for the menu */
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1); /* Subtle shadow */
             }
 
             /* When menu is open */
             .navbar-nav.nav-open {
                 max-height: 500px; /* Sufficient height to show all links */
                 opacity: 1;
-                padding-top: 1rem; /* Add some padding when open */
+                padding: 1rem 0; /* Add padding when open to space links */
             }
 
             .nav-link {
@@ -254,8 +266,18 @@
             }
             /* Adjusted sweet-grid for smaller screens: allow multiple columns */
             .sweet-grid {
-                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); /* Allow 2+ columns on phones */
-                gap: 1rem; /* Reduce gap for tighter fit on mobile */
+                grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); /* More aggressive min-width for smaller cards */
+                gap: 0.5rem; /* Further reduce gap for tighter fit on mobile */
+            }
+            .sweet-card .sweet-title {
+                font-size: 1.1rem; /* Smaller title font for very compact cards */
+            }
+            .sweet-card .sweet-price {
+                font-size: 1.1rem; /* Smaller price font for very compact cards */
+            }
+            .sweet-card .order-button {
+                font-size: 0.75rem; /* Smaller button text */
+                padding: 0.5rem 0.75rem; /* Smaller button padding */
             }
         }
 
@@ -271,8 +293,8 @@
             }
             /* Ensure sweet-grid still allows multiple columns, perhaps even more compactly */
             .sweet-grid {
-                 grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* Even smaller min-width for very small screens */
-                 gap: 0.75rem; /* Even smaller gap */
+                 grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); /* Even smaller min-width for very small screens */
+                 gap: 0.4rem; /* Even smaller gap */
             }
             .section-heading {
                 font-size: 2.5rem;
@@ -310,21 +332,21 @@
                 font-size: 1.1rem;
             }
             .sweet-card {
-                padding: 1rem; /* Smaller padding on very small cards */
-                border-radius: 1.5rem;
+                padding: 0.8rem; /* Smaller padding on very small cards */
+                border-radius: 1.2rem; /* Slightly smaller radius */
             }
             .sweet-image {
-                border-radius: 0.75rem; /* Smaller image radius */
+                border-radius: 0.6rem; /* Smaller image radius */
             }
             .sweet-title {
-                font-size: 1.2rem; /* Smaller title font */
+                font-size: 1rem; /* Even smaller title font */
             }
             .sweet-price {
-                font-size: 1rem; /* Smaller price font */
+                font-size: 0.9rem; /* Even smaller price font */
             }
             .order-button {
-                padding: 0.6rem 1rem;
-                font-size: 0.8rem;
+                padding: 0.5rem 0.8rem;
+                font-size: 0.7rem;
             }
             .newsletter-form {
                 flex-direction: column;
@@ -337,8 +359,6 @@
                 border-top-left-radius: 2rem;
                 border-top-right-radius: 2rem;
             }
-            /* Force single column for extremely narrow screens if necessary, or just rely on minmax */
-            /* Removed explicit 1fr here to let minmax handle it dynamically */
         }
     </style>
 </head>

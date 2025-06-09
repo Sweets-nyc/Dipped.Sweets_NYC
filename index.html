@@ -46,6 +46,7 @@
             font-weight: 600;
             transition: color 0.3s ease-in-out, transform 0.2s ease-in-out;
             position: relative; /* Needed for dropdown positioning */
+            padding: 0.5rem 1rem; /* Default padding for nav links */
         }
         .nav-link:hover {
             color: #F8A4B8; /* Soft Pink */
@@ -179,17 +180,21 @@
            Retaining some simple adjustments like column flex direction for the header/footer
            to ensure they look good if a desktop browser window is made very narrow. */
         @media (max-width: 768px) {
+            /* Increased size for logo and nav links on mobile devices */
             .logo-text {
-                font-size: 2.5rem;
+                font-size: 3rem; /* Made larger for better visibility on scaled mobile */
+                margin-bottom: 1rem; /* Added some space */
             }
             .navbar-nav {
                 flex-direction: column;
-                gap: 1rem;
+                gap: 1.5rem; /* Increased gap between nav items */
                 width: 100%;
             }
             .nav-link {
                 width: 100%;
                 text-align: center;
+                font-size: 1.5rem; /* Made larger for better tap targets and readability */
+                padding: 0.8rem 1rem; /* Increased padding for larger touch area */
             }
             .dropdown-menu {
                 position: static;
@@ -203,6 +208,7 @@
             .dropdown-item {
                 padding-left: 2rem;
                 text-align: center;
+                font-size: 1.3rem; /* Adjusted dropdown item size */
             }
             .hero-section {
                 padding: 4rem 1rem;
@@ -240,7 +246,11 @@
 
         @media (max-width: 480px) {
             .logo-text {
-                font-size: 2rem;
+                font-size: 2.5rem; /* Slightly smaller on very small phones */
+            }
+            .nav-link {
+                font-size: 1.3rem;
+                padding: 0.7rem 1rem;
             }
             .hero-title {
                 font-size: 2.5rem;

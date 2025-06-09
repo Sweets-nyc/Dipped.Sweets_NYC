@@ -923,7 +923,7 @@
             const sweet = sweetsData.find(s => s.title === itemTitle);
             if (!sweet) return;
 
-            const selectedOrderType = document.querySelector('input[name="orderType"]:checked').value;
+            const selectedOrderType = document.querySelector('input[name="orderType']:checked').value;
             const priceUsed = selectedOrderType === 'simple' ? sweet.simplePrice : sweet.partyPrice;
 
             if (selectedOrderItems[itemTitle]) {

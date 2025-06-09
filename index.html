@@ -2,11 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!-- Viewport meta tag set to a fixed width (e.g., 1200px) and initial-scale to 1.0.
-         This forces mobile browsers to render the page at 1200px and then scale the
-         entire rendered content to fit the device's screen. This preserves the desktop
-         layout on mobile, making it appear 'smaller' but consistent. -->
-    <meta name="viewport" content="width=1200, initial-scale=1.0">
+    <!-- Viewport meta tag changed to width=device-width to ensure proper mobile responsiveness.
+         This tells the browser to match the viewport width to the device's actual width,
+         allowing CSS media queries and relative units (rem) to work as intended for scaling. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dipped Sweetss NYC - Handcrafted Dipped Treats</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -21,7 +20,7 @@
             background-color: #FFF8F0; /* Creamy white */
             color: #333333; /* Dark grey */
             overflow-x: hidden; /* Prevent horizontal scrolling if content tries to exceed viewport */
-            font-size: 1rem; /* Base font size for desktop */
+            font-size: 1rem; /* Base font size for desktop (1rem = 16px by default) */
         }
         h1, h2, h3, h4 {
             font-family: 'Fredoka One', cursive;
@@ -48,7 +47,7 @@
             transition: color 0.3s ease-in-out, transform 0.2s ease-in-out;
             position: relative; /* Needed for dropdown positioning */
             padding: 0.5rem 1rem; /* Default padding for nav links on desktop */
-            font-size: 1.125rem; /* Tailwind's text-lg equivalent */
+            font-size: 1.125rem; /* Tailwind's text-lg equivalent on desktop */
         }
         .nav-link:hover {
             color: #F8A4B8; /* Soft Pink */
@@ -154,7 +153,9 @@
         }
 
         /* Responsive Adjustments: These will apply when the *actual device screen width* is smaller. */
-        /* This allows specific elements like nav to be larger relative to the scaled content. */
+        /* IMPORTANT: 'width=device-width' in viewport meta tag makes these media queries work correctly. */
+
+        /* Styles for medium-sized screens (e.g., tablets in landscape, large phones) */
         @media (max-width: 1024px) {
             .hero-title {
                 font-size: 3.5rem; /* Slightly smaller hero title */
@@ -170,169 +171,176 @@
         /* Specific mobile styling for navigation and other text - applies when screen is 768px or less */
         @media (max-width: 768px) {
             body {
-                font-size: 1.3rem; /* Base font size for mobile body text - overall increase */
+                /* Base font size for mobile body text. Affects elements not explicitly sized with rem */
+                font-size: 1.1rem;
             }
             .header-bg {
                 border-bottom-left-radius: 2rem; /* Slightly smaller radius for mobile */
                 border-bottom-right-radius: 2rem;
             }
             .logo-text {
-                font-size: 9rem !important; /* Significantly larger logo for mobile */
-                margin-bottom: 5rem !important;
+                /* Increased substantially for mobile visibility */
+                font-size: 3.5rem !important;
+                margin-bottom: 2rem !important;
             }
             .navbar-nav {
-                flex-direction: column;
-                gap: 4rem; /* Increased space between nav items */
+                flex-direction: column; /* Stack nav items vertically on mobile */
+                gap: 1.5rem; /* Increased space between nav items */
                 width: 100%;
             }
             .nav-link {
                 width: 100%;
                 text-align: center;
-                font-size: 5rem !important; /* Increased to 5rem as requested */
-                padding: 2.5rem 1.5rem !important; /* Adjusted padding for new font size */
+                /* Greatly increased font size for tap targets and readability on phone */
+                font-size: 2.5rem !important; /* Made significantly larger */
+                padding: 1.2rem 1.5rem !important; /* Larger padding for easier tapping */
             }
             .dropdown-menu {
-                position: static; /* Stack dropdown items normally on mobile */
+                position: static; /* Stack dropdown items normally on mobile (not absolute) */
                 width: 100%;
-                box-shadow: none;
-                margin-top: 2rem; /* Small margin for visual separation */
+                box-shadow: none; /* Remove shadow for static stacking */
+                margin-top: 1rem; /* Small margin for visual separation */
                 border-radius: 0;
                 padding: 0;
-                border-top: 1px solid #F8E6DD;
+                border-top: 1px solid #F8E6DD; /* Add a subtle separator */
             }
             .dropdown-item {
-                padding: 2.2rem 2rem !important; /* Larger padding for dropdown items */
+                /* Increased font size for dropdown items */
+                padding: 1rem 2rem !important; /* Larger padding for dropdown items */
                 text-align: center;
-                font-size: 4.5rem !important; /* Adjusted for new font size */
-            }
-            /* Adjust other text elements to be readable relative to scaled content */
-            .hero-title {
-                font-size: 6.5rem;
-            }
-            .hero-tagline {
-                font-size: 3rem;
-            }
-            .cta-button {
-                font-size: 2.8rem;
-                padding: 2rem 4rem;
-            }
-            .section-heading {
-                font-size: 5.5rem;
-            }
-            .sweet-card {
-                padding: 3.5rem;
-            }
-            .sweet-title {
-                font-size: 3.2rem;
-            }
-            .sweet-description {
-                font-size: 2rem;
-            }
-            .sweet-price {
-                font-size: 2.8rem;
-            }
-            .order-button {
-                font-size: 2.2rem;
-                padding: 1.8rem 3rem;
-            }
-            .contact-info p, .contact-details-group span, form label {
-                font-size: 2.2rem;
-            }
-            .contact-info i {
-                font-size: 4.5rem;
-            }
-            form input, form textarea, form button {
-                font-size: 2rem;
-                padding: 2rem;
-            }
-            .footer-logo .logo-text {
-                font-size: 6rem;
-            }
-            .footer-link {
-                font-size: 2.5rem;
-            }
-            .footer-links-group h4 {
-                font-size: 4rem;
-            }
-            .footer-links-group .flex.justify-center.md\:justify-start.gap-6.text-3xl i {
-                font-size: 6rem;
-            }
-            /* Ensuring catch-all Tailwind classes are overridden to be larger */
-            .text-sm {
                 font-size: 2.2rem !important;
             }
+            /* Adjust other text elements to be readable on mobile */
+            .hero-title {
+                font-size: 3.5rem;
+            }
+            .hero-tagline {
+                font-size: 1.4rem;
+            }
+            .cta-button {
+                font-size: 1.5rem;
+                padding: 1rem 2rem;
+            }
+            .section-heading {
+                font-size: 3.2rem;
+            }
+            .sweet-card {
+                padding: 1.5rem;
+            }
+            .sweet-title {
+                font-size: 1.8rem;
+            }
+            .sweet-description {
+                font-size: 1rem;
+            }
+            .sweet-price {
+                font-size: 1.6rem;
+            }
+            .order-button {
+                font-size: 1.1rem;
+                padding: 0.8rem 1.5rem;
+            }
+            .contact-info p, .contact-details-group span, form label {
+                font-size: 1.1rem;
+            }
+            .contact-info i {
+                font-size: 1.8rem;
+            }
+            form input, form textarea, form button {
+                font-size: 1rem;
+                padding: 1rem;
+            }
+            .footer-logo .logo-text {
+                font-size: 3rem;
+            }
+            .footer-link {
+                font-size: 1.2rem;
+            }
+            .footer-links-group h4 {
+                font-size: 1.8rem;
+            }
+            .footer-links-group .flex.justify-center.md\:justify-start.gap-6.text-3xl i {
+                font-size: 2rem;
+            }
+            /* Ensuring catch-all Tailwind classes are overridden to be readable */
+            .text-sm {
+                font-size: 1.1rem !important;
+            }
             .text-lg {
-                font-size: 2.5rem !important;
+                font-size: 1.2rem !important;
             }
             .text-xl {
-                font-size: 3rem !important;
+                font-size: 1.4rem !important;
             }
         }
 
         /* Even smaller mobile screens (e.g., older phones, very narrow viewports) */
         @media (max-width: 480px) {
             body {
-                font-size: 1.2rem; /* Slightly smaller base font for very small screens */
+                font-size: 1rem; /* Slightly smaller base font for very tiny screens */
             }
             .logo-text {
-                font-size: 8rem !important;
-                margin-bottom: 4rem !important;
+                font-size: 3rem !important;
+                margin-bottom: 1.5rem !important;
             }
             .nav-link {
-                font-size: 5.2rem !important; /* Adjusted to be slightly smaller than 768px for tiny screens */
-                padding: 2.4rem 1.2rem !important;
+                font-size: 2.2rem !important; /* Slightly smaller than 768px breakpoint */
+                padding: 1rem 1rem !important;
             }
             .dropdown-item {
-                font-size: 4.5rem !important;
-                padding: 2rem 2rem !important;
+                font-size: 2rem !important;
+                padding: 0.9rem 1.5rem !important;
             }
             .hero-title {
-                font-size: 5.5rem;
+                font-size: 3rem;
             }
             .hero-tagline {
-                font-size: 2.5rem;
+                font-size: 1.2rem;
             }
             .cta-button {
-                font-size: 2.2rem;
-                padding: 1.8rem 3.5rem;
+                font-size: 1.3rem;
+                padding: 0.8rem 1.8rem;
             }
             .section-heading {
-                font-size: 5rem;
-            }
-            .sweet-title {
                 font-size: 2.8rem;
             }
+            .sweet-card {
+                padding: 1.2rem;
+            }
+            .sweet-title {
+                font-size: 1.6rem;
+            }
             .sweet-description {
-                font-size: 1.8rem;
+                font-size: 0.9rem;
             }
             .sweet-price {
-                font-size: 2.5rem;
+                font-size: 1.4rem;
             }
             .order-button {
-                font-size: 2rem;
-                padding: 1.5rem 2.5rem;
+                font-size: 1rem;
+                padding: 0.7rem 1.2rem;
             }
             .contact-info p, .contact-details-group span {
-                font-size: 2rem;
+                font-size: 1rem;
             }
             .contact-info i {
-                font-size: 4.2rem;
+                font-size: 1.6rem;
             }
             form input, form textarea, form button {
-                font-size: 1.8rem;
-                padding: 1.8rem;
+                font-size: 0.9rem;
+                padding: 0.9rem;
             }
             .footer-logo .logo-text {
-                font-size: 5.5rem;
+                font-size: 2.5rem;
             }
             .footer-link {
-                font-size: 2.2rem;
+                font-size: 1.1rem;
             }
             .footer-links-group h4 {
-                font-size: 3.8rem;
+                font-size: 1.6rem;
             }
             .footer-links-group .flex.justify-center.md\:justify-start.gap-6.text-3xl i {
-                font-size: 5.5rem;
+                font-size: 1.8rem;
             }
         }
     </style>

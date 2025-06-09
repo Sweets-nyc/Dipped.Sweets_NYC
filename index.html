@@ -216,8 +216,8 @@
             /* Adjust sweet-grid to be responsive and fit better */
             .sweet-grid {
                 display: grid;
-                /* Allow auto-fit for columns, min 140px per column, 2 columns often on most phones */
-                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+                /* Force 2 columns */
+                grid-template-columns: repeat(2, 1fr);
                 overflow-x: hidden; /* No horizontal scrolling here, let content reflow */
                 -webkit-overflow-scrolling: touch;
                 padding-bottom: 0; /* Remove extra padding, let default flow */
@@ -334,7 +334,8 @@
             }
             /* Adjust sweet-grid for very small screens */
             .sweet-grid {
-                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* Allow even smaller min-width for 2 columns */
+                /* Force 2 columns even on very small screens, min-width reduced */
+                grid-template-columns: repeat(2, 1fr);
                 gap: 0.8rem; /* Further reduced gap */
             }
             .sweet-card {
@@ -342,7 +343,7 @@
                 min-width: unset; /* Ensure maximum flexibility */
             }
             .sweet-image {
-                height: 100px; /* Slightly smaller image height */
+                height: 80px; /* Further reduced image height */
             }
             .sweet-title {
                 font-size: 1rem; /* Even smaller title */

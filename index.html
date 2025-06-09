@@ -170,14 +170,16 @@
         /* Specific mobile styling for navigation and other text - applies when screen is 768px or less */
         @media (max-width: 768px) {
             body {
-                font-size: 1.3rem; /* Base font size for mobile body text - overall increase */
+                /* Keeping base font size relative to scaled content,
+                   but individual elements will be boosted. */
+                font-size: 1rem;
             }
             .header-bg {
                 border-bottom-left-radius: 2rem; /* Slightly smaller radius for mobile */
                 border-bottom-right-radius: 2rem;
             }
             .logo-text {
-                font-size: 4.5rem; /* Significantly larger logo for mobile */
+                font-size: 4.8rem; /* Significantly larger logo for mobile */
                 margin-bottom: 2rem;
             }
             .navbar-nav {
@@ -188,8 +190,8 @@
             .nav-link {
                 width: 100%;
                 text-align: center;
-                font-size: 3rem; /* Much larger font size for navigation links */
-                padding: 1.5rem 1.5rem; /* Larger padding for easier tapping */
+                font-size: 3.2rem; /* Much larger font size for navigation links */
+                padding: 1.6rem 1.5rem; /* Larger padding for easier tapping */
             }
             .dropdown-menu {
                 position: static; /* Stack dropdown items normally on mobile */
@@ -201,136 +203,134 @@
                 border-top: 1px solid #F8E6DD;
             }
             .dropdown-item {
-                padding: 1.2rem 2rem; /* Larger padding for dropdown items */
+                padding: 1.4rem 2rem; /* Larger padding for dropdown items */
                 text-align: center;
-                font-size: 2.5rem; /* Larger font for dropdown items */
+                font-size: 2.8rem; /* Larger font for dropdown items */
             }
+            /* Adjust other text elements to be readable relative to scaled content */
             .hero-title {
-                font-size: 4rem; /* Larger hero title on mobile */
+                font-size: 4.2rem;
             }
             .hero-tagline {
-                font-size: 1.6rem; /* Larger hero tagline */
+                font-size: 1.8rem;
             }
             .cta-button {
-                font-size: 1.5rem; /* Larger CTA button text */
-                padding: 1.2rem 2.5rem;
+                font-size: 1.6rem;
+                padding: 1.3rem 2.8rem;
             }
             .section-heading {
-                font-size: 3.5rem; /* Larger section headings */
+                font-size: 3.8rem;
             }
             .sweet-card {
-                padding: 2rem; /* Increased padding for cards */
+                padding: 2.2rem;
             }
             .sweet-title {
-                font-size: 2rem; /* Larger sweet title */
+                font-size: 2.2rem;
             }
             .sweet-description {
-                font-size: 1.3rem; /* Larger description text */
+                font-size: 1.4rem;
             }
             .sweet-price {
-                font-size: 1.8rem; /* Larger price text */
+                font-size: 2rem;
             }
             .order-button {
-                font-size: 1.3rem; /* Larger order button text */
-                padding: 1rem 1.8rem;
+                font-size: 1.5rem;
+                padding: 1.1rem 2rem;
             }
             .contact-info p, .contact-details-group span, form label {
-                font-size: 1.3rem; /* Larger contact info and form labels */
+                font-size: 1.4rem;
             }
             .contact-info i {
-                font-size: 3rem; /* Larger contact icons */
+                font-size: 3.2rem;
             }
             form input, form textarea, form button {
-                font-size: 1.2rem; /* Larger form elements */
-                padding: 1.2rem;
+                font-size: 1.3rem;
+                padding: 1.3rem;
             }
             .footer-logo .logo-text {
-                font-size: 4rem; /* Larger footer logo */
+                font-size: 4.2rem;
             }
             .footer-link {
-                font-size: 1.6rem; /* Larger footer links */
+                font-size: 1.8rem;
             }
             .footer-links-group h4 {
-                font-size: 2.5rem; /* Larger footer sub-headings */
+                font-size: 2.8rem;
             }
             .footer-links-group .flex.justify-center.md\:justify-start.gap-6.text-3xl i {
-                font-size: 4rem; /* Larger social media icons */
+                font-size: 4.2rem;
             }
-            /* Ensure these catch-all classes are adjusted */
+            /* Ensuring catch-all Tailwind classes are overridden to be larger */
             .text-sm {
-                font-size: 1.2rem !important;
+                font-size: 1.3rem !important;
             }
             .text-lg {
-                font-size: 1.5rem !important;
+                font-size: 1.6rem !important;
             }
             .text-xl {
-                font-size: 1.8rem !important;
+                font-size: 2rem !important;
             }
         }
 
         /* Even smaller mobile screens (e.g., older phones, very narrow viewports) */
         @media (max-width: 480px) {
-            body {
-                font-size: 1.2rem; /* Slightly smaller base font for very small screens */
-            }
             .logo-text {
-                font-size: 3.8rem;
-                margin-bottom: 1.5rem;
+                font-size: 4.2rem;
+                margin-bottom: 1.8rem;
             }
             .nav-link {
-                font-size: 2.5rem;
-                padding: 1.2rem 1.2rem;
+                font-size: 2.8rem;
+                padding: 1.4rem 1.2rem;
             }
             .dropdown-item {
-                font-size: 2.2rem;
+                font-size: 2.4rem;
             }
             .hero-title {
-                font-size: 3.2rem;
+                font-size: 3.6rem;
             }
             .hero-tagline {
-                font-size: 1.4rem;
+                font-size: 1.5rem;
             }
             .cta-button {
-                font-size: 1.3rem;
-                padding: 1.1rem 2rem;
+                font-size: 1.4rem;
+                padding: 1.2rem 2.2rem;
             }
             .section-heading {
-                font-size: 3rem;
+                font-size: 3.2rem;
             }
             .sweet-title {
-                font-size: 1.8rem;
+                font-size: 2rem;
             }
             .sweet-description {
-                font-size: 1.2rem;
+                font-size: 1.3rem;
             }
             .sweet-price {
-                font-size: 1.6rem;
+                font-size: 1.8rem;
             }
             .order-button {
-                font-size: 1.2rem;
-                padding: 0.9rem 1.5rem;
+                font-size: 1.3rem;
+                padding: 1rem 1.6rem;
             }
             .contact-info p, .contact-details-group span {
-                font-size: 1.2rem;
+                font-size: 1.3rem;
             }
             .contact-info i {
-                font-size: 2.8rem;
+                font-size: 3rem;
             }
             form input, form textarea, form button {
-                font-size: 1.15rem;
-                padding: 1.1rem;
+                font-size: 1.2rem;
+                padding: 1.2rem;
             }
             .footer-logo .logo-text {
-                font-size: 3.5rem;
+                font-size: 3.8rem;
             }
             .footer-link {
-                font-size: 1.4rem;
+                font-size: 1.6rem;
             }
             .footer-links-group h4 {
-                font-size: 2.2rem;
+                font-size: 2.5rem;
             }
             .footer-links-group .flex.justify-center.md\:justify-start.gap-6.text-3xl i {
-                font-size: 3.5rem;
+                font-size: 3.8rem;
             }
         }
     </style>

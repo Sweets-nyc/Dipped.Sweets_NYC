@@ -170,9 +170,7 @@
         /* Specific mobile styling for navigation and other text - applies when screen is 768px or less */
         @media (max-width: 768px) {
             body {
-                /* Keeping base font size relative to scaled content,
-                   but individual elements will be boosted. */
-                font-size: 1rem;
+                font-size: 1.3rem; /* Base font size for mobile body text - overall increase */
             }
             .header-bg {
                 border-bottom-left-radius: 2rem; /* Slightly smaller radius for mobile */
@@ -190,8 +188,8 @@
             .nav-link {
                 width: 100%;
                 text-align: center;
-                font-size: 6.5rem !important; /* Much larger font size for navigation links */
-                padding: 3rem 1.5rem !important; /* Larger padding for easier tapping */
+                font-size: 5rem !important; /* Changed to 5rem as requested */
+                padding: 2.5rem 1.5rem !important; /* Adjusted padding for new font size */
             }
             .dropdown-menu {
                 position: static; /* Stack dropdown items normally on mobile */
@@ -203,9 +201,9 @@
                 border-top: 1px solid #F8E6DD;
             }
             .dropdown-item {
-                padding: 2.5rem 2rem !important; /* Larger padding for dropdown items */
+                padding: 2.2rem 2rem !important; /* Larger padding for dropdown items */
                 text-align: center;
-                font-size: 5.5rem !important; /* Larger font for dropdown items */
+                font-size: 4.5rem !important; /* Adjusted for new font size */
             }
             /* Adjust other text elements to be readable relative to scaled content */
             .hero-title {
@@ -273,17 +271,20 @@
 
         /* Even smaller mobile screens (e.g., older phones, very narrow viewports) */
         @media (max-width: 480px) {
+            body {
+                font-size: 1.2rem; /* Slightly smaller base font for very small screens */
+            }
             .logo-text {
                 font-size: 8rem !important;
                 margin-bottom: 4rem !important;
             }
             .nav-link {
-                font-size: 5.8rem !important;
-                padding: 2.8rem 1.2rem !important;
+                font-size: 5.2rem !important; /* Adjusted to be slightly smaller than 768px for tiny screens */
+                padding: 2.4rem 1.2rem !important;
             }
             .dropdown-item {
-                font-size: 5rem !important;
-                padding: 2.2rem 2rem !important;
+                font-size: 4.5rem !important;
+                padding: 2rem 2rem !important;
             }
             .hero-title {
                 font-size: 5.5rem;
@@ -923,7 +924,7 @@
             const sweet = sweetsData.find(s => s.title === itemTitle);
             if (!sweet) return;
 
-            const selectedOrderType = document.querySelector('input[name="orderType']:checked').value;
+            const selectedOrderType = document.querySelector('input[name="orderType"]:checked').value;
             const priceUsed = selectedOrderType === 'simple' ? sweet.simplePrice : sweet.partyPrice;
 
             if (selectedOrderItems[itemTitle]) {

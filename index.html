@@ -183,34 +183,42 @@
                 margin-bottom: 1rem !important;
             }
             .navbar-nav {
-                flex-direction: column;
-                gap: 0.8rem; /* Reduced space between nav items */
-                width: 100%;
-                align-items: center;
+                /* Changed to grid for 2 columns */
+                display: grid;
+                grid-template-columns: repeat(2, 1fr); /* 2 columns, equal width */
+                gap: 0.5rem; /* Reduced gap for a tighter layout */
+                width: 100%; /* Ensure the grid takes full width */
+                /* Removed align-items: center; as grid handles alignment differently */
             }
             .nav-link {
-                width: 90%;
-                text-align: center;
-                font-size: 1.1rem !important; /* Smaller nav link font */
-                padding: 0.8rem 1rem !important; /* Smaller padding for tap targets */
-                border-radius: 0.75rem;
+                /* Removed width: 90%; so it can auto-fit grid column */
+                font-size: 0.95rem !important; /* Slightly smaller nav link font */
+                padding: 0.6rem 0.8rem !important; /* Reduced padding further for compactness */
+                border-radius: 0.5rem; /* Slightly smaller rounded corners */
                 background-color: rgba(255, 255, 255, 0.5);
-                box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+                box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+                display: flex; /* Use flex to center content within each nav-link */
+                justify-content: center; /* Center horizontally */
+                align-items: center; /* Center vertically */
+                height: 100%; /* Ensure consistent height for all nav links in the grid */
             }
             .dropdown-menu {
-                position: static;
-                width: 90%;
+                position: static; /* Remains static to flow within the nav-link */
+                width: 100%; /* Take full width of its parent nav-link's grid cell */
+                max-width: 90%; /* Prevent it from stretching too wide in larger grid cells */
+                margin-left: auto; /* Center it */
+                margin-right: auto; /* Center it */
                 box-shadow: none;
-                margin-top: 0.3rem; /* Reduced margin */
-                border-radius: 0.75rem;
+                margin-top: 0.3rem;
+                border-radius: 0.5rem; /* Smaller radius for dropdown */
                 border-top: none;
-                background-color: rgba(255, 255, 255, 0.8);
-                padding: 0.5rem 0;
+                background-color: rgba(255, 255, 255, 0.9); /* Slightly less transparent */
+                padding: 0.3rem 0;
             }
             .dropdown-item {
-                font-size: 1rem !important; /* Smaller dropdown item font */
-                padding: 0.75rem 1rem !important;
-                text-align: center;
+                font-size: 0.9rem !important; /* Smaller dropdown item font */
+                padding: 0.6rem 0.8rem !important;
+                text-align: center; /* Center text within dropdown items */
             }
             /* Adjust sweet-grid to be responsive and fit better */
             .sweet-grid {
@@ -295,17 +303,16 @@
                 margin-bottom: 0.8rem !important;
             }
             .nav-link {
-                font-size: 1rem !important;
-                padding: 0.7rem 0.8rem !important;
+                font-size: 0.85rem !important; /* Even smaller nav link font */
+                padding: 0.5rem 0.6rem !important;
             }
             .dropdown-menu {
-                width: 95%;
-                font-size: 0.9rem !important;
-                padding: 0.4rem 0;
+                font-size: 0.8rem !important;
+                padding: 0.2rem 0;
             }
             .dropdown-item {
-                font-size: 0.9rem !important;
-                padding: 0.6rem 0.8rem !important;
+                font-size: 0.8rem !important;
+                padding: 0.5rem 0.6rem !important;
             }
             .hero-title {
                 font-size: 2.2rem;
@@ -1049,7 +1056,7 @@
                     const orderName = document.getElementById('orderName').value;
                     const orderEmail = document.getElementById('orderEmail').value;
                     const orderPhone = document.getElementById('orderPhone').value;
-                    const contactMethod = document.querySelector('input[name="contactMethod"]:checked').value; // Get preferred contact method
+                    const contactMethod = document.querySelector('input[name="contactMethod']:checked').value; // Get preferred contact method
 
                     const inspirationPhotosInput = document.getElementById('inspirationPhotos');
                     const inspirationPhotoNames = [];

@@ -153,7 +153,6 @@
         }
 
         /* Responsive Adjustments: These will apply when the *actual device screen width* is smaller. */
-        /* Now using device-width, so font sizes will be relative to the device. */
 
         /* Styles for medium-sized screens (e.g., tablets in landscape, large phones) */
         @media (max-width: 1024px) {
@@ -171,214 +170,205 @@
         /* Specific mobile styling - now truly responsive to device width. */
         @media (max-width: 768px) {
             body {
-                font-size: 1.1rem; /* Base font for mobile, will be scaled up for key elements */
+                font-size: 0.9rem; /* Base font size for mobile */
             }
             .header-bg {
                 border-bottom-left-radius: 2rem;
                 border-bottom-right-radius: 2rem;
-                padding-top: 1.5rem; /* Ensure generous padding */
+                padding-top: 1.5rem;
                 padding-bottom: 1.5rem;
             }
             .logo-text {
-                font-size: 3.2rem !important; /* Large for phones, but not excessively so */
-                margin-bottom: 1.5rem !important;
+                font-size: 2rem !important; /* Smaller logo for mobile */
+                margin-bottom: 1rem !important;
             }
             .navbar-nav {
-                flex-direction: column; /* Stack nav items vertically on mobile for easier tapping */
-                gap: 1.2rem; /* Space between nav items */
-                width: 100%; /* Take full width */
-                align-items: center; /* Center nav items */
+                flex-direction: column;
+                gap: 0.8rem; /* Reduced space between nav items */
+                width: 100%;
+                align-items: center;
             }
             .nav-link {
-                width: 90%; /* Make links wide for tapping */
+                width: 90%;
                 text-align: center;
-                font-size: 2.2rem !important; /* Very large for easy tapping */
-                padding: 1.2rem 1.5rem !important; /* Larger padding for tap targets */
-                border-radius: 0.75rem; /* Apply some rounding */
-                background-color: rgba(255, 255, 255, 0.5); /* Semi-transparent background for better contrast */
-                box-shadow: 0 2px 8px rgba(0,0,0,0.05); /* Subtle shadow */
+                font-size: 1.1rem !important; /* Smaller nav link font */
+                padding: 0.8rem 1rem !important; /* Smaller padding for tap targets */
+                border-radius: 0.75rem;
+                background-color: rgba(255, 255, 255, 0.5);
+                box-shadow: 0 2px 8px rgba(0,0,0,0.05);
             }
             .dropdown-menu {
-                position: static; /* Stack dropdown items normally on mobile (not absolute) */
-                width: 90%; /* Match parent nav link width */
-                box-shadow: none; /* Remove shadow for static stacking */
-                margin-top: 0.5rem;
-                border-radius: 0.75rem; /* Keep rounding */
-                border-top: none; /* Remove top border if stacking */
-                background-color: rgba(255, 255, 255, 0.8); /* Slightly more opaque background */
-                padding: 0.8rem 0;
+                position: static;
+                width: 90%;
+                box-shadow: none;
+                margin-top: 0.3rem; /* Reduced margin */
+                border-radius: 0.75rem;
+                border-top: none;
+                background-color: rgba(255, 255, 255, 0.8);
+                padding: 0.5rem 0;
             }
             .dropdown-item {
-                font-size: 1.8rem !important; /* Large dropdown item font */
-                padding: 1rem 2rem !important;
+                font-size: 1rem !important; /* Smaller dropdown item font */
+                padding: 0.75rem 1rem !important;
                 text-align: center;
             }
             /* Adjust sweet-grid to be responsive and fit better */
             .sweet-grid {
                 display: grid;
-                /* Force 2 columns */
-                grid-template-columns: repeat(2, 1fr);
-                overflow-x: hidden; /* No horizontal scrolling here, let content reflow */
-                -webkit-overflow-scrolling: touch;
-                padding-bottom: 0; /* Remove extra padding, let default flow */
-                gap: 1rem; /* Reduced gap for more compactness */
-                width: 100%; /* Ensure it takes full available width */
-                margin: 0; /* No explicit margin needed */
+                grid-template-columns: repeat(2, 1fr); /* Now always 2 columns on mobile */
+                gap: 0.8rem; /* Reduced gap */
+                width: 100%;
+                margin: 0;
             }
             .sweet-card {
-                padding: 0.8rem; /* Reduced padding for compactness */
-                min-width: unset; /* Remove explicit min-width to allow more flexibility */
-                width: auto; /* Allow auto sizing within grid */
+                padding: 0.6rem; /* Reduced padding for compactness */
             }
             .sweet-image {
-                width: 100%; /* Images should fill their container */
-                height: 120px; /* Fixed height for consistency */
-                object-fit: cover; /* Cover the area, crop if needed */
+                width: 100%;
+                height: 100px; /* Smaller fixed height for consistency */
+                object-fit: cover;
+                margin-bottom: 0.5rem; /* Reduced margin */
             }
             .sweet-title {
-                font-size: 1.2rem; /* Smaller for compactness */
+                font-size: 1.1rem; /* Smaller for compactness */
+                margin-bottom: 0.2rem; /* Reduced margin */
             }
             .sweet-description {
-                font-size: 0.8rem; /* Smaller for compactness */
-                line-height: 1.3; /* Adjust line height for readability */
+                font-size: 0.75rem; /* Slightly smaller for compactness */
+                line-height: 1.3;
+                margin-bottom: 0.5rem; /* Reduced margin */
             }
             .sweet-price {
-                font-size: 1.1rem; /* Smaller for compactness */
+                font-size: 1rem; /* Smaller for compactness */
+                margin-bottom: 0.5rem; /* Reduced margin */
             }
             .order-button {
-                font-size: 0.9rem; /* Smaller for compactness */
-                padding: 0.6rem 1rem;
+                font-size: 0.85rem; /* Smaller for compactness */
+                padding: 0.5rem 0.8rem;
             }
             /* Adjust other content for responsiveness */
             .hero-title {
-                font-size: 3rem;
+                font-size: 2.8rem; /* Smaller hero title */
             }
             .hero-tagline {
-                font-size: 1.4rem;
+                font-size: 1.1rem; /* Smaller tagline */
             }
             .cta-button {
-                font-size: 1.3rem;
-                padding: 1rem 2rem;
+                font-size: 1.1rem; /* Smaller CTA button */
+                padding: 0.8rem 1.8rem;
             }
             .section-heading {
-                font-size: 2.5rem;
+                font-size: 2.2rem; /* Smaller section heading */
+                margin-bottom: 1.5rem; /* Reduced margin */
             }
             .contact-info p, .contact-details-group span, form label {
-                font-size: 1.1rem;
+                font-size: 1rem; /* Smaller contact text */
             }
             .contact-info i {
-                font-size: 1.8rem;
+                font-size: 1.6rem; /* Smaller icon size */
             }
             form input, form textarea, form button {
-                font-size: 1rem;
-                padding: 1rem;
+                font-size: 0.9rem; /* Smaller form elements */
+                padding: 0.8rem;
             }
             .footer-logo .logo-text {
-                font-size: 2.5rem;
+                font-size: 2rem; /* Smaller footer logo */
             }
             .footer-link {
-                font-size: 1.1rem;
+                font-size: 1rem; /* Smaller footer links */
             }
             .footer-links-group h4 {
-                font-size: 1.8rem;
+                font-size: 1.6rem; /* Smaller footer heading */
             }
             .footer-links-group .flex.justify-center.md\:justify-start.gap-6.text-3xl i {
-                font-size: 2.2rem;
-            }
-            /* Ensuring catch-all Tailwind classes are overridden to be readable */
-            .text-sm {
-                font-size: 1rem !important;
-            }
-            .text-lg {
-                font-size: 1.2rem !important;
-            }
-            .text-xl {
-                font-size: 1.4rem !important;
+                font-size: 2rem; /* Smaller social icons */
             }
         }
 
         /* Even smaller mobile screens (e.g., very narrow phone viewports) */
         @media (max-width: 480px) {
             body {
-                font-size: 1rem;
+                font-size: 0.85rem;
             }
             .logo-text {
-                font-size: 2.8rem !important;
-                margin-bottom: 1rem !important;
+                font-size: 1.8rem !important;
+                margin-bottom: 0.8rem !important;
             }
             .nav-link {
-                font-size: 2rem !important;
-                padding: 1rem 1.2rem !important;
+                font-size: 1rem !important;
+                padding: 0.7rem 0.8rem !important;
             }
             .dropdown-menu {
-                width: 95%; /* Slightly wider for tiny screens */
-                font-size: 1.6rem !important;
-                padding: 0.7rem 0;
+                width: 95%;
+                font-size: 0.9rem !important;
+                padding: 0.4rem 0;
             }
             .dropdown-item {
-                font-size: 1.4rem !important;
-                padding: 0.8rem 1rem !important;
+                font-size: 0.9rem !important;
+                padding: 0.6rem 0.8rem !important;
             }
             .hero-title {
-                font-size: 2.5rem;
+                font-size: 2.2rem;
+                margin-bottom: 0.8rem;
             }
             .hero-tagline {
-                font-size: 1.2rem;
+                font-size: 1rem;
+                margin-bottom: 1rem;
             }
             .cta-button {
-                font-size: 1.1rem;
-                padding: 0.8rem 1.5rem;
+                font-size: 1rem;
+                padding: 0.7rem 1.2rem;
             }
             .section-heading {
-                font-size: 2.2rem;
+                font-size: 2rem;
+                margin-bottom: 1rem;
             }
             /* Adjust sweet-grid for very small screens */
             .sweet-grid {
-                /* Force 2 columns even on very small screens, min-width reduced */
-                grid-template-columns: repeat(2, 1fr);
-                gap: 0.8rem; /* Further reduced gap */
+                grid-template-columns: repeat(2, 1fr); /* Keep 2 columns */
+                gap: 0.6rem; /* Further reduced gap */
             }
             .sweet-card {
-                padding: 0.6rem; /* Further reduced padding */
-                min-width: unset; /* Ensure maximum flexibility */
+                padding: 0.4rem; /* Further reduced padding */
             }
             .sweet-image {
-                height: 80px; /* Further reduced image height */
+                height: 70px; /* Further reduced image height */
             }
             .sweet-title {
-                font-size: 1rem; /* Even smaller title */
+                font-size: 0.95rem; /* Even smaller title */
             }
             .sweet-description {
                 font-size: 0.7rem; /* Even smaller description */
+                line-height: 1.2;
             }
             .sweet-price {
-                font-size: 0.9rem; /* Even smaller price */
+                font-size: 0.85rem; /* Even smaller price */
             }
             .order-button {
-                font-size: 0.75rem; /* Even smaller button */
-                padding: 0.4rem 0.7rem;
+                font-size: 0.7rem; /* Even smaller button */
+                padding: 0.3rem 0.6rem;
             }
             .contact-info p, .contact-details-group span {
-                font-size: 1rem;
+                font-size: 0.9rem;
             }
             .contact-info i {
-                font-size: 1.6rem;
+                font-size: 1.4rem;
             }
             form input, form textarea, form button {
-                font-size: 0.9rem;
-                padding: 0.9rem;
+                font-size: 0.8rem;
+                padding: 0.7rem;
             }
             .footer-logo .logo-text {
-                font-size: 2.2rem;
+                font-size: 1.8rem;
             }
             .footer-link {
-                font-size: 1rem;
+                font-size: 0.9rem;
             }
             .footer-links-group h4 {
-                font-size: 1.6rem;
+                font-size: 1.4rem;
             }
             .footer-links-group .flex.justify-center.md\:justify-start.gap-6.text-3xl i {
-                font-size: 1.8rem;
+                font-size: 1.6rem;
             }
         }
     </style>

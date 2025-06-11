@@ -2,10 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!-- Viewport meta tag set to width=device-width to ensure proper mobile responsiveness.
-         This tells the browser to match the viewport width to the device's actual width,
-         allowing CSS media queries and relative units (rem) to work as intended for scaling. -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Viewport meta tag updated: initial-scale set to 0.75 to make the page appear zoomed out by default.
+         shrink-to-fit=no is added for better compatibility on some mobile browsers (e.g., older iOS Safari). -->
+    <meta name="viewport" content="width=device-width, initial-scale=0.75, shrink-to-fit=no">
     <title>Dipped Sweetss NYC - Handcrafted Dipped Treats</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -561,12 +560,6 @@
                     <p class="text-lg text-gray-800 font-semibold bg-[#F8E6DD] p-4 rounded-xl border border-[#F8A4B8] shadow-sm mb-6">
                         <i class="fas fa-info-circle text-[#F8A4B8] mr-2"></i> This is an **inquiry form**. No payment is required now. We'll contact you to discuss details and calculate the final cost after you send your request!
                     </p>
-
-                    <!-- Order Details -->
-                    <div>
-                        <label for="orderDetails" class="block text-left text-lg font-medium text-gray-700 mb-2">What treats are you dreaming of?</label>
-                        <textarea id="orderDetails" name="orderDetails" rows="8" placeholder="e.g., 3 dozen chocolate dipped strawberries with gold flakes, 2 dozen custom themed cake pops for a birthday party..." class="w-full p-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F8A4B8]"></textarea>
-                    </div>
 
                     <!-- Order Type -->
                     <div class="text-left">

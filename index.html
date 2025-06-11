@@ -84,6 +84,7 @@
             width: 100%;
             display: flex;
             flex-direction: column;
+            box-sizing: border-box; /* Ensure padding/border are included in width calculation */
         }
         .sweet-card:hover {
             transform: translateY(-10px) rotate(-1deg);
@@ -229,8 +230,8 @@
             }
             /* Adjust sweet-grid to be responsive and fit better */
             .sweet-grid {
-                display: grid;
-                grid-template-columns: repeat(2, 1fr); /* Now always 2 columns on mobile */
+                display: grid !important; /* Force grid layout */
+                grid-template-columns: repeat(2, 1fr) !important; /* Force 2 equal columns */
                 gap: 0.6rem; /* Reduced gap for more compactness */
                 width: 100%;
                 margin: 0;
@@ -343,11 +344,12 @@
             }
             /* Adjust sweet-grid for very small screens */
             .sweet-grid {
-                grid-template-columns: repeat(2, 1fr); /* Ensure 2 columns */
+                grid-template-columns: repeat(2, 1fr) !important; /* Ensure 2 columns */
                 gap: 0.4rem; /* Further reduced gap */
             }
             .sweet-card {
                 padding: 0.3rem; /* Further reduced padding */
+                box-sizing: border-box; /* Reinforce */
             }
             .sweet-image {
                 /* Using aspect-ratio for very small screens too */
@@ -958,7 +960,7 @@
 
                 htmlContent += `
                     <div class="sweet-card p-2 text-center"> <!-- Removed flex-none w-64, reduced padding -->
-                        <img src="${sweet.img}" alt="${sweet.title}" onerror="this.onerror=null;this.src='https://placehold.co/100x80/F8E6DD/6F4E37?text=Image';" class="sweet-image w-full h-20 object-cover mb-1 rounded-lg"> <!-- Reduced height, margin -->
+                        <img src="${sweet.img}" alt="${sweet.title}" onerror="this.onerror=null;this.src='https://placehold.co/100x80/F8E6DD/6F4E37?text=Image';" class="sweet-image w-full object-cover mb-1 rounded-lg"> <!-- Removed h-20, relying on aspect-ratio -->
                         <h4 class="font-bold text-sm text-[#6F4E37] mb-0.5">${sweet.title}</h4> <!-- Reduced font size -->
                         <p class="text-xs text-gray-600 mb-1">Price: <span class="font-semibold text-[#E0B400]">${priceToDisplay}</span></p> <!-- Reduced font size -->
                         <div class="flex items-center justify-center gap-1 mt-1"> <!-- Reduced gap, margin -->

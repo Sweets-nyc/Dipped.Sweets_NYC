@@ -200,7 +200,7 @@
             .nav-link {
                 /* Removed width: 90%; so it can auto-fit grid column */
                 font-size: 0.95rem !important; /* Slightly smaller nav link font */
-                padding: 0.6rem 0.8rem !important; /* Reduced padding further for compactness */
+                padding: 0.6rem 0.8rem !important;
                 border-radius: 0.5rem; /* Slightly smaller rounded corners */
                 background-color: rgba(255, 255, 255, 0.5);
                 box-shadow: 0 2px 5px rgba(0,0,0,0.05);
@@ -300,7 +300,7 @@
                 font-size: 1.6rem; /* Smaller footer heading */
             }
             .footer-links-group .flex.justify-center.md\:justify-start.gap-6.text-3xl i {
-                font-size: 2rem; /* Smaller social icons */
+                font-size: 1.5rem;
             }
         }
 
@@ -561,6 +561,12 @@
                         <i class="fas fa-info-circle text-[#F8A4B8] mr-2"></i> This is an **inquiry form**. No payment is required now. We'll contact you to discuss details and calculate the final cost after you send your request!
                     </p>
 
+                    <!-- Order Details -->
+                    <div>
+                        <label for="orderDetails" class="block text-left text-lg font-medium text-gray-700 mb-2">What treats are you dreaming of?</label>
+                        <textarea id="orderDetails" name="orderDetails" rows="8" placeholder="e.g., 3 dozen chocolate dipped strawberries with gold flakes, 2 dozen custom themed cake pops for a birthday party..." class="w-full p-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F8A4B8]"></textarea>
+                    </div>
+
                     <!-- Order Type -->
                     <div class="text-left">
                         <label class="block text-lg font-medium text-gray-700 mb-3">Is this for a simple order or a larger event?</label>
@@ -683,7 +689,7 @@
                 simplePrice: "$3.17/each", // Adjusted from $38.00/dozen
                 partyPrice: "$2.83/each", // Adjusted from $34.00/dozen
                 category: "Dipped Strawberries",
-                displayOnMainMenu: true
+                displayOnMainMenu: true // Keep on home screen
             },
             {
                 img: "https://placehold.co/400x300/2b0fd04a-dfe1-42b1-b087-2e3c51fe7a3b/000000?text=White+Drizzle",
@@ -692,7 +698,7 @@
                 simplePrice: "$3.33/each", // Adjusted from $40.00/dozen
                 partyPrice: "$3.00/each", // Adjusted from $36.00/dozen
                 category: "Dipped Strawberries",
-                displayOnMainMenu: false
+                displayOnMainMenu: false // Remove from home screen
             },
             {
                 img: "https://placehold.co/400x300/927b7bcd-ac6a-4c5b-b5b6-df40e195cf4e/000000?text=Oreo+Crunch",
@@ -701,7 +707,7 @@
                 simplePrice: "$3.50/each", // Adjusted from $42.00/dozen
                 partyPrice: "$3.17/each", // Adjusted from $38.00/dozen
                 category: "Dipped Strawberries",
-                displayOnMainMenu: false
+                displayOnMainMenu: false // Remove from home screen
             },
             {
                 img: "https://placehold.co/400x300/5bc5629f-61c9-422b-8882-d1e3b3390d3e/000000?text=Confetti+Dream",
@@ -710,7 +716,7 @@
                 simplePrice: "$3.25/each", // Adjusted from $39.00/dozen
                 partyPrice: "$2.92/each", // Adjusted from $35.00/dozen
                 category: "Dipped Strawberries",
-                displayOnMainMenu: false
+                displayOnMainMenu: false // Remove from home screen
             },
             {
                 img: "https://placehold.co/400x300/94e8e622-c0fe-4af3-824e-73cf376cd3d1/000000?text=Nutty+Caramel",
@@ -719,7 +725,7 @@
                 simplePrice: "$3.67/each", // Adjusted from $44.00/dozen
                 partyPrice: "$3.33/each", // Adjusted from $40.00/dozen
                 category: "Dipped Strawberries",
-                displayOnMainMenu: false
+                displayOnMainMenu: false // Remove from home screen
             },
             {
                 img: "https://placehold.co/400x300/dbf44f3d-48a2-4000-ae4d-c5276a6b0df5/000000?text=Luxury+Gold",
@@ -728,7 +734,7 @@
                 simplePrice: "$4.00/each", // Adjusted from $48.00/dozen
                 partyPrice: "$3.67/each", // Adjusted from $44.00/dozen
                 category: "Dipped Strawberries",
-                displayOnMainMenu: false
+                displayOnMainMenu: false // Remove from home screen
             },
             {
                 img: "https://placehold.co/400x300/c3a68bd5-1d2a-4bd7-8438-92e2190ad0ae/000000?text=Chocolate+Pretzels",
@@ -737,7 +743,7 @@
                 simplePrice: "$2.00/each", // Adjusted from $24.00/dozen
                 partyPrice: "$1.67/each", // Adjusted from $20.00/dozen
                 category: "Dipped Pretzels",
-                displayOnMainMenu: true
+                displayOnMainMenu: true // Keep on home screen
             },
             {
                 img: "https://placehold.co/400x300/45819452-78ee-497a-96f1-3f913ffa95ff/000000?text=Gourmet+Rods",
@@ -746,7 +752,7 @@
                 simplePrice: "$2.33/each", // Adjusted from $28.00/dozen
                 partyPrice: "$2.08/each", // Adjusted from $25.00/dozen
                 category: "Dipped Pretzels",
-                displayOnMainMenu: true
+                displayOnMainMenu: true // Keep on home screen
             },
             {
                 img: "https://placehold.co/400x300/7f770087-fe60-44a9-baa8-23ee81db1d07/000000?text=Custom+Sicles",
@@ -755,7 +761,7 @@
                 simplePrice: "$4.00/each", // Adjusted from $48.00/dozen
                 partyPrice: "$3.58/each", // Adjusted from $43.00/dozen
                 category: "Cake Sicles & Pops",
-                displayOnMainMenu: true
+                displayOnMainMenu: true // Keep on home screen
             },
             {
                 img: "https://placehold.co/400x300/7d70783c-71df-41f5-9a6f-1bb84b1dec8a/000000?text=Classic+CakePops",
@@ -764,7 +770,7 @@
                 simplePrice: "$3.17/each", // Adjusted from $38.00/dozen
                 partyPrice: "$2.83/each", // Adjusted from $34.00/dozen
                 category: "Cake Sicles & Pops",
-                displayOnMainMenu: true
+                displayOnMainMenu: true // Keep on home screen
             },
             {
                 img: "https://placehold.co/400x300/c7c5357a-99b0-439a-8213-04c22bc5b94e/000000?text=Velvet+Swirl",
@@ -773,7 +779,7 @@
                 simplePrice: "$3.42/each", // Adjusted from $41.00/dozen
                 partyPrice: "$3.08/each", // Adjusted from $37.00/dozen
                 category: "Cake Sicles & Pops",
-                displayOnMainMenu: false
+                displayOnMainMenu: false // Remove from home screen
             },
             {
                 img: "https://placehold.co/400x300/273f61a4-d741-4cb7-822f-0bf7e9edffb1/000000?text=Brownie+Batter",
@@ -782,7 +788,7 @@
                 simplePrice: "$3.17/each", // Adjusted from $38.00/dozen
                 partyPrice: "$2.83/each", // Adjusted from $34.00/dozen
                 category: "Cake Sicles & Pops",
-                displayOnMainMenu: false
+                displayOnMainMenu: false // Remove from home screen
             },
             {
                 img: "https://placehold.co/400x300/94801b50-345d-4d51-afc8-73c332b3a0d6/000000?text=Dipped+Oreos",
@@ -791,7 +797,7 @@
                 simplePrice: "$3.42/each", // Adjusted from $41.00/dozen
                 partyPrice: "$3.08/each", // Adjusted from $37.00/dozen
                 category: "Cake Sicles & Pops",
-                displayOnMainMenu: false
+                displayOnMainMenu: false // Remove from home screen
             },
             {
                 img: "https://placehold.co/400x300/793e79b7-20a1-46cf-afa0-5f55534205ee/000000?text=Cookie+Dough",
@@ -800,7 +806,7 @@
                 simplePrice: "$3.42/each", // Adjusted from $41.00/dozen
                 partyPrice: "$3.08/each", // Adjusted from $37.00/dozen
                 category: "Cake Sicles & Pops",
-                displayOnMainMenu: false
+                displayOnMainMenu: false // Remove from home screen
             },
             {
                 img: "https://placehold.co/400x300/14c8746e-cac5-4380-b743-1e3b4d8326ec/000000?text=Rice+Crispy",
@@ -809,7 +815,7 @@
                 simplePrice: "$2.67/each", // Adjusted from $32.00/dozen
                 partyPrice: "$2.33/each", // Adjusted from $28.00/dozen
                 category: "Rice Crispy & Dipped Cupcakes",
-                displayOnMainMenu: true
+                displayOnMainMenu: true // Put back on home screen
             },
             {
                 img: "https://placehold.co/400x300/a67682b1-e2ad-4e9b-8dce-a834af8df359/000000?text=Mini+Cupcakes",
@@ -818,7 +824,7 @@
                 simplePrice: "$3.00/each", // Adjusted from $36.00/dozen
                 partyPrice: "$2.67/each", // Adjusted from $32.00/dozen
                 category: "Rice Crispy & Dipped Cupcakes",
-                displayOnMainMenu: true
+                displayOnMainMenu: true // Keep on home screen
             },
             {
                 img: "https://placehold.co/400x300/02bb3cbc-bd8d-4bc1-a7e4-2a41f5821dec/000000?text=Tres+Leches",
@@ -827,7 +833,7 @@
                 simplePrice: "$8.00/each",
                 partyPrice: "$7.00/each",
                 category: "Individual Sample Cups",
-                displayOnMainMenu: true
+                displayOnMainMenu: true // Keep on home screen
             },
             {
                 img: "https://placehold.co/400x300/f2cc655a-26b1-4bb9-a9f2-4bc20d4f775d/000000?text=Individual+Flan",
@@ -836,7 +842,7 @@
                 simplePrice: "$7.00/each",
                 partyPrice: "$6.00/each",
                 category: "Individual Sample Cups",
-                displayOnMainMenu: true
+                displayOnMainMenu: true // Keep on home screen
             },
             {
                 img: "https://placehold.co/400x300/d20a85a9-9ee2-493b-ab0d-b430f2c2116d/000000?text=Chocolate+Mousse",
@@ -845,7 +851,7 @@
                 simplePrice: "$6.00/each",
                 partyPrice: "$4.00/each",
                 category: "Individual Sample Cups",
-                displayOnMainMenu: true
+                displayOnMainMenu: true // Keep on home screen
             },
             {
                 img: "https://placehold.co/400x300/b5b46884-95db-49c8-82e8-6ea5bdf01f69/000000?text=Creme+Brulee",
@@ -854,7 +860,7 @@
                 simplePrice: "$6.00/each",
                 partyPrice: "$4.00/each",
                 category: "Individual Sample Cups",
-                displayOnMainMenu: true
+                displayOnMainMenu: true // Keep on home screen
             },
             {
                 img: "https://placehold.co/400x300/823f3f9d-c336-4992-b8f1-64ae3e2761e1/000000?text=Churro+Bites",
@@ -863,7 +869,7 @@
                 simplePrice: "$3.00/each",
                 partyPrice: "$2.00/each",
                 category: "Individual Sample Cups",
-                displayOnMainMenu: true
+                displayOnMainMenu: true // Keep on home screen
             }
         ];
 
@@ -886,8 +892,8 @@
             } else if (sectionId === 'menu-only-section') {
                 // When "Menu" is clicked, show only the dedicated menu section
                 document.getElementById('menu-only-section').style.display = 'block';
-                // Populate the alternative menu grid for the menu-only view
-                populateSweetMenu('MainMenuDefault', 'sweet-menu-grid-alt');
+                // Populate the alternative menu grid for the menu-only view, showing all items
+                populateSweetMenu('AllCategories', 'sweet-menu-grid-alt'); // Changed 'MainMenuDefault' to 'AllCategories' for this initial view
                 const menuSection = document.getElementById('menu-only-section');
                 if (menuSection) {
                     window.scrollTo({ top: menuSection.offsetTop - document.querySelector('header').offsetHeight, behavior: 'smooth' });
@@ -904,19 +910,17 @@
         }
 
         // Function to dynamically populate the sweet menu grid based on filterType and targetGridId
-        // This is used for the main menu and category menus (not the order form selection)
         function populateSweetMenu(filterType = 'MainMenuDefault', targetGridId = 'sweet-menu-grid') {
             const sweetMenuGrid = document.getElementById(targetGridId);
             if (sweetMenuGrid) {
                 let htmlContent = '';
                 let filteredSweets = [];
 
-                // Logic for populating the main menu and category menus
-                if (filterType === 'MainMenuDefault') {
-                    // Display ALL items on the main menu, ignoring the displayOnMainMenu flag
-                    filteredSweets = sweetsData;
-                } else {
-                    // For specific category selections, filter items by that category
+                if (targetGridId === 'sweet-menu-grid') { // This is the home screen grid
+                    filteredSweets = sweetsData.filter(sweet => sweet.displayOnMainMenu === true);
+                } else if (filterType === 'AllCategories') { // This is for 'All Other Treats' category on the menu page
+                    filteredSweets = sweetsData; // Show all items for the 'All Other Treats' category
+                } else { // This is for specific categories on the menu-only section
                     filteredSweets = sweetsData.filter(sweet => sweet.category === filterType);
                 }
 

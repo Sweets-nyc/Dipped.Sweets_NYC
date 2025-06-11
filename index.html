@@ -237,7 +237,7 @@
                 margin: 0;
             }
             .sweet-card {
-                padding: 0.5rem; /* Reduced padding for compactness */
+                padding: 0.25rem; /* Reduced padding for compactness */
                 /* Ensure it takes full width of its grid cell */
                 width: 100%;
             }
@@ -310,6 +310,9 @@
             body {
                 font-size: 0.8rem; /* Further reduced base font size */
             }
+            .container-main { /* Reduced padding for very small screens */
+                padding: 0 0.8rem;
+            }
             .logo-text {
                 font-size: 1.7rem !important;
                 margin-bottom: 0.7rem !important;
@@ -348,7 +351,7 @@
                 gap: 0.4rem; /* Further reduced gap */
             }
             .sweet-card {
-                padding: 0.3rem; /* Further reduced padding */
+                padding: 0.25rem; /* Further reduced padding */
                 box-sizing: border-box; /* Reinforce */
             }
             .sweet-image {
@@ -959,13 +962,13 @@
                 const priceToDisplay = selectedOrderType === 'simple' ? sweet.simplePrice : sweet.partyPrice;
 
                 htmlContent += `
-                    <div class="sweet-card p-2 text-center"> <!-- Removed flex-none w-64, reduced padding -->
+                    <div class="sweet-card p-1 text-center"> <!-- Removed flex-none w-64, reduced padding -->
                         <img src="${sweet.img}" alt="${sweet.title}" onerror="this.onerror=null;this.src='https://placehold.co/100x80/F8E6DD/6F4E37?text=Image';" class="sweet-image w-full object-cover mb-1 rounded-lg"> <!-- Removed h-20, relying on aspect-ratio -->
-                        <h4 class="font-bold text-sm text-[#6F4E37] mb-0.5">${sweet.title}</h4> <!-- Reduced font size -->
+                        <h4 class="font-bold text-xs text-[#6F4E37] mb-0.5">${sweet.title}</h4> <!-- Reduced font size -->
                         <p class="text-xs text-gray-600 mb-1">Price: <span class="font-semibold text-[#E0B400]">${priceToDisplay}</span></p> <!-- Reduced font size -->
                         <div class="flex items-center justify-center gap-1 mt-1"> <!-- Reduced gap, margin -->
-                            <input type="number" id="${quantityInputId}" value="1" min="1" class="w-12 p-1 border border-gray-300 rounded-md text-center text-xs focus:outline-none focus:ring-1 focus:ring-[#F8A4B8]"> <!-- Reduced width, padding, font size -->
-                            <button type="button" onclick="addToOrder('${sweet.title.replace(/'/g, "\\'")}', '${quantityInputId}')" class="bg-[#E0B400] text-white px-2 py-1 rounded-full text-xs font-semibold hover:bg-[#FFD700] transition-colors">Add</button> <!-- Reduced padding, font size -->
+                            <input type="number" id="${quantityInputId}" value="1" min="1" class="w-12 p-0.5 border border-gray-300 rounded-md text-center text-xs focus:outline-none focus:ring-1 focus:ring-[#F8A4B8]"> <!-- Reduced width, padding, font size -->
+                            <button type="button" onclick="addToOrder('${sweet.title.replace(/'/g, "\\'")}', '${quantityInputId}')" class="bg-[#E0B400] text-white px-1.5 py-0.5 rounded-full text-xs font-semibold hover:bg-[#FFD700] transition-colors">Add</button> <!-- Reduced padding, font size -->
                         </div>
                     </div>
                 `;
@@ -1072,7 +1075,7 @@
                     const orderName = document.getElementById('orderName').value;
                     const orderEmail = document.getElementById('orderEmail').value;
                     const orderPhone = document.getElementById('orderPhone').value;
-                    const contactMethod = document.querySelector('input[name="contactMethod"]:checked').value; // Get preferred contact method
+                    const contactMethod = document.querySelector('input[name="contactMethod']:checked').value; // Get preferred contact method
 
                     const inspirationPhotosInput = document.getElementById('inspirationPhotos');
                     const inspirationPhotoNames = [];

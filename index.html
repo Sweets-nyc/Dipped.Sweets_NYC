@@ -2,8 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!-- Viewport meta tag updated: initial-scale set to 1.0 for accessibility. -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <!-- Viewport meta tag updated: initial-scale set to 0.65 to make the page appear more zoomed out by default.
+         shrink-to-fit=no is added for better compatibility on some mobile browsers (e.g., older iOS Safari). -->
+    <meta name="viewport" content="width=device-width, initial-scale=0.65, shrink-to-fit=no">
     <title>Dipped Sweetss NYC - Handcrafted Dipped Treats</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -394,30 +395,6 @@
                 font-size: 1.5rem;
             }
         }
-        /* Message Box styles */
-        .message-box {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: #4CAF50; /* Green */
-            color: white;
-            padding: 15px 25px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            z-index: 1000;
-            display: none; /* Hidden by default */
-            opacity: 0;
-            transition: opacity 0.5s ease-in-out;
-            text-align: center;
-        }
-        .message-box.show {
-            display: block;
-            opacity: 1;
-        }
-        .message-box.error {
-            background-color: #f44336; /* Red */
-        }
     </style>
 </head>
 <body>
@@ -431,11 +408,24 @@
             </div>
             <nav class="navbar-nav flex flex-wrap justify-center gap-4">
                 <a href="#home" class="nav-link text-lg" onclick="showSection('home-menu-combined'); return false;">Home</a>
-                <a href="#menu" class="nav-link text-lg" onclick="showSection('menu-only-section'); populateSweetMenu('AllCategories', 'sweet-menu-grid-alt'); return false;">Menu</a>
-                <!-- Moved "About Us" before "Create Your Order" -->
-                <a href="#about" class="nav-link text-lg" onclick="showSection('about-section'); return false;">About Us</a>
+                <a href="#menu" class="nav-link text-lg" onclick="showSection('menu-only-section'); populateSweetMenu('MainMenuDefault', 'sweet-menu-grid-alt'); return false;">Menu</a>
                 <a href="#create-order" class="nav-link text-lg" onclick="showSection('create-order-section'); return false;">Create Your Order</a>
                 <a href="#contact" class="nav-link text-lg" onclick="showSection('contact-section'); return false;">Contact</a>
+                <a href="#about" class="nav-link text-lg" onclick="showSection('about-section'); return false;">About Us</a>
+                <!-- Categories Dropdown - Moved to the end -->
+                <div class="nav-link text-lg group">
+                    <a href="#menu" class="inline-flex items-center" onclick="showSection('menu-only-section'); return false;">
+                        Categories <i class="fas fa-chevron-down ml-2 text-base"></i>
+                    </a>
+                    <div class="dropdown-menu">
+                        <a href="#menu" class="dropdown-item" data-category="MainMenuDefault" onclick="showSection('menu-only-section'); populateSweetMenu('MainMenuDefault', 'sweet-menu-grid-alt'); return false;">All Other Treats</a>
+                        <a href="#menu" class="dropdown-item" data-category="Dipped Strawberries" onclick="showSection('menu-only-section'); populateSweetMenu('Dipped Strawberries', 'sweet-menu-grid-alt'); return false;">Dipped Strawberries</a>
+                        <a href="#menu" class="dropdown-item" data-category="Dipped Pretzels" onclick="showSection('menu-only-section'); populateSweetMenu('Dipped Pretzels', 'sweet-menu-grid-alt'); return false;">Dipped Pretzels</a>
+                        <a href="#menu" class="dropdown-item" data-category="Cake Sicles & Pops" onclick="showSection('menu-only-section'); populateSweetMenu('Cake Sicles & Pops', 'sweet-menu-grid-alt'); return false;">Cake Sicles & Pops</a>
+                        <a href="#menu" class="dropdown-item" data-category="Rice Crispy & Dipped Cupcakes" onclick="showSection('menu-only-section'); populateSweetMenu('Rice Crispy & Dipped Cupcakes', 'sweet-menu-grid-alt'); return false;">Rice Crispy & Dipped Cupcakes</a>
+                        <a href="#menu" class="dropdown-item" data-category="Individual Sample Cups" onclick="showSection('menu-only-section'); populateSweetMenu('Individual Sample Cups', 'sweet-menu-grid-alt'); return false;">Individual Sample Cups</a>
+                    </div>
+                </div>
             </nav>
         </div>
     </header>
@@ -674,7 +664,7 @@
                 <h4 class="text-2xl font-bold mb-4 text-[#F8A4B8]">Quick Links</h4>
                 <ul class="space-y-2 text-lg">
                     <li><a href="#home" class="footer-link" onclick="showSection('home-menu-combined'); return false;">Home</a></li>
-                    <li><a href="#menu" class="footer-link" onclick="showSection('menu-only-section'); populateSweetMenu('AllCategories', 'sweet-menu-grid-alt'); return false;">Menu</a></li>
+                    <li><a href="#menu" class="footer-link" onclick="showSection('menu-only-section'); populateSweetMenu('MainMenuDefault', 'sweet-menu-grid-alt'); return false;">Menu</a></li>
                     <li><a href="#about" class="footer-link" onclick="showSection('about-section'); return false;">About Us</a></li>
                     <li><a href="#contact" class="footer-link" onclick="showSection('contact-section'); return false;">Contact</a></li>
                     <li><a href="#create-order" class="footer-link" onclick="showSection('create-order-section'); return false;">Create Your Order</a></li>
@@ -969,32 +959,13 @@
                                     ${sweet.description}
                                 </p>
                                 <span class="sweet-price text-2xl font-extrabold mb-4">${sweet.simplePrice}</span> <!-- Always show simplePrice on main menu -->
-                                <button class="order-button px-6 py-3 rounded-full text-lg shadow-md" onclick="addSweetToOrderFromMenu('${sweet.title.replace(/'/g, "\\'")}')">Order Now</button>
+                                <button class="order-button px-6 py-3 rounded-full text-lg shadow-md">Order Now</button>
                             </div>
                         `;
                     });
                 }
                 sweetMenuGrid.innerHTML = htmlContent;
             }
-        }
-
-        // New function to add sweet directly from the main menu cards
-        function addSweetToOrderFromMenu(itemTitle) {
-            const sweet = sweetsData.find(s => s.title === itemTitle);
-            if (!sweet) return;
-
-            const selectedOrderType = document.querySelector('input[name="orderType"]:checked').value;
-            const priceUsed = selectedOrderType === 'simple' ? sweet.simplePrice : sweet.partyPrice;
-
-            if (selectedOrderItems[itemTitle]) {
-                selectedOrderItems[itemTitle].quantity += 1; // Add one by default from menu button
-            } else {
-                selectedOrderItems[itemTitle] = { ...sweet, quantity: 1, priceUsed: priceUsed }; // Add one by default
-            }
-            updateOrderSummary();
-            showMessage(`'${itemTitle}' added to your order!`);
-            showSection('create-order-section'); // Switch to the order section
-            smoothScrollTo('selectedItemsSummary'); // Scroll to the summary list
         }
 
         // Function to populate the menu selection in the order form with dynamic pricing
@@ -1102,8 +1073,6 @@
             updateOrderSummary(); // Initialize empty summary
 
             // Event listeners for dropdown category selection
-            // NOTE: These event listeners are still present even if the Categories dropdown is removed from HTML.
-            //       They won't cause issues but could be removed for cleaner code if no longer needed.
             document.querySelectorAll('.dropdown-item').forEach(item => {
                 item.addEventListener('click', function(e) {
                     e.preventDefault(); // Prevent default link behavior
@@ -1165,6 +1134,7 @@
                         price: item.priceUsed // Use the price that was active when added
                     }));
 
+
                     // Basic validation
                     if (!orderDetails && selectedMenuOrder.length === 0) {
                         showMessage("Please provide order details or select items from the menu.", true);
@@ -1174,6 +1144,7 @@
                         showMessage("Please fill in Your Name and Your Email.", true);
                         return;
                     }
+
 
                     // For demonstration, log the form data
                     console.log("Custom Order Request Submitted:");
@@ -1186,6 +1157,7 @@
                     console.log("Inspiration Photos:", inspirationPhotoNames.length > 0 ? inspirationPhotoNames.join(', ') : "No photos uploaded");
                     console.log("Selected Menu Items:", selectedMenuOrder);
 
+
                     // For this example, we'll just log and reset the form.
                     showMessage("Your custom order request has been sent! We'll contact you soon.", false);
                     customOrderForm.reset();
@@ -1194,6 +1166,7 @@
                         delete selectedOrderItems[key];
                     }
                     updateOrderSummary(); // Clear the displayed summary
+                    // Optionally, you could show a success message on the page here
                 });
             }
         });

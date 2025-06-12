@@ -2,9 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!-- Viewport meta tag updated: initial-scale set to 0.65 to make the page appear more zoomed out by default.
-         shrink-to-fit=no is added for better compatibility on some mobile browsers (e.g., older iOS Safari). -->
-    <meta name="viewport" content="width=device-width, initial-scale=0.65, shrink-to-fit=no">
+    <!-- Viewport meta tag updated: initial-scale set to 1.0 for accessibility. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
     <title>Dipped Sweetss NYC - Handcrafted Dipped Treats</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -395,9 +394,36 @@
                 font-size: 1.5rem;
             }
         }
+        /* Message Box styles */
+        .message-box {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #4CAF50; /* Green */
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            display: none; /* Hidden by default */
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            text-align: center;
+        }
+        .message-box.show {
+            display: block;
+            opacity: 1;
+        }
+        .message-box.error {
+            background-color: #f44336; /* Red */
+        }
     </style>
 </head>
 <body>
+    <!-- Message Box container -->
+    <div id="messageBox" class="message-box"></div>
+
     <header class="header-bg py-6">
         <div class="container-main flex flex-col md:flex-row justify-between items-center">
             <div class="mb-4 md:mb-0">
@@ -405,14 +431,14 @@
             </div>
             <nav class="navbar-nav flex flex-wrap justify-center gap-4">
                 <a href="#home" class="nav-link text-lg" onclick="showSection('home-menu-combined'); return false;">Home</a>
-                <a href="#menu" class="nav-link text-lg" onclick="showSection('menu-only-section'); populateSweetMenu('MainMenuDefault', 'sweet-menu-grid-alt'); return false;">Menu</a>
+                <a href="#menu" class="nav-link text-lg" onclick="showSection('menu-only-section'); populateSweetMenu('AllCategories', 'sweet-menu-grid-alt'); return false;">Menu</a>
                 <!-- Categories Dropdown -->
                 <div class="nav-link text-lg group">
                     <a href="#menu" class="inline-flex items-center" onclick="showSection('menu-only-section'); return false;">
                         Categories <i class="fas fa-chevron-down ml-2 text-base"></i>
                     </a>
                     <div class="dropdown-menu">
-                        <a href="#menu" class="dropdown-item" data-category="MainMenuDefault" onclick="showSection('menu-only-section'); populateSweetMenu('MainMenuDefault', 'sweet-menu-grid-alt'); return false;">All Other Treats</a>
+                        <a href="#menu" class="dropdown-item" data-category="AllCategories" onclick="showSection('menu-only-section'); populateSweetMenu('AllCategories', 'sweet-menu-grid-alt'); return false;">All Other Treats</a>
                         <a href="#menu" class="dropdown-item" data-category="Dipped Strawberries" onclick="showSection('menu-only-section'); populateSweetMenu('Dipped Strawberries', 'sweet-menu-grid-alt'); return false;">Dipped Strawberries</a>
                         <a href="#menu" class="dropdown-item" data-category="Dipped Pretzels" onclick="showSection('menu-only-section'); populateSweetMenu('Dipped Pretzels', 'sweet-menu-grid-alt'); return false;">Dipped Pretzels</a>
                         <a href="#menu" class="dropdown-item" data-category="Cake Sicles & Pops" onclick="showSection('menu-only-section'); populateSweetMenu('Cake Sicles & Pops', 'sweet-menu-grid-alt'); return false;">Cake Sicles & Pops</a>
@@ -420,9 +446,10 @@
                         <a href="#menu" class="dropdown-item" data-category="Individual Sample Cups" onclick="showSection('menu-only-section'); populateSweetMenu('Individual Sample Cups', 'sweet-menu-grid-alt'); return false;">Individual Sample Cups</a>
                     </div>
                 </div>
+                <!-- Moved "About Us" before "Create Your Order" -->
+                <a href="#about" class="nav-link text-lg" onclick="showSection('about-section'); return false;">About Us</a>
                 <a href="#create-order" class="nav-link text-lg" onclick="showSection('create-order-section'); return false;">Create Your Order</a>
                 <a href="#contact" class="nav-link text-lg" onclick="showSection('contact-section'); return false;">Contact</a>
-                <a href="#about" class="nav-link text-lg" onclick="showSection('about-section'); return false;">About Us</a>
             </nav>
         </div>
     </header>
@@ -527,16 +554,16 @@
                     </p>
                 </div>
 
-                <form class="max-w-xl mx-auto bg-white p-10 rounded-3xl shadow-xl mt-16 space-y-6">
+                <form id="contactForm" class="max-w-xl mx-auto bg-white p-10 rounded-3xl shadow-xl mt-16 space-y-6">
                     <h3 class="text-3xl font-bold text-[#6F4E37] mb-6">Send Us a Message</h3>
                     <div>
-                        <input type="text" placeholder="Your Name" class="w-full p-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F8A4B8]">
+                        <input type="text" id="contactName" name="name" placeholder="Your Name" class="w-full p-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F8A4B8]">
                     </div>
                     <div>
-                        <input type="email" placeholder="Your Email" class="w-full p-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F8A4B8]">
+                        <input type="email" id="contactEmail" name="email" placeholder="Your Email" class="w-full p-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F8A4B8]">
                     </div>
                     <div>
-                        <textarea placeholder="Your Message" rows="6" class="w-full p-4 border border-gray-300 rounded-xl resize-y focus:outline-none focus:ring-2 focus:ring-[#F8A4B8]"></textarea>
+                        <textarea id="contactMessage" name="message" placeholder="Your Message" rows="6" class="w-full p-4 border border-gray-300 rounded-xl resize-y focus:outline-none focus:ring-2 focus:ring-[#F8A4B8]"></textarea>
                     </div>
                     <button type="submit" class="cta-button w-full px-6 py-3 rounded-full text-xl shadow-md">
                         Send Sweet Message <i class="fas fa-paper-plane ml-2"></i>
@@ -661,7 +688,7 @@
                 <h4 class="text-2xl font-bold mb-4 text-[#F8A4B8]">Quick Links</h4>
                 <ul class="space-y-2 text-lg">
                     <li><a href="#home" class="footer-link" onclick="showSection('home-menu-combined'); return false;">Home</a></li>
-                    <li><a href="#menu" class="footer-link" onclick="showSection('menu-only-section'); populateSweetMenu('MainMenuDefault', 'sweet-menu-grid-alt'); return false;">Menu</a></li>
+                    <li><a href="#menu" class="footer-link" onclick="showSection('menu-only-section'); populateSweetMenu('AllCategories', 'sweet-menu-grid-alt'); return false;">Menu</a></li>
                     <li><a href="#about" class="footer-link" onclick="showSection('about-section'); return false;">About Us</a></li>
                     <li><a href="#contact" class="footer-link" onclick="showSection('contact-section'); return false;">Contact</a></li>
                     <li><a href="#create-order" class="footer-link" onclick="showSection('create-order-section'); return false;">Create Your Order</a></li>
@@ -876,6 +903,25 @@
         // Global object to store selected order items
         const selectedOrderItems = {}; // Stores { 'Item Title': { sweetData, quantity, currentPriceUsed } }
 
+        // Function to display messages to the user
+        function showMessage(message, isError = false) {
+            const messageBox = document.getElementById('messageBox');
+            messageBox.textContent = message;
+            messageBox.className = 'message-box show'; // Reset classes and show
+            if (isError) {
+                messageBox.classList.add('error');
+            } else {
+                messageBox.classList.remove('error');
+            }
+
+            // Hide the message after 3 seconds
+            setTimeout(() => {
+                messageBox.classList.remove('show');
+                // Optional: clear text after fade out
+                setTimeout(() => messageBox.textContent = '', 500);
+            }, 3000);
+        }
+
         // Function to control which sections are visible
         function showSection(sectionId) {
             const allSections = document.querySelectorAll('main > section'); // Target top-level sections
@@ -937,13 +983,32 @@
                                     ${sweet.description}
                                 </p>
                                 <span class="sweet-price text-2xl font-extrabold mb-4">${sweet.simplePrice}</span> <!-- Always show simplePrice on main menu -->
-                                <button class="order-button px-6 py-3 rounded-full text-lg shadow-md">Order Now</button>
+                                <button class="order-button px-6 py-3 rounded-full text-lg shadow-md" onclick="addSweetToOrderFromMenu('${sweet.title.replace(/'/g, "\\'")}')">Order Now</button>
                             </div>
                         `;
                     });
                 }
                 sweetMenuGrid.innerHTML = htmlContent;
             }
+        }
+
+        // New function to add sweet directly from the main menu cards
+        function addSweetToOrderFromMenu(itemTitle) {
+            const sweet = sweetsData.find(s => s.title === itemTitle);
+            if (!sweet) return;
+
+            const selectedOrderType = document.querySelector('input[name="orderType"]:checked').value;
+            const priceUsed = selectedOrderType === 'simple' ? sweet.simplePrice : sweet.partyPrice;
+
+            if (selectedOrderItems[itemTitle]) {
+                selectedOrderItems[itemTitle].quantity += 1; // Add one by default from menu button
+            } else {
+                selectedOrderItems[itemTitle] = { ...sweet, quantity: 1, priceUsed: priceUsed }; // Add one by default
+            }
+            updateOrderSummary();
+            showMessage(`'${itemTitle}' added to your order!`);
+            showSection('create-order-section'); // Switch to the order section
+            smoothScrollTo('selectedItemsSummary'); // Scroll to the summary list
         }
 
         // Function to populate the menu selection in the order form with dynamic pricing
@@ -1032,7 +1097,6 @@
             populateOrderMenuSelection(); // Re-populate menu items with new prices
         }
 
-
         // Function for smooth scrolling without changing section visibility
         function smoothScrollTo(targetId) {
             const targetElement = document.getElementById(targetId);
@@ -1060,6 +1124,30 @@
                     populateSweetMenu(category, 'sweet-menu-grid-alt'); // Filter sweets by the selected category for the menu-only grid
                 });
             });
+
+            // Handle submission of the contact form
+            const contactForm = document.getElementById('contactForm');
+            if (contactForm) {
+                contactForm.addEventListener('submit', function(e) {
+                    e.preventDefault(); // Prevent default form submission
+                    const name = document.getElementById('contactName').value;
+                    const email = document.getElementById('contactEmail').value;
+                    const message = document.getElementById('contactMessage').value;
+
+                    if (!name || !email || !message) {
+                        showMessage("Please fill in all required fields for the contact form.", true);
+                        return;
+                    }
+
+                    console.log("Contact Form Submitted:");
+                    console.log("Name:", name);
+                    console.log("Email:", email);
+                    console.log("Message:", message);
+
+                    showMessage("Your message has been sent!", false);
+                    contactForm.reset();
+                });
+            }
 
             // Handle submission of the custom order form
             const customOrderForm = document.getElementById('customOrderForm');
@@ -1089,18 +1177,15 @@
                         price: item.priceUsed // Use the price that was active when added
                     }));
 
-
                     // Basic validation
                     if (!orderDetails && selectedMenuOrder.length === 0) {
-                        console.error("Validation Error: Please provide order details or select items from the menu.");
-                        // In a real application, you'd show a user-friendly message on the page.
+                        showMessage("Please provide order details or select items from the menu.", true);
                         return;
                     }
                     if (!orderName || !orderEmail) {
-                        console.error("Validation Error: Please fill in Your Name and Your Email.");
+                        showMessage("Please fill in Your Name and Your Email.", true);
                         return;
                     }
-
 
                     // For demonstration, log the form data
                     console.log("Custom Order Request Submitted:");
@@ -1113,16 +1198,14 @@
                     console.log("Inspiration Photos:", inspirationPhotoNames.length > 0 ? inspirationPhotoNames.join(', ') : "No photos uploaded");
                     console.log("Selected Menu Items:", selectedMenuOrder);
 
-
                     // For this example, we'll just log and reset the form.
-                    console.log("Form submission simulated successfully. (In a live app, this data would be sent to a backend.)");
+                    showMessage("Your custom order request has been sent! We'll contact you soon.", false);
                     customOrderForm.reset();
                     // Clear selected items after submission
                     for (const key in selectedOrderItems) {
                         delete selectedOrderItems[key];
                     }
                     updateOrderSummary(); // Clear the displayed summary
-                    // Optionally, you could show a success message on the page here
                 });
             }
         });

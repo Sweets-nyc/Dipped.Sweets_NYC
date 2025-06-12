@@ -432,20 +432,6 @@
             <nav class="navbar-nav flex flex-wrap justify-center gap-4">
                 <a href="#home" class="nav-link text-lg" onclick="showSection('home-menu-combined'); return false;">Home</a>
                 <a href="#menu" class="nav-link text-lg" onclick="showSection('menu-only-section'); populateSweetMenu('AllCategories', 'sweet-menu-grid-alt'); return false;">Menu</a>
-                <!-- Categories Dropdown -->
-                <div class="nav-link text-lg group">
-                    <a href="#menu" class="inline-flex items-center" onclick="showSection('menu-only-section'); return false;">
-                        Categories <i class="fas fa-chevron-down ml-2 text-base"></i>
-                    </a>
-                    <div class="dropdown-menu">
-                        <a href="#menu" class="dropdown-item" data-category="AllCategories" onclick="showSection('menu-only-section'); populateSweetMenu('AllCategories', 'sweet-menu-grid-alt'); return false;">All Other Treats</a>
-                        <a href="#menu" class="dropdown-item" data-category="Dipped Strawberries" onclick="showSection('menu-only-section'); populateSweetMenu('Dipped Strawberries', 'sweet-menu-grid-alt'); return false;">Dipped Strawberries</a>
-                        <a href="#menu" class="dropdown-item" data-category="Dipped Pretzels" onclick="showSection('menu-only-section'); populateSweetMenu('Dipped Pretzels', 'sweet-menu-grid-alt'); return false;">Dipped Pretzels</a>
-                        <a href="#menu" class="dropdown-item" data-category="Cake Sicles & Pops" onclick="showSection('menu-only-section'); populateSweetMenu('Cake Sicles & Pops', 'sweet-menu-grid-alt'); return false;">Cake Sicles & Pops</a>
-                        <a href="#menu" class="dropdown-item" data-category="Rice Crispy & Dipped Cupcakes" onclick="showSection('menu-only-section'); populateSweetMenu('Rice Crispy & Dipped Cupcakes', 'sweet-menu-grid-alt'); return false;">Rice Crispy & Dipped Cupcakes</a>
-                        <a href="#menu" class="dropdown-item" data-category="Individual Sample Cups" onclick="showSection('menu-only-section'); populateSweetMenu('Individual Sample Cups', 'sweet-menu-grid-alt'); return false;">Individual Sample Cups</a>
-                    </div>
-                </div>
                 <!-- Moved "About Us" before "Create Your Order" -->
                 <a href="#about" class="nav-link text-lg" onclick="showSection('about-section'); return false;">About Us</a>
                 <a href="#create-order" class="nav-link text-lg" onclick="showSection('create-order-section'); return false;">Create Your Order</a>
@@ -1116,6 +1102,8 @@
             updateOrderSummary(); // Initialize empty summary
 
             // Event listeners for dropdown category selection
+            // NOTE: These event listeners are still present even if the Categories dropdown is removed from HTML.
+            //       They won't cause issues but could be removed for cleaner code if no longer needed.
             document.querySelectorAll('.dropdown-item').forEach(item => {
                 item.addEventListener('click', function(e) {
                     e.preventDefault(); // Prevent default link behavior

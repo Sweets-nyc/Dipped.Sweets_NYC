@@ -535,6 +535,8 @@
                 </div>
 
                 <form id="contactForm" name="contact" method="POST" data-netlify="true" class="max-w-xl mx-auto bg-white p-10 rounded-3xl shadow-xl mt-16 space-y-6">
+                    <!-- Hidden field to identify the form for Netlify -->
+                    <input type="hidden" name="form-name" value="contact">
                     <h3 class="text-3xl font-bold text-[#6F4E37] mb-6">Send Us a Message</h3>
                     <div>
                         <input type="text" id="contactName" name="name" placeholder="Your Name" class="w-full p-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F8A4B8]">
@@ -561,6 +563,8 @@
                 </p>
 
                 <form id="customOrderForm" name="custom_order" method="POST" enctype="multipart/form-data" data-netlify="true" class="max-w-xl mx-auto bg-white p-10 rounded-3xl shadow-xl mt-16 space-y-6">
+                    <!-- Hidden field to identify the form for Netlify -->
+                    <input type="hidden" name="form-name" value="custom_order">
                     <h3 class="text-3xl font-bold text-[#6F4E37] mb-6">Tell Us About Your Custom Order</h3>
 
                     <!-- IMPORTANT CLARIFICATION -->
@@ -1082,27 +1086,29 @@
             const contactForm = document.getElementById('contactForm');
             if (contactForm) {
                 contactForm.addEventListener('submit', function(e) {
-                    e.preventDefault(); // Prevent default form submission
-                    // The form will now submit to the 'action' URL defined in the HTML
-                    // For demonstration, we'll still log and show a message
+                    // *** REMOVED e.preventDefault() HERE ***
+                    // Netlify Forms needs the default browser submission to work with data-netlify="true"
+
                     const name = document.getElementById('contactName').value;
                     const email = document.getElementById('contactEmail').value;
                     const message = document.getElementById('contactMessage').value;
 
                     if (!name || !email || !message) {
                         showMessage("Please fill in all required fields for the contact form.", true);
+                        e.preventDefault(); // Prevent submission if validation fails
                         return;
                     }
 
-                    console.log("Contact Form Submitted (via external service):");
-                    console.log("Name:", name);
-                    console.log("Email:", email);
-                    console.log("Message:", message);
-
-                    // If using a service like Formspree, the form submission itself handles the email.
-                    // This message is for immediate user feedback.
-                    showMessage("Your message has been sent! We'll get back to you soon.", false);
-                    contactForm.reset();
+                    // The form will now submit to Netlify.
+                    // Netlify will handle the success message by default, or you can redirect to a custom success page.
+                    // For now, we'll just let the default Netlify behavior take over.
+                    // The console.logs and showMessage below are no longer needed for actual submission,
+                    // but could be used for client-side feedback before the page reloads/redirects.
+                    // console.log("Contact Form Submitted (to Netlify):");
+                    // console.log("Name:", name);
+                    // console.log("Email:", email);
+                    // console.log("Message:", message);
+                    // showMessage("Your message has been sent!", false); // This message will flash before redirect/reload
                 });
             }
 
@@ -1110,22 +1116,12 @@
             const customOrderForm = document.getElementById('customOrderForm');
             if (customOrderForm) {
                 customOrderForm.addEventListener('submit', function(e) {
-                    e.preventDefault(); // Prevent default form submission
+                    // *** REMOVED e.preventDefault() HERE ***
+                    // Netlify Forms needs the default browser submission to work with data-netlify="true"
 
                     const orderDetails = document.getElementById('orderDetails').value;
-                    const orderType = document.querySelector('input[name="orderType"]:checked').value;
                     const orderName = document.getElementById('orderName').value;
                     const orderEmail = document.getElementById('orderEmail').value;
-                    const orderPhone = document.getElementById('orderPhone').value;
-                    const contactMethod = document.querySelector('input[name="contactMethod"]:checked').value;
-
-                    const inspirationPhotosInput = document.getElementById('inspirationPhotos');
-                    const inspirationPhotoNames = [];
-                    if (inspirationPhotosInput.files.length > 0) {
-                        for (let i = 0; i < inspirationPhotosInput.files.length; i++) {
-                            inspirationPhotoNames.push(inspirationPhotosInput.files[i].name);
-                        }
-                    }
 
                     const selectedMenuOrder = Object.values(selectedOrderItems).map(item => ({
                         title: item.title,
@@ -1135,31 +1131,29 @@
 
                     if (!orderDetails && selectedMenuOrder.length === 0) {
                         showMessage("Please provide order details or select items from the menu.", true);
+                        e.preventDefault(); // Prevent submission if validation fails
                         return;
                     }
                     if (!orderName || !orderEmail) {
                         showMessage("Please fill in Your Name and Your Email.", true);
+                        e.preventDefault(); // Prevent submission if validation fails
                         return;
                     }
 
-                    console.log("Custom Order Request Submitted (via external service):");
-                    console.log("Order Details:", orderDetails);
-                    console.log("Order Type:", orderType);
-                    console.log("Name:", orderName);
-                    console.log("Email:", orderEmail);
-                    console.log("Phone:", orderPhone || "N/A");
-                    console.log("Preferred Contact Method:", contactMethod);
-                    console.log("Inspiration Photos:", inspirationPhotoNames.length > 0 ? inspirationPhotoNames.join(', ') : "No photos uploaded");
-                    console.log("Selected Menu Items:", selectedMenuOrder);
+                    // The form will now submit to Netlify.
+                    // Netlify will handle the success message by default, or you can redirect to a custom success page.
+                    // For now, we'll just let the default Netlify behavior take over.
+                    // The console.logs and showMessage below are no longer needed for actual submission.
+                    // console.log("Custom Order Request Submitted (to Netlify):");
+                    // console.log("Order Details:", orderDetails);
+                    // console.log("Selected Menu Items:", selectedMenuOrder);
+                    // showMessage("Your custom order request has been sent! We'll contact you soon.", false); // This message will flash before redirect/reload
 
-                    // If using a service like Formspree, the form submission itself handles the email.
-                    // This message is for immediate user feedback.
-                    showMessage("Your custom order request has been sent! We'll contact you soon.", false);
-                    customOrderForm.reset();
-                    for (const key in selectedOrderItems) {
-                        delete selectedOrderItems[key];
-                    }
-                    updateOrderSummary();
+                    // Clear selected items after submission logic (will happen on page reload anyway)
+                    // for (const key in selectedOrderItems) {
+                    //     delete selectedOrderItems[key];
+                    // }
+                    // updateOrderSummary(); // Clear the displayed summary
                 });
             }
         });

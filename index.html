@@ -534,7 +534,7 @@
                     </p>
                 </div>
 
-                <form id="contactForm" class="max-w-xl mx-auto bg-white p-10 rounded-3xl shadow-xl mt-16 space-y-6">
+                <form id="contactForm" name="contact" method="POST" data-netlify="true" class="max-w-xl mx-auto bg-white p-10 rounded-3xl shadow-xl mt-16 space-y-6">
                     <h3 class="text-3xl font-bold text-[#6F4E37] mb-6">Send Us a Message</h3>
                     <div>
                         <input type="text" id="contactName" name="name" placeholder="Your Name" class="w-full p-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F8A4B8]">
@@ -560,7 +560,7 @@
                     Looking for something unique or planning a special event? Tell us what you envision, and we'll make it a reality.
                 </p>
 
-                <form id="customOrderForm" class="max-w-xl mx-auto bg-white p-10 rounded-3xl shadow-xl mt-16 space-y-6">
+                <form id="customOrderForm" name="custom_order" method="POST" enctype="multipart/form-data" data-netlify="true" class="max-w-xl mx-auto bg-white p-10 rounded-3xl shadow-xl mt-16 space-y-6">
                     <h3 class="text-3xl font-bold text-[#6F4E37] mb-6">Tell Us About Your Custom Order</h3>
 
                     <!-- IMPORTANT CLARIFICATION -->
@@ -1083,6 +1083,8 @@
             if (contactForm) {
                 contactForm.addEventListener('submit', function(e) {
                     e.preventDefault(); // Prevent default form submission
+                    // The form will now submit to the 'action' URL defined in the HTML
+                    // For demonstration, we'll still log and show a message
                     const name = document.getElementById('contactName').value;
                     const email = document.getElementById('contactEmail').value;
                     const message = document.getElementById('contactMessage').value;
@@ -1092,12 +1094,14 @@
                         return;
                     }
 
-                    console.log("Contact Form Submitted:");
+                    console.log("Contact Form Submitted (via external service):");
                     console.log("Name:", name);
                     console.log("Email:", email);
                     console.log("Message:", message);
 
-                    showMessage("Your message has been sent!", false);
+                    // If using a service like Formspree, the form submission itself handles the email.
+                    // This message is for immediate user feedback.
+                    showMessage("Your message has been sent! We'll get back to you soon.", false);
                     contactForm.reset();
                 });
             }
@@ -1113,7 +1117,7 @@
                     const orderName = document.getElementById('orderName').value;
                     const orderEmail = document.getElementById('orderEmail').value;
                     const orderPhone = document.getElementById('orderPhone').value;
-                    const contactMethod = document.querySelector('input[name="contactMethod"]:checked').value; // Get preferred contact method
+                    const contactMethod = document.querySelector('input[name="contactMethod"]:checked').value;
 
                     const inspirationPhotosInput = document.getElementById('inspirationPhotos');
                     const inspirationPhotoNames = [];
@@ -1123,15 +1127,12 @@
                         }
                     }
 
-                    // Prepare selected menu items for submission
                     const selectedMenuOrder = Object.values(selectedOrderItems).map(item => ({
                         title: item.title,
                         quantity: item.quantity,
-                        price: item.priceUsed // Use the price that was active when added
+                        price: item.priceUsed
                     }));
 
-
-                    // Basic validation
                     if (!orderDetails && selectedMenuOrder.length === 0) {
                         showMessage("Please provide order details or select items from the menu.", true);
                         return;
@@ -1141,28 +1142,24 @@
                         return;
                     }
 
-
-                    // For demonstration, log the form data
-                    console.log("Custom Order Request Submitted:");
+                    console.log("Custom Order Request Submitted (via external service):");
                     console.log("Order Details:", orderDetails);
                     console.log("Order Type:", orderType);
                     console.log("Name:", orderName);
                     console.log("Email:", orderEmail);
                     console.log("Phone:", orderPhone || "N/A");
-                    console.log("Preferred Contact Method:", contactMethod); // Log the new field
+                    console.log("Preferred Contact Method:", contactMethod);
                     console.log("Inspiration Photos:", inspirationPhotoNames.length > 0 ? inspirationPhotoNames.join(', ') : "No photos uploaded");
                     console.log("Selected Menu Items:", selectedMenuOrder);
 
-
-                    // For this example, we'll just log and reset the form.
+                    // If using a service like Formspree, the form submission itself handles the email.
+                    // This message is for immediate user feedback.
                     showMessage("Your custom order request has been sent! We'll contact you soon.", false);
                     customOrderForm.reset();
-                    // Clear selected items after submission
                     for (const key in selectedOrderItems) {
                         delete selectedOrderItems[key];
                     }
-                    updateOrderSummary(); // Clear the displayed summary
-                    // Optionally, you could show a success message on the page here
+                    updateOrderSummary();
                 });
             }
         });

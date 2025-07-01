@@ -565,6 +565,9 @@
                 <form id="customOrderForm" name="custom_order" method="POST" enctype="multipart/form-data" data-netlify="true" class="max-w-xl mx-auto bg-white p-10 rounded-3xl shadow-xl mt-16 space-y-6">
                     <!-- Hidden field to identify the form for Netlify -->
                     <input type="hidden" name="form-name" value="custom_order">
+                    <!-- Hidden field to store selected menu items as JSON -->
+                    <input type="hidden" name="selected_menu_items" id="selectedItemsHiddenInput">
+
                     <h3 class="text-3xl font-bold text-[#6F4E37] mb-6">Tell Us About Your Custom Order</h3>
 
                     <!-- IMPORTANT CLARIFICATION -->
@@ -1086,9 +1089,6 @@
             const contactForm = document.getElementById('contactForm');
             if (contactForm) {
                 contactForm.addEventListener('submit', function(e) {
-                    // *** REMOVED e.preventDefault() HERE ***
-                    // Netlify Forms needs the default browser submission to work with data-netlify="true"
-
                     const name = document.getElementById('contactName').value;
                     const email = document.getElementById('contactEmail').value;
                     const message = document.getElementById('contactMessage').value;
@@ -1098,17 +1098,7 @@
                         e.preventDefault(); // Prevent submission if validation fails
                         return;
                     }
-
                     // The form will now submit to Netlify.
-                    // Netlify will handle the success message by default, or you can redirect to a custom success page.
-                    // For now, we'll just let the default Netlify behavior take over.
-                    // The console.logs and showMessage below are no longer needed for actual submission,
-                    // but could be used for client-side feedback before the page reloads/redirects.
-                    // console.log("Contact Form Submitted (to Netlify):");
-                    // console.log("Name:", name);
-                    // console.log("Email:", email);
-                    // console.log("Message:", message);
-                    // showMessage("Your message has been sent!", false); // This message will flash before redirect/reload
                 });
             }
 
@@ -1116,9 +1106,6 @@
             const customOrderForm = document.getElementById('customOrderForm');
             if (customOrderForm) {
                 customOrderForm.addEventListener('submit', function(e) {
-                    // *** REMOVED e.preventDefault() HERE ***
-                    // Netlify Forms needs the default browser submission to work with data-netlify="true"
-
                     const orderDetails = document.getElementById('orderDetails').value;
                     const orderName = document.getElementById('orderName').value;
                     const orderEmail = document.getElementById('orderEmail').value;
@@ -1129,6 +1116,18 @@
                         price: item.priceUsed
                     }));
 
+                    // Add selected menu items as a hidden field to the form
+                    let hiddenInput = document.getElementById('selectedItemsHiddenInput');
+                    if (!hiddenInput) {
+                        hiddenInput = document.createElement('input');
+                        hiddenInput.type = 'hidden';
+                        hiddenInput.id = 'selectedItemsHiddenInput';
+                        hiddenInput.name = 'selected_menu_items'; // Name for Netlify to capture
+                        customOrderForm.appendChild(hiddenInput);
+                    }
+                    hiddenInput.value = JSON.stringify(selectedMenuOrder);
+
+                    // Basic validation
                     if (!orderDetails && selectedMenuOrder.length === 0) {
                         showMessage("Please provide order details or select items from the menu.", true);
                         e.preventDefault(); // Prevent submission if validation fails
@@ -1141,19 +1140,7 @@
                     }
 
                     // The form will now submit to Netlify.
-                    // Netlify will handle the success message by default, or you can redirect to a custom success page.
-                    // For now, we'll just let the default Netlify behavior take over.
-                    // The console.logs and showMessage below are no longer needed for actual submission.
-                    // console.log("Custom Order Request Submitted (to Netlify):");
-                    // console.log("Order Details:", orderDetails);
-                    // console.log("Selected Menu Items:", selectedMenuOrder);
-                    // showMessage("Your custom order request has been sent! We'll contact you soon.", false); // This message will flash before redirect/reload
-
-                    // Clear selected items after submission logic (will happen on page reload anyway)
-                    // for (const key in selectedOrderItems) {
-                    //     delete selectedOrderItems[key];
-                    // }
-                    // updateOrderSummary(); // Clear the displayed summary
+                    // Netlify will handle the success message by default.
                 });
             }
         });

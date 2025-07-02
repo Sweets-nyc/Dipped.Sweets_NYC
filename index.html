@@ -166,8 +166,10 @@
         @media print {
             body {
                 background-color: #fff;
-                padding: 0.5rem; /* Reduced padding for print */
-                font-size: 10pt; /* Smaller base font size for print */
+                padding: 0.25rem; /* Further reduced padding for print */
+                font-size: 8pt; /* Even smaller base font size for print */
+                -webkit-print-color-adjust: exact; /* Ensure background colors print */
+                print-color-adjust: exact;
             }
             .container {
                 box-shadow: none;
@@ -192,44 +194,44 @@
                 text-shadow: none !important; /* Remove text shadows */
             }
             .invoice-header h2 {
-                font-size: 24pt; /* Adjust header font size for print */
-                margin-bottom: 0.5rem;
+                font-size: 20pt; /* Further adjust header font size for print */
+                margin-bottom: 0.3rem; /* Reduced margin */
             }
             .invoice-header p {
-                font-size: 9pt;
+                font-size: 8pt; /* Further reduced font size */
             }
             .invoice-details, .invoice-items, .invoice-summary, .invoice-notes, .invoice-delivery-info {
-                margin-bottom: 0.8rem; /* Reduced margins between sections */
+                margin-bottom: 0.5rem; /* Further reduced margins between sections */
             }
             .invoice-details h3, .invoice-items h3, .invoice-notes h3, .invoice-delivery-info h3 {
-                font-size: 14pt; /* Smaller sub-headings */
-                margin-bottom: 0.5rem;
+                font-size: 12pt; /* Even smaller sub-headings */
+                margin-bottom: 0.3rem; /* Reduced margin */
             }
             .invoice-details p, .invoice-notes p, .invoice-delivery-info p {
-                font-size: 10pt; /* Smaller body text */
+                font-size: 9pt; /* Even smaller body text */
             }
             .invoice-items table, .invoice-items th, .invoice-items td {
                 border: 1px solid #cccccc; /* Lighter border for print */
-                font-size: 10pt;
-                padding: 0.4rem; /* Reduced padding in table cells */
+                font-size: 9pt; /* Even smaller table font size */
+                padding: 0.3rem; /* Further reduced padding in table cells */
             }
             .invoice-items th {
                 background-color: #f0f0f0 !important; /* Lighter background for print */
                 color: #333333 !important;
             }
             .invoice-summary div {
-                padding: 0.3rem 0; /* Reduced padding in summary lines */
-                font-size: 10pt;
+                padding: 0.2rem 0; /* Further reduced padding in summary lines */
+                font-size: 9pt; /* Even smaller summary font size */
             }
             .invoice-summary div:last-child {
-                font-size: 14pt; /* Grand total slightly larger */
-                padding-top: 0.6rem;
-                margin-top: 0.4rem;
+                font-size: 12pt; /* Grand total slightly larger, but overall smaller */
+                padding-top: 0.5rem;
+                margin-top: 0.3rem;
                 border-top: 1px solid #6F4E37 !important; /* Thinner border for print */
             }
             .invoice-footer {
-                font-size: 9pt;
-                margin-top: 1.5rem;
+                font-size: 8pt; /* Even smaller footer font size */
+                margin-top: 1rem; /* Reduced margin */
             }
             /* Ensure price columns are hidden if toggle is active */
             .output-price-column, .output-price-summary-line {
@@ -247,7 +249,7 @@
 </head>
 <body>
     <!-- Message Box container -->
-    <div id="messageBox" class="message-box fixed top-4 left-1/2 -translate-x-1/2 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-[1000] opacity-0 transition-opacity duration-300 ease-in-out"></div>
+    <div id="messageBox" class="message-box fixed top-4 left-50% -translate-x-1/2 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-[1000] opacity-0 transition-opacity duration-300 ease-in-out"></div>
 
     <div class="container">
         <h1 class="text-4xl font-bold mb-8 text-center">Dipped Sweets NYC - Invoice Creator</h1>

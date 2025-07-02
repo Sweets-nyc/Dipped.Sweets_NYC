@@ -278,12 +278,63 @@
             body:not(.hide-prices-active) .output-price-summary-line {
                 display: flex !important;
             }
+
+            /* Styles for saved invoices list */
+            .saved-invoice-card {
+                background-color: #fefefe;
+                border: 1px solid #e5e7eb;
+                border-radius: 0.75rem;
+                padding: 1.5rem;
+                margin-bottom: 1rem;
+                box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+                cursor: pointer;
+                transition: all 0.2s ease-in-out;
+            }
+            .saved-invoice-card:hover {
+                box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+                transform: translateY(-2px);
+            }
+            .saved-invoice-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                font-weight: 600;
+                color: #6F4E37;
+            }
+            .saved-invoice-details {
+                margin-top: 1rem;
+                border-top: 1px dashed #e5e7eb;
+                padding-top: 1rem;
+                display: none; /* Hidden by default */
+            }
+            .saved-invoice-details.show {
+                display: block;
+            }
+            .saved-invoice-details p {
+                margin-bottom: 0.5rem;
+            }
+            .saved-invoice-items table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 1rem;
+            }
+            .saved-invoice-items th, .saved-invoice-items td {
+                border: 1px solid #eee;
+                padding: 0.5rem;
+                text-align: left;
+                font-size: 0.9rem;
+            }
+            .saved-invoice-items th {
+                background-color: #F8E6DD;
+                font-weight: 600;
+                color: #6F4E37;
+            }
         }
     </style>
 </head>
 <body>
     <!-- Message Box container -->
-    <div id="messageBox" class="message-box fixed top-4 left-50 -translate-x-1/2 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-[1000] opacity-0 transition-opacity duration-300 ease-in-out"></div>
+    <div id="messageBox" class="message-box fixed top-4 left-1/2 -translate-x-1/2 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-[1000] opacity-0 transition-opacity duration-300 ease-in-out"></div>
 
     <div class="container">
         <h1 class="text-4xl font-bold mb-8 text-center">Dipped Sweets NYC - Invoice</h1>
@@ -428,6 +479,9 @@
                 <button id="resetFormBtn" class="btn-secondary flex items-center">
                     Reset Form <i class="fas fa-redo ml-2"></i>
                 </button>
+                <button id="viewSavedInvoicesBtn" class="btn-primary flex items-center">
+                    View Saved Invoices <i class="fas fa-list-alt ml-2"></i>
+                </button>
             </div>
         </div>
 
@@ -435,7 +489,7 @@
         <div id="invoiceOutputSection" class="invoice-output hidden">
             <div class="invoice-header">
                 <!-- Circular Logo Placeholder -->
-                <img id="invoiceLogo" src="https://placehold.co/80x80/F8E6DD/6F4E37?text=Logo" alt="Company Logo" class="absolute rounded-full object-cover">
+                <img id="invoiceLogo" src="IMG_8127.PNG" alt="Company Logo" class="absolute rounded-full object-cover">
                 <h2 class="text-4xl font-bold text-[#6F4E37] mb-2">INVOICE</h2>
                 <p class="text-gray-700 text-lg">Dipped Sweets NYC</p>
                 <p class="text-gray-600 text-sm">Handcrafted Dipped Treats</p>
@@ -534,13 +588,27 @@
                 </button>
             </div>
         </div>
+
+        <!-- Saved Invoices Section (initially hidden) -->
+        <div id="savedInvoicesSection" class="hidden">
+            <h2 class="text-3xl font-semibold mb-6 text-center">Your Saved Invoices</h2>
+            <div id="savedInvoicesList" class="space-y-4">
+                <!-- Saved invoices will be loaded here -->
+                <p id="noSavedInvoicesMessage" class="text-center text-gray-500 py-4 hidden">No invoices saved yet.</p>
+            </div>
+            <div class="flex justify-center mt-8">
+                <button id="backToCreatorFromSavedBtn" class="btn-secondary flex items-center">
+                    Back to Invoice Creator <i class="fas fa-arrow-left ml-2"></i>
+                </button>
+            </div>
+        </div>
     </div>
 
     <script type="module">
         // Firebase imports
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, query, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // Firebase variables (MANDATORY: use these global variables)
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
@@ -584,7 +652,7 @@
             });
         } else {
             console.warn("Firebase config not found. Firestore features will be disabled.");
-            showMessage("Firebase not configured. Save functionality disabled.", true);
+            showMessage("Firebase not configured. Save/Load functionality disabled.", true);
             userId = crypto.randomUUID(); // Generate a random ID even if Firebase isn't configured
             document.getElementById('userIdDisplay').textContent = `User ID (No Firebase Config): ${userId}`;
         }
@@ -793,6 +861,19 @@
                 // Optional: clear text after fade out
                 setTimeout(() => messageBox.textContent = '', 500);
             }, 3000);
+        }
+
+        // Function to control which sections are visible
+        function showSection(sectionId) {
+            const allSections = document.querySelectorAll('.form-section, .invoice-output, #savedInvoicesSection');
+            allSections.forEach(section => {
+                section.classList.add('hidden'); // Hide all sections
+            });
+
+            const activeSection = document.getElementById(sectionId);
+            if (activeSection) {
+                activeSection.classList.remove('hidden'); // Show the target section
+            }
         }
 
         // Function to populate the menu items for selection
@@ -1072,8 +1153,7 @@
             document.getElementById('outputAmountDue').textContent = `$${amountDue.toFixed(2)}`;
 
             // Show invoice output, hide form
-            document.getElementById('invoiceFormSection').classList.add('hidden');
-            document.getElementById('invoiceOutputSection').classList.remove('hidden');
+            showSection('invoiceOutputSection');
             showMessage("Invoice generated successfully!");
             togglePriceVisibility(); // Apply visibility to the generated invoice
         }
@@ -1122,6 +1202,119 @@
             } catch (e) {
                 console.error("Error adding document: ", e);
                 showMessage(`Error saving invoice: ${e.message}`, true);
+            }
+        }
+
+        // Function to load and display saved invoices from Firestore
+        async function loadSavedInvoices() {
+            if (!db || !userId) {
+                showMessage("Firestore not initialized or user not authenticated. Cannot load invoices.", true);
+                return;
+            }
+
+            const savedInvoicesList = document.getElementById('savedInvoicesList');
+            const noSavedInvoicesMessage = document.getElementById('noSavedInvoicesMessage');
+            savedInvoicesList.innerHTML = ''; // Clear previous list
+            noSavedInvoicesMessage.classList.add('hidden'); // Hide no invoices message by default
+
+            try {
+                // Collection path: /artifacts/{appId}/users/{userId}/invoices
+                const invoicesColRef = collection(db, `artifacts/${appId}/users/${userId}/invoices`);
+                const q = query(invoicesColRef); // No orderBy to avoid index issues
+
+                const querySnapshot = await getDocs(q);
+
+                if (querySnapshot.empty) {
+                    noSavedInvoicesMessage.classList.remove('hidden');
+                    return;
+                }
+
+                querySnapshot.forEach(doc => {
+                    const invoice = doc.data();
+                    const invoiceId = doc.id;
+                    const savedDate = invoice.savedAt ? new Date(invoice.savedAt.seconds * 1000).toLocaleDateString() : 'N/A';
+                    const hidePrices = invoice.hidePrices || false;
+
+                    let itemsHtml = '';
+                    if (invoice.items && invoice.items.length > 0) {
+                        itemsHtml = `
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Description</th>
+                                        <th class="text-center">Qty</th>
+                                        <th class="${hidePrices ? 'hidden-price' : ''} text-right">Unit Price</th>
+                                        <th class="${hidePrices ? 'hidden-price' : ''} text-right">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                        `;
+                        invoice.items.forEach(item => {
+                            itemsHtml += `
+                                <tr>
+                                    <td>${item.description}</td>
+                                    <td class="text-center">${item.quantity}</td>
+                                    <td class="${hidePrices ? 'hidden-price' : ''} text-right">${hidePrices ? '' : '$' + item.unitPrice.toFixed(2)}</td>
+                                    <td class="${hidePrices ? 'hidden-price' : ''} text-right">${hidePrices ? '' : '$' + item.total.toFixed(2)}</td>
+                                </tr>
+                            `;
+                        });
+                        itemsHtml += `</tbody></table>`;
+                    } else {
+                        itemsHtml = '<p>No items listed for this invoice.</p>';
+                    }
+
+                    savedInvoicesList.innerHTML += `
+                        <div class="saved-invoice-card" data-invoice-id="${invoiceId}">
+                            <div class="saved-invoice-header">
+                                <span>Invoice #: ${invoice.invoiceNumber}</span>
+                                <span>Client: ${invoice.clientName}</span>
+                                <span>Date: ${invoice.invoiceDate}</span>
+                                <span class="${hidePrices ? 'hidden-price' : ''}">Grand Total: $${invoice.grandTotal.toFixed(2)}</span>
+                                <i class="fas fa-chevron-down ml-2 transition-transform duration-300"></i>
+                            </div>
+                            <div class="saved-invoice-details">
+                                <p><strong>Due Date:</strong> ${invoice.dueDate}</p>
+                                <p><strong>Client Email:</strong> ${invoice.clientEmail}</p>
+                                <p><strong>Client Phone:</strong> ${invoice.clientPhone}</p>
+                                <p><strong>Client Address:</strong> ${invoice.clientAddress.replace(/\n/g, '<br>')}</p>
+                                <p><strong>Delivery Date:</strong> ${invoice.deliveryDate}</p>
+                                <p><strong>Delivery Time:</strong> ${invoice.deliveryTime}</p>
+                                <p><strong>Delivery Location:</strong> ${invoice.deliveryLocation.replace(/\n/g, '<br>')}</p>
+                                <p><strong>Notes:</strong> ${invoice.notes}</p>
+                                <div class="saved-invoice-items">
+                                    <h4>Items:</h4>
+                                    ${itemsHtml}
+                                </div>
+                                <div class="text-right mt-4">
+                                    <p class="${hidePrices ? 'hidden-price' : ''}"><strong>Subtotal:</strong> $${invoice.subtotal.toFixed(2)}</p>
+                                    <p class="${hidePrices ? 'hidden-price' : ''}"><strong>Delivery Fee:</strong> $${invoice.deliveryFee.toFixed(2)}</p>
+                                    <p class="${hidePrices ? 'hidden-price' : ''}"><strong>Deposit Received:</strong> $${invoice.depositReceived.toFixed(2)}</p>
+                                    <p class="${hidePrices ? 'hidden-price' : ''} font-bold text-lg text-[#6F4E37]"><strong>Grand Total:</strong> $${invoice.grandTotal.toFixed(2)}</p>
+                                    <p class="${hidePrices ? 'hidden-price' : ''} font-bold text-lg text-[#F44336]"><strong>Amount Due:</strong> $${invoice.amountDue.toFixed(2)}</p>
+                                </div>
+                                <p class="text-sm text-gray-500 mt-4">Saved On: ${savedDate}</p>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                // Add event listeners for expanding/collapsing saved invoice details
+                document.querySelectorAll('.saved-invoice-card').forEach(card => {
+                    card.addEventListener('click', function() {
+                        const details = this.querySelector('.saved-invoice-details');
+                        const icon = this.querySelector('.fa-chevron-down');
+                        if (details) {
+                            details.classList.toggle('show');
+                            icon.classList.toggle('rotate-180');
+                        }
+                    });
+                });
+
+                showMessage("Saved invoices loaded successfully!");
+            } catch (e) {
+                console.error("Error loading documents: ", e);
+                showMessage(`Error loading invoices: ${e.message}`, true);
             }
         }
 
@@ -1210,14 +1403,23 @@ Regarding the tax acknowledgment letter: As a small business just starting out, 
                 window.print();
             });
             document.getElementById('backToFormBtn').addEventListener('click', function() {
-                document.getElementById('invoiceOutputSection').classList.add('hidden');
-                document.getElementById('invoiceFormSection').classList.remove('hidden');
-                togglePriceVisibility(); // Ensure visibility is correct when returning to form
+                showSection('invoiceFormSection'); // Go back to the main form
             });
 
-            // New: Event listener for the Save Invoice button
+            // Event listener for the Save Invoice button
             document.getElementById('saveInvoiceBtn').addEventListener('click', saveInvoice);
-            
+
+            // New: Event listener for the View Saved Invoices button
+            document.getElementById('viewSavedInvoicesBtn').addEventListener('click', function() {
+                showSection('savedInvoicesSection');
+                loadSavedInvoices(); // Load invoices when the section is shown
+            });
+
+            // New: Event listener for the Back to Creator from Saved Invoices button
+            document.getElementById('backToCreatorFromSavedBtn').addEventListener('click', function() {
+                showSection('invoiceFormSection'); // Go back to the main form
+            });
+
             // Listen for changes on the delivery fee and deposit input to update totals
             document.getElementById('deliveryFee').addEventListener('input', calculateAndDisplayCurrentTotals);
             document.getElementById('depositReceived').addEventListener('input', calculateAndDisplayCurrentTotals);

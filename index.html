@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!-- Viewport meta tag reverted: initial-scale set back to 0.65 as requested.
-         shrink-to-fit=no is kept for better compatibility on some mobile browsers. -->
+    <!-- Viewport meta tag: initial-scale set to 0.65 as requested, for a zoomed-out view.
+         shrink-to-fit=no is included for better mobile compatibility. -->
     <meta name="viewport" content="width=device-width, initial-scale=0.65, shrink-to-fit=no">
     <title>Dipped Sweets NYC - Handcrafted Dipped Treats</title>
     <!-- Tailwind CSS CDN -->
@@ -167,6 +167,7 @@
             border-radius: 1.5rem; /* Matches sweet-image border-radius */
             box-shadow: 0 5px 15px rgba(0,0,0,0.05); /* Matches sweet-image shadow */
             aspect-ratio: 4/3; /* Maintain aspect ratio */
+            min-height: 200px; /* Ensure a minimum height on smaller screens */
         }
         .slider-image {
             width: 100%;
@@ -380,9 +381,6 @@
             .footer-links-group .flex.justify-center.md\:justify-start.gap-6.text-3xl i {
                 font-size: 1.5rem;
             }
-            .slider-container {
-                min-height: 200px; /* Even smaller minimum height for very small screens */
-            }
         }
 
         /* Even smaller mobile screens (e.g., very narrow phone viewports) */
@@ -562,7 +560,7 @@
                 <div class="flex flex-col md:flex-row items-center md:gap-12 lg:gap-16">
                     <!-- Image Slider Column -->
                     <div class="md:w-1/2 mb-8 md:mb-0">
-                        <div class="slider-container">
+                        <div class="slider-container" id="about-us-slider">
                             <img src="bronx.webp" alt="Bronx Skyline" class="slider-image active">
                             <img src="Bronx-1024x683.jpg" alt="Bronx Street View" class="slider-image">
                             <img src="upperwest.jpg" alt="Upper West Side Manhattan" class="slider-image">
@@ -1007,6 +1005,9 @@
             }, 3000);
         }
 
+        // Variable to hold the interval ID for the automatic slideshow
+        let autoSlideInterval;
+
         // Function to control which sections are visible
         function showSection(sectionId) {
             const allSections = document.querySelectorAll('main > section'); // Target top-level sections
@@ -1019,9 +1020,12 @@
                 // Force display to block, overriding potential conflicting rules
                 activeSection.style.setProperty('display', 'block', 'important');
 
-                // For the 'about-section', ensure slider is initialized
-                if (sectionId === 'about-section' && typeof showSlides === 'function') {
-                    showSlides(slideIndex);
+                // For the 'about-section', ensure slider is initialized and auto-play starts
+                if (sectionId === 'about-section') {
+                    showSlides(slideIndex); // Show the current slide
+                    startAutoSlide(); // Start the automatic slideshow
+                } else {
+                    stopAutoSlide(); // Stop the automatic slideshow if not on the about section
                 }
                 // Scroll to section, accounting for header height
                 const headerHeight = document.querySelector('header').offsetHeight || 0;
@@ -1204,6 +1208,23 @@
             showSlides(slideIndex = n);
         }
 
+        // Function to start the automatic slideshow
+        function startAutoSlide() {
+            // Clear any existing interval to prevent multiple intervals running
+            stopAutoSlide();
+            // Set a new interval to change slides every 3 seconds (3000 milliseconds)
+            autoSlideInterval = setInterval(() => {
+                plusSlides(1);
+            }, 3000);
+        }
+
+        // Function to stop the automatic slideshow
+        function stopAutoSlide() {
+            if (autoSlideInterval) {
+                clearInterval(autoSlideInterval);
+                autoSlideInterval = null;
+            }
+        }
 
         document.addEventListener('DOMContentLoaded', function() {
             // Initially show the combined home and menu section
@@ -1211,6 +1232,16 @@
             populateSweetMenu('MainMenuDefault', 'sweet-menu-grid'); // Populate the default menu grid
             populateOrderMenuSelection(); // Populate the menu selection for the order form
             updateOrderSummary(); // Initialize empty summary
+
+            // Add event listeners for the About Us slider container for pause/resume on hover
+            const aboutUsSlider = document.getElementById('about-us-slider');
+            if (aboutUsSlider) {
+                aboutUsSlider.addEventListener('mouseover', stopAutoSlide);
+                aboutUsSlider.addEventListener('mouseout', startAutoSlide);
+                // For touch devices, a tap might be considered a 'hover' depending on browser.
+                // For a more robust solution, you might consider touch events for pause/play.
+                // For now, auto-slide will continue on touch devices unless dots are interacted with.
+            }
 
             // Event listeners for dropdown category selection
             document.querySelectorAll('.dropdown-item').forEach(item => {

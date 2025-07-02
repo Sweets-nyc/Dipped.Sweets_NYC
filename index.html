@@ -283,10 +283,12 @@
 </head>
 <body>
     <!-- Message Box container -->
-    <div id="messageBox" class="message-box fixed top-4 left-1/2 -translate-x-1/2 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-[1000] opacity-0 transition-opacity duration-300 ease-in-out"></div>
+    <div id="messageBox" class="message-box fixed top-4 left-50 -translate-x-1/2 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-[1000] opacity-0 transition-opacity duration-300 ease-in-out"></div>
 
     <div class="container">
-        <h1 class="text-4xl font-bold mb-8 text-center">Dipped Sweets NYC </h1>
+        <h1 class="text-4xl font-bold mb-8 text-center">Dipped Sweets NYC - Invoice</h1>
+        <p id="userIdDisplay" class="text-sm text-gray-500 text-center mb-4"></p>
+
 
         <!-- Invoice Input Form -->
         <div id="invoiceFormSection" class="form-section">
@@ -433,7 +435,7 @@
         <div id="invoiceOutputSection" class="invoice-output hidden">
             <div class="invoice-header">
                 <!-- Circular Logo Placeholder -->
-                <img id="invoiceLogo" src="IMG_8127.PNG" alt="Company Logo" class="absolute rounded-full object-cover">
+                <img id="invoiceLogo" src="https://placehold.co/80x80/F8E6DD/6F4E37?text=Logo" alt="Company Logo" class="absolute rounded-full object-cover">
                 <h2 class="text-4xl font-bold text-[#6F4E37] mb-2">INVOICE</h2>
                 <p class="text-gray-700 text-lg">Dipped Sweets NYC</p>
                 <p class="text-gray-600 text-sm">Handcrafted Dipped Treats</p>
@@ -521,6 +523,9 @@
             </div>
 
             <div class="flex justify-center gap-4 mt-8">
+                <button id="saveInvoiceBtn" class="btn-primary flex items-center">
+                    Save Invoice <i class="fas fa-save ml-2"></i>
+                </button>
                 <button id="printInvoiceBtn" class="btn-primary flex items-center">
                     Print Invoice <i class="fas fa-print ml-2"></i>
                 </button>
@@ -531,7 +536,59 @@
         </div>
     </div>
 
-    <script>
+    <script type="module">
+        // Firebase imports
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Firebase variables (MANDATORY: use these global variables)
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+        let app;
+        let db;
+        let auth;
+        let userId = null; // To store the authenticated user ID
+
+        // Initialize Firebase
+        if (Object.keys(firebaseConfig).length > 0) {
+            app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            auth = getAuth(app);
+
+            // Authenticate user
+            onAuthStateChanged(auth, async (user) => {
+                if (user) {
+                    userId = user.uid;
+                    document.getElementById('userIdDisplay').textContent = `User ID: ${userId}`;
+                } else {
+                    try {
+                        if (initialAuthToken) {
+                            const userCredential = await signInWithCustomToken(auth, initialAuthToken);
+                            userId = userCredential.user.uid;
+                            document.getElementById('userIdDisplay').textContent = `User ID: ${userId}`;
+                        } else {
+                            const userCredential = await signInAnonymously(auth);
+                            userId = userCredential.user.uid;
+                            document.getElementById('userIdDisplay').textContent = `User ID (Anonymous): ${userId}`;
+                        }
+                    } catch (error) {
+                        console.error("Firebase authentication error:", error);
+                        showMessage(`Authentication failed: ${error.message}`, true);
+                        userId = crypto.randomUUID(); // Fallback to a random ID if auth fails
+                        document.getElementById('userIdDisplay').textContent = `User ID (Fallback): ${userId}`;
+                    }
+                }
+            });
+        } else {
+            console.warn("Firebase config not found. Firestore features will be disabled.");
+            showMessage("Firebase not configured. Save functionality disabled.", true);
+            userId = crypto.randomUUID(); // Generate a random ID even if Firebase isn't configured
+            document.getElementById('userIdDisplay').textContent = `User ID (No Firebase Config): ${userId}`;
+        }
+
         // Data for your menu items (copied from your website's script)
         const sweetsData = [
             {
@@ -1021,6 +1078,54 @@
             togglePriceVisibility(); // Apply visibility to the generated invoice
         }
 
+        // Function to save the current invoice to Firestore
+        async function saveInvoice() {
+            if (!db || !userId) {
+                showMessage("Firestore not initialized or user not authenticated. Cannot save invoice.", true);
+                return;
+            }
+
+            // Collect all data from the *output* section to ensure it's the generated invoice
+            const invoiceData = {
+                invoiceNumber: document.getElementById('outputInvoiceNumber').textContent,
+                invoiceDate: document.getElementById('outputInvoiceDate').textContent,
+                dueDate: document.getElementById('outputDueDate').textContent,
+                clientName: document.getElementById('outputClientName').textContent,
+                clientAddress: document.getElementById('outputClientAddress').innerHTML.replace(/<br>/g, '\n'), // Convert <br> back to newline
+                clientEmail: document.getElementById('outputClientEmail').textContent,
+                clientPhone: document.getElementById('outputClientPhone').textContent,
+                deliveryDate: document.getElementById('outputDeliveryDate').textContent,
+                deliveryTime: document.getElementById('outputDeliveryTime').textContent,
+                deliveryLocation: document.getElementById('outputDeliveryLocation').innerHTML.replace(/<br>/g, '\n'),
+                notes: document.getElementById('outputNotes').textContent,
+                subtotal: parseFloat(document.getElementById('outputSubtotal').textContent.replace('$', '')),
+                deliveryFee: parseFloat(document.getElementById('outputDeliveryFee').textContent.replace('$', '')),
+                depositReceived: parseFloat(document.getElementById('outputDepositReceived').textContent.replace('$', '')),
+                grandTotal: parseFloat(document.getElementById('outputGrandTotal').textContent.replace('$', '')),
+                amountDue: parseFloat(document.getElementById('outputAmountDue').textContent.replace('$', '')),
+                hidePrices: document.getElementById('hidePricesToggle').checked,
+                items: invoiceItems.map(item => ({ // Use the original invoiceItems array for full detail
+                    description: item.description,
+                    quantity: item.quantity,
+                    unitPrice: item.unitPrice,
+                    total: item.total
+                })),
+                savedAt: serverTimestamp(), // Firestore timestamp
+                userId: userId // Store the user ID for security rules
+            };
+
+            try {
+                // Collection path: /artifacts/{appId}/users/{userId}/invoices
+                const docRef = await addDoc(collection(db, `artifacts/${appId}/users/${userId}/invoices`), invoiceData);
+                showMessage(`Invoice saved successfully! ID: ${docRef.id}`);
+                console.log("Document written with ID: ", docRef.id);
+            } catch (e) {
+                console.error("Error adding document: ", e);
+                showMessage(`Error saving invoice: ${e.message}`, true);
+            }
+        }
+
+
         // Function to reset the form
         function resetForm() {
             document.getElementById('invoiceFormSection').reset(); // Resets form fields
@@ -1035,16 +1140,37 @@
             document.getElementById('hidePricesToggle').checked = false; // Uncheck hide prices
             togglePriceVisibility(); // Ensure prices are visible after reset
             showMessage("Form has been reset.");
+            // Re-apply default notes and deposit on reset
+            setInitialFormValues();
         }
 
-        // Event Listeners
-        document.addEventListener('DOMContentLoaded', function() {
-            // Set today's date as default for invoiceDate
+        // Function to set initial form values including notes and deposit
+        function setInitialFormValues() {
             const today = new Date();
             const yyyy = today.getFullYear();
             const mm = String(today.getMonth() + 1).padStart(2, '0'); // Months start at 0!
             const dd = String(today.getDate()).padStart(2, '0');
             document.getElementById('invoiceDate').value = `${yyyy}-${mm}-${dd}`;
+
+            // Pre-fill notes for the donation scenario
+            document.getElementById('invoiceNotes').value = `Dietary Restrictions: Nut-free options only.
+
+Regarding the tax acknowledgment letter: As a small business just starting out, we're not set up to utilize those kinds of tax deductions at this time.`;
+
+            // Set default delivery fee and deposit
+            document.getElementById('deliveryFee').value = '0.00';
+            document.getElementById('depositReceived').value = '45.00';
+
+            // Set default due date to October 21, 2025
+            document.getElementById('dueDate').value = '2025-10-21';
+
+            calculateAndDisplayCurrentTotals(); // Update totals based on these initial values
+        }
+
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            setInitialFormValues(); // Set initial values on load
 
             populateMenuItems('All'); // Initial population of menu items
 
@@ -1088,6 +1214,9 @@
                 document.getElementById('invoiceFormSection').classList.remove('hidden');
                 togglePriceVisibility(); // Ensure visibility is correct when returning to form
             });
+
+            // New: Event listener for the Save Invoice button
+            document.getElementById('saveInvoiceBtn').addEventListener('click', saveInvoice);
             
             // Listen for changes on the delivery fee and deposit input to update totals
             document.getElementById('deliveryFee').addEventListener('input', calculateAndDisplayCurrentTotals);

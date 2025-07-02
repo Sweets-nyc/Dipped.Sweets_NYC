@@ -105,6 +105,10 @@
             text-align: center;
             margin-bottom: 1.5rem;
         }
+        /* Added relative positioning for invoice-header to contain absolute logo */
+        .invoice-header {
+            position: relative;
+        }
         .invoice-details, .invoice-items, .invoice-summary {
             margin-bottom: 1.5rem;
         }
@@ -163,6 +167,17 @@
         .hidden-price {
             display: none !important;
         }
+        /* Logo styling for screen output */
+        #invoiceLogo {
+            position: absolute;
+            top: 1rem; /* Adjust as needed */
+            left: 1rem; /* Adjust as needed */
+            width: 80px; /* Size for screen */
+            height: 80px; /* Size for screen */
+            border-radius: 50%; /* Circular shape */
+            object-fit: cover; /* Ensure image covers the area */
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1); /* Subtle shadow */
+        }
         @media print {
             body {
                 background-color: #fff;
@@ -193,12 +208,31 @@
                 color: #333333 !important; /* Ensure black text for print */
                 text-shadow: none !important; /* Remove text shadows */
             }
+            .invoice-header {
+                position: relative; /* Ensure positioning context */
+                text-align: left; /* Align text to left for print */
+                padding-top: 0.5rem; /* Add some padding at the top for print */
+                padding-left: 90px; /* Make space for the logo on the left */
+                margin-bottom: 0.8rem; /* Reduced margin */
+            }
             .invoice-header h2 {
-                font-size: 20pt; /* Further adjust header font size for print */
-                margin-bottom: 0.3rem; /* Reduced margin */
+                font-size: 28pt; /* Larger for main title "INVOICE" */
+                margin-bottom: 0.1rem; /* Reduced margin */
+                color: #333333 !important; /* Ensure black text */
             }
             .invoice-header p {
-                font-size: 8pt; /* Further reduced font size */
+                font-size: 9pt; /* Smaller text for company details */
+                line-height: 1.2;
+            }
+            #invoiceLogo {
+                position: absolute;
+                top: 0.5rem; /* Adjust as needed for print */
+                left: 0.5rem; /* Adjust as needed for print */
+                width: 80px; /* Larger size for print */
+                height: 80px; /* Larger size for print */
+                border-radius: 50%;
+                object-fit: cover;
+                box-shadow: none; /* Remove shadow for print */
             }
             .invoice-details, .invoice-items, .invoice-summary, .invoice-notes, .invoice-delivery-info {
                 margin-bottom: 0.5rem; /* Further reduced margins between sections */
@@ -249,10 +283,10 @@
 </head>
 <body>
     <!-- Message Box container -->
-    <div id="messageBox" class="message-box fixed top-4 left-50% -translate-x-1/2 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-[1000] opacity-0 transition-opacity duration-300 ease-in-out"></div>
+    <div id="messageBox" class="message-box fixed top-4 left-1/2 -translate-x-1/2 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-[1000] opacity-0 transition-opacity duration-300 ease-in-out"></div>
 
     <div class="container">
-        <h1 class="text-4xl font-bold mb-8 text-center">Dipped Sweets NYC - Invoice Creator</h1>
+        <h1 class="text-4xl font-bold mb-8 text-center">Dipped Sweets NYC - Invoice</h1>
 
         <!-- Invoice Input Form -->
         <div id="invoiceFormSection" class="form-section">
@@ -398,8 +432,11 @@
         <!-- Invoice Output Section (initially hidden) -->
         <div id="invoiceOutputSection" class="invoice-output hidden">
             <div class="invoice-header">
-                <h2 class="text-4xl font-bold text-[#6F4E37] mb-2">Dipped Sweets NYC</h2>
-                <p class="text-gray-700 text-lg">Handcrafted Dipped Treats</p>
+                <!-- Circular Logo Placeholder -->
+                <img id="invoiceLogo" src="https://placehold.co/80x80/F8E6DD/6F4E37?text=Logo" alt="Company Logo" class="absolute rounded-full object-cover">
+                <h2 class="text-4xl font-bold text-[#6F4E37] mb-2">INVOICE</h2>
+                <p class="text-gray-700 text-lg">Dipped Sweets NYC</p>
+                <p class="text-gray-600 text-sm">Handcrafted Dipped Treats</p>
                 <p class="text-gray-600 text-sm">DippedSweets.nyc@gmail.com | +1 (929) 323-9892</p>
                 <p class="text-gray-600 text-sm">Serving The Bronx, Upper East Side & Upper West Side Manhattan, and Astoria, Queens</p>
             </div>

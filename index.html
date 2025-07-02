@@ -1340,10 +1340,10 @@
         // Function to set initial form values including notes and deposit
         function setInitialFormValues() {
             const today = new Date();
-            const yyyy = today.getFullYear();
-            const mm = String(today.getMonth() + 1).padStart(2, '0'); // Months start at 0!
-            const dd = String(today.getDate()).padStart(2, '0');
-            document.getElementById('invoiceDate').value = `${yyyy}-${mm}-${dd}`;
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0'); // Months start at 0!
+            const day = String(today.getDate()).padStart(2, '0');
+            document.getElementById('invoiceDate').value = `${year}-${month}-${day}`;
 
             // Pre-fill notes for the donation scenario
             document.getElementById('invoiceNotes').value = `Dietary Restrictions: Nut-free options only.

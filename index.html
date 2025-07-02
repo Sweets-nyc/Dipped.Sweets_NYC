@@ -2,17 +2,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!-- Viewport meta tag updated: initial-scale set to 0.65 to make the page appear more zoomed out by default.
-         shrink-to-fit=no is added for better compatibility on some mobile browsers (e.g., older iOS Safari). -->
-    <meta name="viewport" content="width=device-width, initial-scale=0.65, shrink-to-fit=no">
-    <title>Dipped Sweetss NYC - Handcrafted Dipped Treats</title>
+    <!-- Viewport meta tag updated: initial-scale set to 1.0 for standard responsive behavior.
+         shrink-to-fit=no is kept for better compatibility on some mobile browsers. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Dipped Sweets NYC - Handcrafted Dipped Treats</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts - Fredoka One (for headings), Inter (for body) -->
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Google Fonts - Poppins (for headings), Inter (for body) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
     <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- Custom CSS for Dipped Sweetss NYC -->
+    <!-- Custom CSS for Dipped Sweets NYC -->
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -22,7 +22,7 @@
             font-size: 1rem; /* Base font size for desktop (1rem = 16px by default) */
         }
         h1, h2, h3, h4 {
-            font-family: 'Fredoka One', cursive;
+            font-family: 'Poppins', sans-serif; /* Changed to Poppins */
         }
         .container-main {
             max-width: 1200px; /* Limits content width on large screens */
@@ -159,6 +159,78 @@
             color: #E28FA0; /* Darker Pink */
         }
 
+        /* Slider specific styles */
+        .slider-container {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            border-radius: 1.5rem; /* Matches sweet-image border-radius */
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05); /* Matches sweet-image shadow */
+            aspect-ratio: 4/3; /* Maintain aspect ratio */
+        }
+        .slider-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none; /* Hidden by default */
+            transition: opacity 0.5s ease-in-out;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .slider-image.active {
+            display: block;
+            opacity: 1;
+        }
+        .slider-dots {
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 10;
+        }
+        .dot {
+            height: 12px;
+            width: 12px;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            border: 1px solid rgba(0,0,0,0.2);
+        }
+        .dot.active {
+            background-color: #F8A4B8; /* Soft Pink */
+            border: 1px solid #E28FA0; /* Darker Pink */
+        }
+
+        /* Message Box styles */
+        .message-box {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #4CAF50; /* Green for success */
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+            font-size: 1rem;
+            text-align: center;
+        }
+        .message-box.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        .message-box.error {
+            background-color: #f44336; /* Red for error */
+        }
+
         /* Responsive Adjustments: These will apply when the *actual device screen width* is smaller. */
 
         /* Styles for medium-sized screens (e.g., tablets in landscape, large phones) */
@@ -171,6 +243,9 @@
             }
             .section-heading {
                 font-size: 2.8rem;
+            }
+            .slider-container {
+                min-height: 250px; /* Ensure a minimum height on smaller screens */
             }
         }
 
@@ -185,9 +260,12 @@
                 padding-top: 1.5rem;
                 padding-bottom: 1.5rem;
             }
-            .logo-text {
-                font-size: 2rem !important; /* Smaller logo for mobile */
-                margin-bottom: 1rem !important;
+            .logo-container img { /* Added style for logo image on mobile */
+                width: 150px; /* Adjust as needed */
+                height: auto;
+            }
+            .logo-text { /* Hide text logo on mobile if image is present */
+                display: none !important;
             }
             .navbar-nav {
                 /* Changed to grid for 2 columns */
@@ -273,7 +351,7 @@
                 font-size: 1.1rem; /* Smaller tagline */
             }
             .cta-button {
-                font-size: 1.1rem; /* Smaller CTA button */
+                font-size: 1.1rem;
                 padding: 0.8rem 1.8rem;
             }
             .section-heading {
@@ -297,10 +375,13 @@
                 font-size: 1rem; /* Smaller footer links */
             }
             .footer-links-group h4 {
-                font-size: 1.6rem; /* Smaller footer heading */
+                font-size: 1.6rem;
             }
             .footer-links-group .flex.justify-center.md\:justify-start.gap-6.text-3xl i {
                 font-size: 1.5rem;
+            }
+            .slider-container {
+                min-height: 200px; /* Even smaller minimum height for very small screens */
             }
         }
 
@@ -403,8 +484,11 @@
 
     <header class="header-bg py-6">
         <div class="container-main flex flex-col md:flex-row justify-between items-center">
-            <div class="mb-4 md:mb-0">
-                <a href="#home" class="logo-text text-center block" onclick="showSection('home-menu-combined'); return false;">Dipped Sweetss NYC</a>
+            <div class="mb-4 md:mb-0 logo-container">
+                <!-- Placeholder for your logo image -->
+                <a href="#home" class="block" onclick="showSection('home-menu-combined'); return false;">
+                    <img src="IMG_8127.PNG" alt="Dipped Sweets NYC Logo" class="h-20 w-20 mx-auto md:mx-0 rounded-full">
+                </a>
             </div>
             <nav class="navbar-nav flex flex-wrap justify-center gap-4">
                 <a href="#home" class="nav-link text-lg" onclick="showSection('home-menu-combined'); return false;">Home</a>
@@ -412,7 +496,7 @@
                 <a href="#create-order" class="nav-link text-lg" onclick="showSection('create-order-section'); return false;">Create Your Order</a>
                 <a href="#contact" class="nav-link text-lg" onclick="showSection('contact-section'); return false;">Contact</a>
                 <a href="#about" class="nav-link text-lg" onclick="showSection('about-section'); return false;">About Us</a>
-                <!-- Categories Dropdown - Moved to the end -->
+                <!-- Categories Dropdown -->
                 <div class="nav-link text-lg group">
                     <a href="#menu" class="inline-flex items-center" onclick="showSection('menu-only-section'); return false;">
                         Categories <i class="fas fa-chevron-down ml-2 text-base"></i>
@@ -421,7 +505,7 @@
                         <a href="#menu" class="dropdown-item" data-category="MainMenuDefault" onclick="showSection('menu-only-section'); populateSweetMenu('MainMenuDefault', 'sweet-menu-grid-alt'); return false;">All Other Treats</a>
                         <a href="#menu" class="dropdown-item" data-category="Dipped Strawberries" onclick="showSection('menu-only-section'); populateSweetMenu('Dipped Strawberries', 'sweet-menu-grid-alt'); return false;">Dipped Strawberries</a>
                         <a href="#menu" class="dropdown-item" data-category="Dipped Pretzels" onclick="showSection('menu-only-section'); populateSweetMenu('Dipped Pretzels', 'sweet-menu-grid-alt'); return false;">Dipped Pretzels</a>
-                        <a href="#menu" class="dropdown-item" data-category="Cake Sicles & Pops" onclick="showSection('menu-only-section'); populateSweetMenu('Cake Sicles & Pops', 'sweet-menu-grid-alt'); return false;">Cake Pops & Covered Treats</a>
+                        <a href="#menu" class="dropdown-item" data-category="Cake Pops" onclick="showSection('menu-only-section'); populateSweetMenu('Cake Pops', 'sweet-menu-grid-alt'); return false;">Cake Pops</a>
                         <a href="#menu" class="dropdown-item" data-category="Rice Crispy & Dipped Cupcakes" onclick="showSection('menu-only-section'); populateSweetMenu('Rice Crispy & Dipped Cupcakes', 'sweet-menu-grid-alt'); return false;">Rice Crispy & Dipped Cupcakes</a>
                         <a href="#menu" class="dropdown-item" data-category="Individual Sample Cups" onclick="showSection('menu-only-section'); populateSweetMenu('Individual Sample Cups', 'sweet-menu-grid-alt'); return false;">Individual Sample Cups</a>
                     </div>
@@ -437,7 +521,7 @@
             <div id="home-content" class="hero-section text-center pb-20">
                 <div class="container-main">
                     <h1 class="hero-title text-6xl font-extrabold mb-6 animate-fade-in-up">
-                        Indulge in Pure Bliss.
+                        Dipped Sweets NYC
                     </h1>
                     <p class="hero-tagline text-xl mb-10 max-w-2xl mx-auto animate-fade-in-up delay-200">
                         Handcrafted dipped treats, made with love and the finest ingredients, delivered right to your door in NYC.
@@ -471,23 +555,45 @@
         </section>
 
 
-        <!-- About Us Section -->
-        <section id="about-section" class="py-20 bg-gradient-to-tl from-[#F8E6DD] to-[#FFF8F0] rounded-t-[4rem]" style="display:none;">
-            <div class="container-main text-center">
-                <h2 class="section-heading text-5xl mb-10">Our Story: A Passion for Sweetness</h2>
-                <div class="max-w-3xl mx-auto text-lg leading-relaxed text-gray-700 space-y-6">
-                    <p>
-                        At **Dipped Sweetss NYC**, we believe in the power of a perfect bite. Born out of a deep love for delicious treats and a passion for craftsmanship, our journey began in a small kitchen, experimenting with the finest chocolates and freshest ingredients to create something truly special.
-                    </p>
-                    <p>
-                        Every strawberry, pretzel, and cookie is hand-dipped with meticulous care, ensuring not just a beautiful appearance but an unforgettable taste. We pride ourselves on using premium, ethically sourced chocolate and supporting local suppliers whenever possible.
-                    </p>
-                    <p>
-                        Our mission is to bring joy and a touch of luxury to your everyday moments and special celebrations across New York City. From elegant party favors to a simple indulgence after a long day, Dipped Sweetss NYC is here to sweeten your life.
-                    </p>
-                    <p>
-                        Thank you for letting us be a part of your sweet journey!
-                    </p>
+        <!-- About Us Section - UPDATED -->
+        <section id="about-section" class="py-20 bg-gradient-to-tl from-[#F8E6DD] to-[#FFF8F0] rounded-t-[4rem] rounded-b-[4rem] shadow-lg" style="display:none;">
+            <div class="container-main">
+                <h2 class="section-heading text-5xl text-center mb-12">Our Story: A Passion for Sweetness</h2>
+                <div class="flex flex-col md:flex-row items-center md:gap-12 lg:gap-16">
+                    <!-- Image Slider Column -->
+                    <div class="md:w-1/2 mb-8 md:mb-0">
+                        <div class="slider-container">
+                            <img src="bronx.webp" alt="Bronx Skyline" class="slider-image active">
+                            <img src="Bronx-1024x683.jpg" alt="Bronx Street View" class="slider-image">
+                            <img src="upperwest.jpg" alt="Upper West Side Manhattan" class="slider-image">
+
+                            <div class="slider-dots">
+                                <span class="dot active" onclick="currentSlide(1)"></span>
+                                <span class="dot" onclick="currentSlide(2)"></span>
+                                <span class="dot" onclick="currentSlide(3)"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Text Column -->
+                    <div class="md:w-1/2 text-lg leading-relaxed text-gray-700 space-y-6 text-center md:text-left">
+                        <p>
+                            At **Dipped Sweets NYC**, our story is deeply rooted in the heart of this city. Born in **Manhattan** and raised in the **Bronx**, I know these streets by heart and carry a profound love for both Upper Manhattan and the Bronx – they are truly my place. With just **$10 in hand**, a dream, and unwavering determination, I embarked on this journey to create something special.
+                        </p>
+                        <p>
+                            We're still growing, but our passion goes into every single treat. Each strawberry, pretzel, and cookie is hand-dipped with meticulous care, crafted using **premium, ethically sourced chocolate** and the freshest ingredients. Our goal is to stand out and bring a genuine moment of sweetness and a special touch to everyone we serve.
+                        </p>
+                        <p>
+                            Whether you're a large corporation looking for unique gifts, a local supplier we partner with, or an individual simply craving a delicious indulgence, we're here to make your day a little sweeter. Our mission is to spread joy across New York City, one delicious bite at a time.
+                        </p>
+                        <p class="font-semibold text-[#6F4E37] italic">
+                            Thank you for letting us be a part of your sweet journey!
+                        </p>
+                        <div class="mt-8 text-center md:text-left">
+                            <a href="#create-order" class="cta-button inline-flex items-center px-6 py-3 rounded-full font-bold text-lg shadow-md hover:shadow-lg" onclick="showSection('create-order-section'); return false;">
+                                Create Your Custom Order <i class="fas fa-cookie-bite ml-2"></i>
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -510,11 +616,11 @@
                     </p>
                     <p class="flex items-center gap-3">
                         <i class="fab fa-instagram text-[#F8A4B8] text-2xl"></i>
-                        <a href="https://www.instagram.com/dippedsweets_nyc/" target="_blank" rel="noopener noreferrer" class="hover:text-[#E28FA0] transition-colors duration-300">@dippedsweetss_nyc</a>
+                        <a href="https://www.instagram.com/dippedsweets_nyc/" target="_blank" rel="noopener noreferrer" class="hover:text-[#E28FA0] transition-colors duration-300">@dippedsweets_nyc</a>
                     </p>
                     <p class="flex items-center gap-3">
                         <i class="fab fa-facebook text-[#F8A4B8] text-2xl"></i>
-                        <a href="https://www.facebook.com/profile.php?id=61578114530851" target="_blank" rel="noopener noreferrer" class="hover:text-[#E28FA0] transition-colors duration-300">Dipped Sweetss NYC on Facebook</a>
+                        <a href="https://www.facebook.com/profile.php?id=61578114530851" target="_blank" rel="noopener noreferrer" class="hover:text-[#E28FA0] transition-colors duration-300">Dipped Sweets NYC on Facebook</a>
                     </p>
                 </div>
 
@@ -668,8 +774,8 @@
     <footer class="footer-bg py-12 text-white text-center rounded-t-[4rem]">
         <div class="container-main grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
             <div class="footer-logo">
-                <h3 class="logo-text text-4xl font-extrabold text-[#FFF8F0] mb-4">Dipped Sweetss NYC</h3>
-                <p class="text-sm text-gray-200">&copy; 2025 Dipped Sweetss NYC. All rights reserved.</p>
+                <h3 class="logo-text text-4xl font-extrabold text-[#FFF8F0] mb-4">Dipped Sweets NYC</h3>
+                <p class="text-sm text-gray-200">&copy; 2025 Dipped Sweets NYC. All rights reserved.</p>
             </div>
             <div class="footer-links-group">
                 <h4 class="text-2xl font-bold mb-4 text-[#F8A4B8]">Quick Links</h4>
@@ -686,7 +792,7 @@
                 <div class="flex justify-center md:justify-start gap-6 text-3xl">
                     <a href="https://www.instagram.com/dippedsweets_nyc/" aria-label="Instagram" class="footer-link hover:text-[#E0B400]" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
                     <a href="https://www.facebook.com/profile.php?id=61578114530851" aria-label="Facebook" class="footer-link hover:text-[#E0B400]" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" aria-label="TikTok" class="footer-link hover:text-[#E0B400]"><i class="fab fa-tiktok"></i></a>
+                    <a href="https://www.tiktok.com/@dippedsweetsnyc?lang=en" aria-label="TikTok" class="footer-link hover:text-[#E0B400]" target="_blank" rel="noopener noreferrer"><i class="fab fa-tiktok"></i></a>
                 </div>
             </div>
         </div>
@@ -733,7 +839,7 @@
                 displayOnMainMenu: false // Remove from home screen
             },
             {
-                img: "https://placehold.co/300x200/F8E6DD/6F4E37?text=Custom+Strawberry",
+                img: "43MGOODAVXURGXTKKV6QSADP.webp",
                 title: "Custom Dipped Strawberries",
                 description: "Design your own! Choose your chocolate, toppings, and drizzles for a truly unique treat.",
                 simplePrice: "Inquire for Price",
@@ -742,7 +848,7 @@
                 displayOnMainMenu: false
             },
             {
-                img: "https://placehold.co/300x200/F8E6DD/6F4E37?text=Dark+Raspberry",
+                img: "Clean-Eating-Chocolate-Dipped-Strawberries-CleanFoodCrush.jpg",
                 title: "Nuty Strawberries",
                 description: "Fresh strawberries dipped in rich milk chocolate, adorned with dried cut nuts of your choice.",
                 simplePrice: "$3.42/each",
@@ -768,14 +874,14 @@
                 category: "Dipped Pretzels",
                 displayOnMainMenu: true // Keep on home screen
             },
-            // Removed "Custom Cake Sicles"
+            // Removed "Custom Cake Sicles" entirely
             {
                 img: "7d70783c-71df-41f5-9a6f-1bb84b1dec8a.jpeg",
                 title: "Classic Cake Pops",
                 description: "Moist cake bites on a stick, hand-dipped in chocolate and decorated with sprinkles.",
                 simplePrice: "$3.17/each", // Adjusted from $38.00/dozen
                 partyPrice: "$2.83/each", // Adjusted from $34.00/dozen
-                category: "Cake Sicles & Pops", // Category remains for other pops/oreos
+                category: "Cake Pops", // Changed category back to "Cake Pops"
                 displayOnMainMenu: true // Keep on home screen
             },
             {
@@ -784,7 +890,7 @@
                 description: "Decadent red velvet cake pops with elegant white chocolate swirls.",
                 simplePrice: "$3.42/each", // Adjusted from $41.00/dozen
                 partyPrice: "$3.08/each", // Adjusted from $37.00/dozen
-                category: "Cake Sicles & Pops",
+                category: "Cake Pops", // Changed category back to "Cake Pops"
                 displayOnMainMenu: false // Remove from home screen
             },
             {
@@ -793,7 +899,7 @@
                 description: "Rich brownie-flavored cake pops dipped in dark chocolate and topped with mini chocolate chips.",
                 simplePrice: "$3.17/each", // Adjusted from $38.00/dozen
                 partyPrice: "$2.83/each", // Adjusted from $34.00/dozen
-                category: "Cake Sicles & Pops",
+                category: "Cake Pops", // Changed category back to "Cake Pops"
                 displayOnMainMenu: false // Remove from home screen
             },
             {
@@ -802,7 +908,7 @@
                 description: "Classic Oreos dipped in smooth chocolate, available in various colors and simple drizzles.",
                 simplePrice: "$3.42/each", // Adjusted from $41.00/dozen
                 partyPrice: "$3.08/each", // Adjusted from $37.00/dozen
-                category: "Cake Sicles & Pops",
+                category: "Cake Pops", // Changed category back to "Cake Pops"
                 displayOnMainMenu: false // Remove from home screen
             },
             {
@@ -811,17 +917,8 @@
                 description: "Sweet cookie dough cake pops dipped in milk chocolate, a delightful treat.",
                 simplePrice: "$3.42/each", // Adjusted from $41.00/dozen
                 partyPrice: "$3.08/each", // Adjusted from $37.00/dozen
-                category: "Cake Sicles & Pops",
+                category: "Cake Pops", // Changed category back to "Cake Pops"
                 displayOnMainMenu: false // Remove from home screen
-            },
-            {
-                img: "823f3f9d-c336-4992-b8f1-64ae3e2761e1.jpeg",
-                title: "Dipped Churro Bites (Sample)",
-                description: "Crispy churro bites, dipped in chocolate and dusted with cinnamon sugar.",
-                simplePrice: "$3.00/each",
-                partyPrice: "$2.00/each",
-                category: "Cake Sicles & Pops", // Moved to this category
-                displayOnMainMenu: true // Keep on home screen
             },
             {
                 img: "14c8746e-cac5-4380-b743-1e3b4d8326ec.jpeg",
@@ -876,6 +973,15 @@
                 partyPrice: "$4.00/each",
                 category: "Individual Sample Cups",
                 displayOnMainMenu: true // Keep on home screen
+            },
+            {
+                img: "823f3f9d-c336-4992-b8f1-64ae3e2761e1.jpeg",
+                title: "Dipped Churro Bites (Sample)",
+                description: "Crispy churro bites, dipped in chocolate and dusted with cinnamon sugar.",
+                simplePrice: "$3.00/each",
+                partyPrice: "$2.00/each",
+                category: "Individual Sample Cups",
+                displayOnMainMenu: true // Keep on home screen
             }
         ];
 
@@ -908,29 +1014,18 @@
                 section.style.display = 'none'; // Hide all sections
             });
 
-            if (sectionId === 'home-menu-combined') {
-                // When "Home" is clicked, show the combined home/menu section
-                document.getElementById('home-menu-combined').style.display = 'block';
-                // Ensure the main menu grid is populated when home is shown
-                populateSweetMenu('MainMenuDefault', 'sweet-menu-grid');
-                window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll to top for home
-            } else if (sectionId === 'menu-only-section') {
-                // When "Menu" is clicked, show only the dedicated menu section
-                document.getElementById('menu-only-section').style.display = 'block';
-                // Populate the alternative menu grid for the menu-only view, showing all items
-                populateSweetMenu('AllCategories', 'sweet-menu-grid-alt'); // Changed 'MainMenuDefault' to 'AllCategories' for this initial view
-                const menuSection = document.getElementById('menu-only-section');
-                if (menuSection) {
-                    window.scrollTo({ top: menuSection.offsetTop - document.querySelector('header').offsetHeight, behavior: 'smooth' });
+            const activeSection = document.getElementById(sectionId);
+            if (activeSection) {
+                // Force display to block, overriding potential conflicting rules
+                activeSection.style.setProperty('display', 'block', 'important');
+
+                // For the 'about-section', ensure slider is initialized
+                if (sectionId === 'about-section' && typeof showSlides === 'function') {
+                    showSlides(slideIndex);
                 }
-            }
-            else {
-                // For other sections (About, Contact, Create Order), show only that specific section
-                const activeSection = document.getElementById(sectionId);
-                if (activeSection) {
-                    activeSection.style.display = 'block';
-                    window.scrollTo({ top: activeSection.offsetTop - document.querySelector('header').offsetHeight, behavior: 'smooth' });
-                }
+                // Scroll to section, accounting for header height
+                const headerHeight = document.querySelector('header').offsetHeight || 0;
+                window.scrollTo({ top: activeSection.offsetTop - headerHeight, behavior: 'smooth' });
             }
         }
 
@@ -1067,6 +1162,48 @@
                 });
             }
         }
+
+        // Image Slider Logic
+        let slideIndex = 1; // Start with the first slide
+
+        function showSlides(n) {
+            let i;
+            const slides = document.getElementsByClassName("slider-image");
+            const dots = document.getElementsByClassName("dot");
+
+            // Handle wrap-around for slides
+            if (n > slides.length) { slideIndex = 1 }
+            if (n < 1) { slideIndex = slides.length }
+
+            // Hide all slides and deactivate all dots
+            for (i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";
+                slides[i].classList.remove("active");
+            }
+            for (i = 0; i < dots.length; i++) {
+                dots[i].classList.remove("active");
+            }
+
+            // Display the current slide and activate the corresponding dot
+            if (slides[slideIndex - 1]) { // Check if element exists before accessing
+                slides[slideIndex - 1].style.display = "block";
+                slides[slideIndex - 1].classList.add("active");
+            }
+            if (dots[slideIndex - 1]) { // Check if element exists before accessing
+                dots[slideIndex - 1].classList.add("active");
+            }
+        }
+
+        // Next/previous controls
+        function plusSlides(n) {
+            showSlides(slideIndex += n);
+        }
+
+        // Thumbnail image controls
+        function currentSlide(n) {
+            showSlides(slideIndex = n);
+        }
+
 
         document.addEventListener('DOMContentLoaded', function() {
             // Initially show the combined home and menu section

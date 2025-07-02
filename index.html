@@ -166,20 +166,81 @@
         @media print {
             body {
                 background-color: #fff;
-                padding: 0;
+                padding: 0.5rem; /* Reduced padding for print */
+                font-size: 10pt; /* Smaller base font size for print */
             }
-            .container, .invoice-output {
+            .container {
                 box-shadow: none;
                 border: none;
                 padding: 0;
                 margin: 0;
                 max-width: 100%;
+                width: 100%; /* Ensure it takes full width of paper */
             }
             .form-section, .btn-primary, .btn-secondary, .message-box {
-                display: none !important;
+                display: none !important; /* Hide form elements when printing */
             }
             .invoice-output {
                 display: block !important; /* Ensure invoice output is visible */
+                padding: 0; /* Remove padding from output section for print */
+                margin-top: 0; /* Remove margin from output section for print */
+                border: none; /* Remove border for cleaner print */
+                box-shadow: none; /* Remove shadow for cleaner print */
+            }
+            h1, h2, h3, h4 {
+                color: #333333 !important; /* Ensure black text for print */
+                text-shadow: none !important; /* Remove text shadows */
+            }
+            .invoice-header h2 {
+                font-size: 24pt; /* Adjust header font size for print */
+                margin-bottom: 0.5rem;
+            }
+            .invoice-header p {
+                font-size: 9pt;
+            }
+            .invoice-details, .invoice-items, .invoice-summary, .invoice-notes, .invoice-delivery-info {
+                margin-bottom: 0.8rem; /* Reduced margins between sections */
+            }
+            .invoice-details h3, .invoice-items h3, .invoice-notes h3, .invoice-delivery-info h3 {
+                font-size: 14pt; /* Smaller sub-headings */
+                margin-bottom: 0.5rem;
+            }
+            .invoice-details p, .invoice-notes p, .invoice-delivery-info p {
+                font-size: 10pt; /* Smaller body text */
+            }
+            .invoice-items table, .invoice-items th, .invoice-items td {
+                border: 1px solid #cccccc; /* Lighter border for print */
+                font-size: 10pt;
+                padding: 0.4rem; /* Reduced padding in table cells */
+            }
+            .invoice-items th {
+                background-color: #f0f0f0 !important; /* Lighter background for print */
+                color: #333333 !important;
+            }
+            .invoice-summary div {
+                padding: 0.3rem 0; /* Reduced padding in summary lines */
+                font-size: 10pt;
+            }
+            .invoice-summary div:last-child {
+                font-size: 14pt; /* Grand total slightly larger */
+                padding-top: 0.6rem;
+                margin-top: 0.4rem;
+                border-top: 1px solid #6F4E37 !important; /* Thinner border for print */
+            }
+            .invoice-footer {
+                font-size: 9pt;
+                margin-top: 1.5rem;
+            }
+            /* Ensure price columns are hidden if toggle is active */
+            .output-price-column, .output-price-summary-line {
+                display: none !important; /* This ensures they are hidden if the checkbox is checked */
+            }
+            /* If prices are NOT hidden, ensure they display correctly */
+            body:not(.hide-prices-active) .output-price-column {
+                display: table-cell !important;
+            }
+            body:not(.hide-prices-active) .output-price-summary-line {
+                display: flex !important;
             }
         }
     </style>
@@ -820,6 +881,10 @@
         function togglePriceVisibility() {
             const hidePrices = document.getElementById('hidePricesToggle').checked;
 
+            // Toggle a class on the body to allow print CSS to react
+            document.body.classList.toggle('hide-prices-active', hidePrices);
+
+
             // Toggle visibility in the input form's item list header
             document.querySelectorAll('.price-column').forEach(el => {
                 el.style.display = hidePrices ? 'none' : 'block';
@@ -835,6 +900,7 @@
             }
 
             // Toggle visibility in the invoice output section
+            // These are now primarily controlled by the @media print CSS based on body class
             document.querySelectorAll('.output-price-column').forEach(el => {
                 el.style.display = hidePrices ? 'none' : 'table-cell'; // Use table-cell for table headers/data
             });

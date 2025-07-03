@@ -93,7 +93,9 @@
         .item-row:last-child {
             border-bottom: none;
         }
-        .invoice-output {
+
+        /* Common styles for invoice display (both output and saved view) */
+        .invoice-display-container {
             background-color: #fcfcfc;
             border: 1px solid #e5e7eb;
             border-radius: 1rem;
@@ -101,13 +103,13 @@
             margin-top: 2rem;
             box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
         }
+
         .invoice-header, .invoice-footer {
             text-align: center;
             margin-bottom: 1.5rem;
         }
-        /* Added relative positioning for invoice-header to contain absolute logo */
         .invoice-header {
-            position: relative;
+            position: relative; /* Added relative positioning for logo */
         }
         .invoice-details, .invoice-items, .invoice-summary {
             margin-bottom: 1.5rem;
@@ -168,7 +170,7 @@
             display: none !important;
         }
         /* Logo styling for screen output */
-        #invoiceLogo {
+        .invoice-logo { /* Changed from ID to class */
             position: absolute;
             top: 1rem; /* Adjust as needed */
             left: 1rem; /* Adjust as needed */
@@ -197,7 +199,8 @@
             .form-section, .btn-primary, .btn-secondary, .message-box {
                 display: none !important; /* Hide form elements when printing */
             }
-            .invoice-output {
+            /* Target the common invoice display container for print styles */
+            .invoice-display-container {
                 display: block !important; /* Ensure invoice output is visible */
                 padding: 0; /* Remove padding from output section for print */
                 margin-top: 0; /* Remove margin from output section for print */
@@ -216,15 +219,15 @@
                 margin-bottom: 0.8rem; /* Reduced margin */
             }
             .invoice-header h2 {
-                font-size: 28pt; /* Larger for main title "INVOICE" */
-                margin-bottom: 0.1rem; /* Reduced margin */
+                font-size: 28pt !important; /* Larger for main title "INVOICE" */
+                margin-bottom: 0.1rem !important; /* Reduced margin */
                 color: #333333 !important; /* Ensure black text */
             }
             .invoice-header p {
-                font-size: 9pt; /* Smaller text for company details */
-                line-height: 1.2;
+                font-size: 9pt !important; /* Smaller text for company details */
+                line-height: 1.2 !important;
             }
-            #invoiceLogo {
+            .invoice-logo { /* Target the class for print */
                 position: absolute;
                 top: 0.5rem; /* Adjust as needed for print */
                 left: 0.5rem; /* Adjust as needed for print */
@@ -235,37 +238,37 @@
                 box-shadow: none; /* Remove shadow for print */
             }
             .invoice-details, .invoice-items, .invoice-summary, .invoice-notes, .invoice-delivery-info {
-                margin-bottom: 0.5rem; /* Further reduced margins between sections */
+                margin-bottom: 0.5rem !important; /* Further reduced margins between sections */
             }
             .invoice-details h3, .invoice-items h3, .invoice-notes h3, .invoice-delivery-info h3 {
-                font-size: 12pt; /* Even smaller sub-headings */
-                margin-bottom: 0.3rem; /* Reduced margin */
+                font-size: 12pt !important; /* Even smaller sub-headings */
+                margin-bottom: 0.3rem !important; /* Reduced margin */
             }
             .invoice-details p, .invoice-notes p, .invoice-delivery-info p {
-                font-size: 9pt; /* Even smaller body text */
+                font-size: 9pt !important; /* Even smaller body text */
             }
             .invoice-items table, .invoice-items th, .invoice-items td {
-                border: 1px solid #cccccc; /* Lighter border for print */
-                font-size: 9pt; /* Even smaller table font size */
-                padding: 0.3rem; /* Further reduced padding in table cells */
+                border: 1px solid #cccccc !important; /* Lighter border for print */
+                font-size: 9pt !important; /* Even smaller table font size */
+                padding: 0.3rem !important; /* Further reduced padding in table cells */
             }
             .invoice-items th {
                 background-color: #f0f0f0 !important; /* Lighter background for print */
                 color: #333333 !important;
             }
             .invoice-summary div {
-                padding: 0.2rem 0; /* Further reduced padding in summary lines */
-                font-size: 9pt; /* Even smaller summary font size */
+                padding: 0.2rem 0 !important; /* Further reduced padding in summary lines */
+                font-size: 9pt !important; /* Even smaller summary font size */
             }
             .invoice-summary div:last-child {
-                font-size: 12pt; /* Grand total slightly larger, but overall smaller */
-                padding-top: 0.5rem;
-                margin-top: 0.3rem;
+                font-size: 12pt !important; /* Grand total slightly larger, but overall smaller */
+                padding-top: 0.5rem !important;
+                margin-top: 0.3rem !important;
                 border-top: 1px solid #6F4E37 !important; /* Thinner border for print */
             }
             .invoice-footer {
-                font-size: 8pt; /* Even smaller footer font size */
-                margin-top: 1rem; /* Reduced margin */
+                font-size: 8pt !important;
+                margin-top: 1rem !important;
             }
             /* Ensure price columns are hidden if toggle is active */
             .output-price-column, .output-price-summary-line {
@@ -313,22 +316,8 @@
             .saved-invoice-details p {
                 margin-bottom: 0.5rem;
             }
-            .saved-invoice-items table {
-                width: 100%;
-                border-collapse: collapse;
-                margin-top: 1rem;
-            }
-            .saved-invoice-items th, .saved-invoice-items td {
-                border: 1px solid #eee;
-                padding: 0.5rem;
-                text-align: left;
-                font-size: 0.9rem;
-            }
-            .saved-invoice-items th {
-                background-color: #F8E6DD;
-                font-weight: 600;
-                color: #6F4E37;
-            }
+            /* No specific table/th/td styles for saved-invoice-items here,
+               as they will inherit from .invoice-display-container children */
         }
     </style>
 </head>
@@ -487,10 +476,10 @@
         </div>
 
         <!-- Invoice Output Section (initially hidden) -->
-        <div id="invoiceOutputSection" class="invoice-output hidden">
+        <div id="invoiceOutputSection" class="invoice-display-container hidden">
             <div class="invoice-header">
                 <!-- Circular Logo Placeholder -->
-                <img id="invoiceLogo" src="https://placehold.co/80x80/F8E6DD/6F4E37?text=DS" alt="Company Logo" class="absolute rounded-full object-cover">
+                <img src="https://placehold.co/80x80/F8E6DD/6F4E37?text=DS" alt="Company Logo" class="invoice-logo">
                 <h2 class="text-4xl font-bold text-[#6F4E37] mb-2">INVOICE</h2>
                 <p class="text-gray-700 text-lg">Dipped Sweets NYC</p>
                 <p class="text-gray-600 text-sm">Handcrafted Dipped Treats</p>
@@ -802,7 +791,7 @@
         // Function to control which sections are visible
         function showSection(sectionId) {
             // Include #savedInvoicesSection in the selection
-            const allSections = document.querySelectorAll('.form-section, .invoice-output, #savedInvoicesSection');
+            const allSections = document.querySelectorAll('.form-section, .invoice-display-container, #savedInvoicesSection');
             allSections.forEach(section => {
                 section.classList.add('hidden'); // Hide all sections
             });
@@ -1173,8 +1162,8 @@
                                     <tr>
                                         <th>Description</th>
                                         <th class="text-center">Qty</th>
-                                        <th class="${hidePrices ? 'hidden-price' : ''} text-right">Unit Price</th>
-                                        <th class="${hidePrices ? 'hidden-price' : ''} text-right">Total</th>
+                                        <th class="output-price-column text-right">Unit Price</th>
+                                        <th class="output-price-column text-right">Total</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -1184,8 +1173,8 @@
                                 <tr>
                                     <td>${item.description}</td>
                                     <td class="text-center">${item.quantity}</td>
-                                    <td class="${hidePrices ? 'hidden-price' : ''} text-right">${hidePrices ? '' : '$' + item.unitPrice.toFixed(2)}</td>
-                                    <td class="${hidePrices ? 'hidden-price' : ''} text-right">${hidePrices ? '' : '$' + item.total.toFixed(2)}</td>
+                                    <td class="output-price-column text-right">${hidePrices ? '' : '$' + item.unitPrice.toFixed(2)}</td>
+                                    <td class="output-price-column text-right">${hidePrices ? '' : '$' + item.total.toFixed(2)}</td>
                                 </tr>
                             `;
                         });
@@ -1194,6 +1183,7 @@
                         itemsHtml = '<p>No items listed for this invoice.</p>';
                     }
 
+                    // Construct the full invoice display within the saved-invoice-details
                     savedInvoicesList.innerHTML += `
                         <div class="saved-invoice-card" data-invoice-id="${invoiceId}">
                             <div class="saved-invoice-header">
@@ -1203,27 +1193,80 @@
                                 <span class="${hidePrices ? 'hidden-price' : ''}">Grand Total: $${invoice.grandTotal.toFixed(2)}</span>
                                 <i class="fas fa-chevron-down ml-2 transition-transform duration-300"></i>
                             </div>
-                            <div class="saved-invoice-details">
-                                <p><strong>Due Date:</strong> ${invoice.dueDate}</p>
-                                <p><strong>Client Email:</strong> ${invoice.clientEmail}</p>
-                                <p><strong>Client Phone:</strong> ${invoice.clientPhone}</p>
-                                <p><strong>Client Address:</strong> ${invoice.clientAddress.replace(/\n/g, '<br>')}</p>
-                                <p><strong>Delivery Date:</strong> ${invoice.deliveryDate}</p>
-                                <p><strong>Delivery Time:</strong> ${invoice.deliveryTime}</p>
-                                <p><strong>Delivery Location:</strong> ${invoice.deliveryLocation.replace(/\n/g, '<br>')}</p>
-                                <p><strong>Notes:</strong> ${invoice.notes}</p>
-                                <div class="saved-invoice-items">
-                                    <h4>Items:</h4>
+                            <div class="saved-invoice-details invoice-display-container ${hidePrices ? 'hide-prices-active' : ''}">
+                                <div class="invoice-header">
+                                    <img src="https://placehold.co/80x80/F8E6DD/6F4E37?text=DS" alt="Company Logo" class="invoice-logo">
+                                    <h2 class="text-4xl font-bold text-[#6F4E37] mb-2">INVOICE</h2>
+                                    <p class="text-gray-700 text-lg">Dipped Sweets NYC</p>
+                                    <p class="text-gray-600 text-sm">Handcrafted Dipped Treats</p>
+                                    <p class="text-gray-600 text-sm">DippedSweets.nyc@gmail.com | +1 (929) 323-9892</p>
+                                    <p class="text-gray-600 text-sm">Serving The Bronx, Upper East Side & Upper West Side Manhattan, and Astoria, Queens</p>
+                                </div>
+
+                                <hr class="border-t-2 border-[#F8A4B8] my-6">
+
+                                <div class="invoice-details grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-800">
+                                    <div>
+                                        <h3 class="text-xl font-semibold mb-2">Bill To:</h3>
+                                        <p class="font-medium">${invoice.clientName}</p>
+                                        <p>${invoice.clientAddress.replace(/\n/g, '<br>')}</p>
+                                        <p>${invoice.clientEmail}</p>
+                                        <p>${invoice.clientPhone}</p>
+                                    </div>
+                                    <div class="md:text-right">
+                                        <h3 class="text-xl font-semibold mb-2">Invoice Info:</h3>
+                                        <p><strong>Invoice #:</strong> ${invoice.invoiceNumber}</p>
+                                        <p><strong>Date:</strong> ${invoice.invoiceDate}</p>
+                                        <p><strong>Due Date:</strong> ${invoice.dueDate}</p>
+                                    </div>
+                                </div>
+
+                                <div class="invoice-items my-8">
+                                    <h3 class="text-xl font-semibold mb-4">Items:</h3>
                                     ${itemsHtml}
                                 </div>
-                                <div class="text-right mt-4">
-                                    <p class="${hidePrices ? 'hidden-price' : ''}"><strong>Subtotal:</strong> $${invoice.subtotal.toFixed(2)}</p>
-                                    <p class="${hidePrices ? 'hidden-price' : ''}"><strong>Delivery Fee:</strong> $${invoice.deliveryFee.toFixed(2)}</p>
-                                    <p class="${hidePrices ? 'hidden-price' : ''}"><strong>Deposit Received:</strong> $${invoice.depositReceived.toFixed(2)}</p>
-                                    <p class="${hidePrices ? 'hidden-price' : ''} font-bold text-lg text-[#6F4E37]"><strong>Grand Total:</strong> $${invoice.grandTotal.toFixed(2)}</p>
-                                    <p class="${hidePrices ? 'hidden-price' : ''} font-bold text-lg text-[#F44336]"><strong>Amount Due:</strong> $${invoice.amountDue.toFixed(2)}</p>
+
+                                <div class="invoice-summary text-right text-gray-800">
+                                    <div class="output-price-summary-line">
+                                        <span>Subtotal:</span>
+                                        <span class="${hidePrices ? 'hidden-price' : ''}">$${invoice.subtotal.toFixed(2)}</span>
+                                    </div>
+                                    <div class="output-price-summary-line">
+                                        <span>Delivery Fee:</span>
+                                        <span class="${hidePrices ? 'hidden-price' : ''}">$${invoice.deliveryFee.toFixed(2)}</span>
+                                    </div>
+                                    <div class="output-price-summary-line">
+                                        <span>Deposit Received:</span>
+                                        <span class="${hidePrices ? 'hidden-price' : ''}">$${invoice.depositReceived.toFixed(2)}</span>
+                                    </div>
+                                    <div class="text-2xl text-[#6F4E37] output-price-summary-line">
+                                        <span>Grand Total:</span>
+                                        <span class="${hidePrices ? 'hidden-price' : ''}">$${invoice.grandTotal.toFixed(2)}</span>
+                                    </div>
+                                    <div class="text-2xl text-[#F44336] font-bold output-price-summary-line">
+                                        <span>Amount Due:</span>
+                                        <span class="${hidePrices ? 'hidden-price' : ''}">$${invoice.amountDue.toFixed(2)}</span>
+                                    </div>
                                 </div>
-                                <p class="text-sm text-gray-500 mt-4">Saved On: ${savedDate}</p>
+
+                                <div class="invoice-notes my-8">
+                                    <h3 class="text-xl font-semibold mb-2">Notes:</h3>
+                                    <p class="text-gray-700 italic">${invoice.notes}</p>
+                                </div>
+
+                                <div class="invoice-delivery-info my-8">
+                                    <h3 class="text-xl font-semibold mb-2">Delivery/Pickup Details:</h3>
+                                    <p><strong>Date:</strong> ${invoice.deliveryDate}</p>
+                                    <p><strong>Time:</strong> ${invoice.deliveryTime}</p>
+                                    <p><strong>Location:</strong> ${invoice.deliveryLocation.replace(/\n/g, '<br>')}</p>
+                                </div>
+
+                                <hr class="border-t-2 border-[#F8A4B8] my-6">
+
+                                <div class="invoice-footer text-gray-600 text-sm">
+                                    <p>Thank you for your business!</p>
+                                    <p>Please make payments to [Your Preferred Payment Method/Details Here]</p>
+                                </div>
                             </div>
                         </div>
                     `;

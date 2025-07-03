@@ -620,36 +620,54 @@
         let auth;
         let userId = null; // To store the authenticated user ID
 
+        console.log("Firebase Config (parsed):", firebaseConfig);
+        console.log("App ID:", appId);
+        console.log("Initial Auth Token:", initialAuthToken ? "Present" : "Not Present");
+
+
         // Initialize Firebase
         if (Object.keys(firebaseConfig).length > 0) {
-            app = initializeApp(firebaseConfig);
-            db = getFirestore(app);
-            auth = getAuth(app);
+            try {
+                app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                auth = getAuth(app);
+                console.log("Firebase app, db, auth initialized successfully.");
 
-            // Authenticate user
-            onAuthStateChanged(auth, async (user) => {
-                if (user) {
-                    userId = user.uid;
-                    document.getElementById('userIdDisplay').textContent = `User ID: ${userId}`;
-                } else {
-                    try {
-                        if (initialAuthToken) {
-                            const userCredential = await signInWithCustomToken(auth, initialAuthToken);
-                            userId = userCredential.user.uid;
-                            document.getElementById('userIdDisplay').textContent = `User ID: ${userId}`;
-                        } else {
-                            const userCredential = await signInAnonymously(auth);
-                            userId = userCredential.user.uid;
-                            document.getElementById('userIdDisplay').textContent = `User ID (Anonymous): ${userId}`;
+                // Authenticate user
+                onAuthStateChanged(auth, async (user) => {
+                    if (user) {
+                        userId = user.uid;
+                        document.getElementById('userIdDisplay').textContent = `User ID: ${userId}`;
+                        console.log("User authenticated:", userId);
+                    } else {
+                        try {
+                            if (initialAuthToken) {
+                                const userCredential = await signInWithCustomToken(auth, initialAuthToken);
+                                userId = userCredential.user.uid;
+                                document.getElementById('userIdDisplay').textContent = `User ID: ${userId}`;
+                                console.log("Signed in with custom token:", userId);
+                            } else {
+                                const userCredential = await signInAnonymously(auth);
+                                userId = userCredential.user.uid;
+                                document.getElementById('userIdDisplay').textContent = `User ID (Anonymous): ${userId}`;
+                                console.log("Signed in anonymously:", userId);
+                            }
+                        } catch (error) {
+                            console.error("Firebase authentication error:", error);
+                            showMessage(`Authentication failed: ${error.message}`, true);
+                            userId = crypto.randomUUID(); // Fallback to a random ID if auth fails
+                            document.getElementById('userIdDisplay').textContent = `User ID (Fallback): ${userId}`;
+                            console.warn("Falling back to random User ID due to authentication failure.");
                         }
-                    } catch (error) {
-                        console.error("Firebase authentication error:", error);
-                        showMessage(`Authentication failed: ${error.message}`, true);
-                        userId = crypto.randomUUID(); // Fallback to a random ID if auth fails
-                        document.getElementById('userIdDisplay').textContent = `User ID (Fallback): ${userId}`;
                     }
-                }
-            });
+                });
+            } catch (initError) {
+                console.error("Error initializing Firebase:", initError);
+                showMessage(`Firebase initialization failed: ${initError.message}`, true);
+                userId = crypto.randomUUID(); // Fallback to a random ID if init fails
+                document.getElementById('userIdDisplay').textContent = `User ID (Fallback, Init Failed): ${userId}`;
+                console.warn("Falling back to random User ID due to Firebase initialization failure.");
+            }
         } else {
             console.warn("Firebase config not found. Firestore features will be disabled.");
             showMessage("Firebase not configured. Save/Load functionality disabled.", true);
@@ -1168,6 +1186,7 @@
         async function saveInvoice() {
             if (!db || !userId) {
                 showMessage("Firestore not initialized or user not authenticated. Cannot save invoice.", true);
+                console.error("Save Invoice Error: Firestore DB or User ID is null.", { db, userId });
                 return;
             }
 
@@ -1215,6 +1234,7 @@
         async function loadSavedInvoices() {
             if (!db || !userId) {
                 showMessage("Firestore not initialized or user not authenticated. Cannot load invoices.", true);
+                console.error("Load Invoices Error: Firestore DB or User ID is null.", { db, userId });
                 return;
             }
 
@@ -1232,9 +1252,11 @@
 
                 if (querySnapshot.empty) {
                     noSavedInvoicesMessage.classList.remove('hidden');
+                    console.log("No saved invoices found for this user.");
                     return;
                 }
 
+                console.log(`Found ${querySnapshot.size} saved invoices.`);
                 querySnapshot.forEach(doc => {
                     const invoice = doc.data();
                     const invoiceId = doc.id;

@@ -1411,9 +1411,10 @@
                         detailsDiv.style.opacity = '1';
                         detailsDiv.style.visibility = 'visible';
 
-                        // After the transition, set max-height to 'none' for natural content flow
+                        // After the transition, set max-height to a large fixed value
+                        // This ensures scrollHeight is always available for subsequent collapses.
                         detailsDiv.addEventListener('transitionend', function handler() {
-                            detailsDiv.style.maxHeight = 'none'; // Allow content to dictate height
+                            detailsDiv.style.maxHeight = '2000px'; // Keep it at a large fixed value
                             detailsDiv.removeEventListener('transitionend', handler);
                         }, { once: true });
                     }

@@ -602,6 +602,10 @@
                 <button id="viewSavedInvoicesFromOutputBtn" class="btn-primary flex items-center">
                     View Saved Invoices <i class="fas fa-list-alt ml-2"></i>
                 </button>
+                <!-- NEW: Back to Saved Invoices List button -->
+                <button id="backToSavedListBtn" class="btn-secondary flex items-center hidden">
+                    Back to Saved Invoices <i class="fas fa-arrow-left ml-2"></i>
+                </button>
             </div>
         </div>
 
@@ -820,6 +824,19 @@
             const activeSection = document.getElementById(sectionId);
             if (activeSection) {
                 activeSection.classList.remove('hidden'); // Show the target section
+            }
+
+            // Manage visibility of "Back to Saved Invoices" button
+            const backToSavedListBtn = document.getElementById('backToSavedListBtn');
+            if (sectionId === 'invoiceOutputSection') {
+                // Only show this button if we are viewing a *saved* invoice, not a newly generated one
+                // This logic needs to be tied to how displayInvoiceInOutput is called
+                // For now, let's assume if we are in output, it could be from saved.
+                // A more robust solution would pass a flag.
+                // For this specific request, we'll make it visible when any invoice is displayed.
+                backToSavedListBtn.classList.remove('hidden');
+            } else {
+                backToSavedListBtn.classList.add('hidden');
             }
         }
 
@@ -1062,8 +1079,9 @@
         /**
          * Populates the invoice output section with the given invoice data.
          * @param {object} invoiceData - The invoice object to display.
+         * @param {boolean} fromSaved - Flag to indicate if the invoice is being displayed from saved list.
          */
-        function displayInvoiceInOutput(invoiceData) {
+        function displayInvoiceInOutput(invoiceData, fromSaved = false) {
             // Populate output fields
             document.getElementById('outputInvoiceNumber').textContent = invoiceData.invoiceNumber;
             document.getElementById('outputInvoiceDate').textContent = invoiceData.invoiceDate;
@@ -1103,6 +1121,14 @@
             document.getElementById('hidePricesToggle').checked = invoiceData.hidePrices;
             togglePriceVisibility(); // Apply visibility to the generated invoice
             showSection('invoiceOutputSection');
+
+            // Show/hide the "Back to Saved Invoices" button based on 'fromSaved' flag
+            const backToSavedListBtn = document.getElementById('backToSavedListBtn');
+            if (fromSaved) {
+                backToSavedListBtn.classList.remove('hidden');
+            } else {
+                backToSavedListBtn.classList.add('hidden');
+            }
         }
 
 
@@ -1116,7 +1142,7 @@
                 return;
             }
 
-            displayInvoiceInOutput(invoiceData);
+            displayInvoiceInOutput(invoiceData, false); // Not from saved
             showMessage("Invoice generated successfully!");
         }
 
@@ -1268,7 +1294,7 @@
                 listItem.querySelector('.view-btn').addEventListener('click', function() {
                     const invoiceToView = savedInvoices.find(inv => inv.id === invoiceId);
                     if (invoiceToView) {
-                        displayInvoiceInOutput(invoiceToView);
+                        displayInvoiceInOutput(invoiceToView, true); // Pass true for 'fromSaved'
                         showMessage(`Displaying Invoice #${invoiceToView.invoiceNumber}`);
                     } else {
                         showMessage("Error: Invoice not found.", true);
@@ -1389,6 +1415,12 @@ Regarding the tax acknowledgment letter: As a small business just starting out, 
             document.getElementById('viewSavedInvoicesFromOutputBtn').addEventListener('click', function() {
                 showSection('savedInvoicesSection');
                 loadSavedInvoices(); // Load and display saved invoices
+            });
+
+            // NEW: Event listener for the "Back to Saved Invoices" button
+            document.getElementById('backToSavedListBtn').addEventListener('click', function() {
+                showSection('savedInvoicesSection');
+                loadSavedInvoices(); // Reload the list to ensure it's up-to-date
             });
 
             // Listen for changes on the delivery fee and deposit input to update totals

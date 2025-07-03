@@ -783,11 +783,7 @@
                 simplePrice: 6.00,
                 partyPrice: 4.00,
                 category: "Individual Sample Cups",
-                displayOnMainMenu: true
-            },
-            {
-                img: "823f3f9d-c336-4992-b8f1-64ae3e2761e1.jpeg",
-                title: "Dipped Churro Bites (Sample)",
+                Dipped Churro Bites (Sample)",
                 description: "Crispy churro bites, dipped in chocolate and dusted with cinnamon sugar.",
                 simplePrice: 3.00,
                 partyPrice: 2.00,
@@ -1378,11 +1374,48 @@
                         return;
                     }
 
-                    detailsDiv.classList.toggle('show');
-                    icon.classList.toggle('rotate-180');
+                    if (detailsDiv.classList.contains('show')) {
+                        // Collapse
+                        detailsDiv.style.maxHeight = detailsDiv.scrollHeight + 'px'; // Set explicit height
+                        detailsDiv.offsetWidth; // Force reflow
+                        detailsDiv.style.maxHeight = '0'; // Animate to 0
+                        detailsDiv.classList.remove('show'); // Remove visual properties
+                        icon.classList.remove('rotate-180');
 
-                    console.log(`Toggling invoice ${invoiceId}. Current show state: ${detailsDiv.classList.contains('show')}`);
-                    console.log(`Icon for invoice ${invoiceId}. Has rotate-180: ${icon.classList.contains('rotate-180')}`);
+                        // After transition, ensure visibility is truly hidden
+                        detailsDiv.addEventListener('transitionend', function handler() {
+                            if (!detailsDiv.classList.contains('show')) { // Only if still hidden
+                                detailsDiv.style.visibility = 'hidden';
+                                detailsDiv.style.opacity = '0';
+                                detailsDiv.style.padding = '0';
+                                detailsDiv.style.marginTop = '0';
+                            }
+                            detailsDiv.removeEventListener('transitionend', handler);
+                        }, { once: true });
+
+                    } else {
+                        // Expand
+                        detailsDiv.style.visibility = 'visible'; // Make visible immediately
+                        detailsDiv.style.opacity = '1'; // Make opaque immediately
+                        detailsDiv.style.padding = '2rem'; // Apply padding
+                        detailsDiv.style.marginTop = '2rem'; // Apply margin-top
+
+                        // Calculate height after content is visible and styled
+                        const contentHeight = detailsDiv.scrollHeight;
+                        detailsDiv.style.maxHeight = '0'; // Start from 0
+                        detailsDiv.offsetWidth; // Force reflow
+                        detailsDiv.style.maxHeight = contentHeight + 'px'; // Animate to content height
+                        detailsDiv.classList.add('show'); // Add class for other properties (though most are set above)
+                        icon.classList.add('rotate-180');
+
+                        // After expansion, remove explicit max-height to allow content to grow naturally
+                        detailsDiv.addEventListener('transitionend', function handler() {
+                            if (detailsDiv.classList.contains('show')) { // Only if still showing
+                                detailsDiv.style.maxHeight = 'none';
+                            }
+                            detailsDiv.removeEventListener('transitionend', handler);
+                        }, { once: true });
+                    }
                 });
 
                 // Attach event listener for the delete button

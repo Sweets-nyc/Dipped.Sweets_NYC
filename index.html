@@ -489,7 +489,7 @@
         <div id="invoiceOutputSection" class="invoice-output hidden">
             <div class="invoice-header">
                 <!-- Circular Logo Placeholder -->
-                <img id="invoiceLogo" src="IMG_8127.PNG" alt="Company Logo" class="absolute rounded-full object-cover">
+                <img id="invoiceLogo" src="https://placehold.co/80x80/F8E6DD/6F4E37?text=DS" alt="Company Logo" class="absolute rounded-full object-cover">
                 <h2 class="text-4xl font-bold text-[#6F4E37] mb-2">INVOICE</h2>
                 <p class="text-gray-700 text-lg">Dipped Sweets NYC</p>
                 <p class="text-gray-600 text-sm">Handcrafted Dipped Treats</p>
@@ -619,32 +619,33 @@
         let db;
         let auth;
         let userId = null; // To store the authenticated user ID
+        let isFirebaseReady = false; // New flag to indicate Firebase is ready for operations
 
         console.log("Firebase Config (parsed):", firebaseConfig);
         console.log("App ID:", appId);
         console.log("Initial Auth Token:", initialAuthToken ? "Present" : "Not Present");
 
-
         // Initialize Firebase
-        if (Object.keys(firebaseConfig).length > 0) {
+        if (Object.keys(firebaseConfig).length > 0 && firebaseConfig.apiKey) { // Check for apiKey presence
             try {
                 app = initializeApp(firebaseConfig);
                 db = getFirestore(app);
                 auth = getAuth(app);
                 console.log("Firebase app, db, auth initialized successfully.");
 
-                // Authenticate user
+                // Authenticate user and set isFirebaseReady flag
                 onAuthStateChanged(auth, async (user) => {
                     if (user) {
                         userId = user.uid;
-                        document.getElementById('userIdDisplay').textContent = `User ID: ${userId}`;
+                        document.getElementById('userIdDisplay').textContent = `User ID (Authenticated): ${userId}`;
                         console.log("User authenticated:", userId);
+                        isFirebaseReady = true; // Firebase is ready after auth state is known
                     } else {
                         try {
                             if (initialAuthToken) {
                                 const userCredential = await signInWithCustomToken(auth, initialAuthToken);
                                 userId = userCredential.user.uid;
-                                document.getElementById('userIdDisplay').textContent = `User ID: ${userId}`;
+                                document.getElementById('userIdDisplay').textContent = `User ID (Custom Token): ${userId}`;
                                 console.log("Signed in with custom token:", userId);
                             } else {
                                 const userCredential = await signInAnonymously(auth);
@@ -652,28 +653,36 @@
                                 document.getElementById('userIdDisplay').textContent = `User ID (Anonymous): ${userId}`;
                                 console.log("Signed in anonymously:", userId);
                             }
+                            isFirebaseReady = true; // Firebase is ready after auth attempt
                         } catch (error) {
                             console.error("Firebase authentication error:", error);
-                            showMessage(`Authentication failed: ${error.message}`, true);
+                            showMessage(`Authentication failed: ${error.message}. Save/Load functionality may be limited.`, true);
                             userId = crypto.randomUUID(); // Fallback to a random ID if auth fails
-                            document.getElementById('userIdDisplay').textContent = `User ID (Fallback): ${userId}`;
+                            document.getElementById('userIdDisplay').textContent = `User ID (Auth Failed, Fallback): ${userId}`;
                             console.warn("Falling back to random User ID due to authentication failure.");
+                            isFirebaseReady = true; // Still ready, but with fallback ID
                         }
                     }
+                    console.log("Firebase ready status:", isFirebaseReady);
                 });
             } catch (initError) {
                 console.error("Error initializing Firebase:", initError);
-                showMessage(`Firebase initialization failed: ${initError.message}`, true);
+                showMessage(`Firebase initialization failed: ${initError.message}. Save/Load functionality disabled.`, true);
                 userId = crypto.randomUUID(); // Fallback to a random ID if init fails
-                document.getElementById('userIdDisplay').textContent = `User ID (Fallback, Init Failed): ${userId}`;
+                document.getElementById('userIdDisplay').textContent = `User ID (Init Failed, Fallback): ${userId}`;
                 console.warn("Falling back to random User ID due to Firebase initialization failure.");
+                isFirebaseReady = true; // Mark as ready even if failed, to unblock UI, but operations will fail
+                console.log("Firebase ready status:", isFirebaseReady);
             }
         } else {
-            console.warn("Firebase config not found. Firestore features will be disabled.");
+            console.warn("Firebase config not found or incomplete. Firestore features will be disabled.");
             showMessage("Firebase not configured. Save/Load functionality disabled.", true);
             userId = crypto.randomUUID(); // Generate a random ID even if Firebase isn't configured
             document.getElementById('userIdDisplay').textContent = `User ID (No Firebase Config): ${userId}`;
+            isFirebaseReady = true; // Mark as ready, but features will be disabled
+            console.log("Firebase ready status:", isFirebaseReady);
         }
+
 
         // Data for your menu items (copied from your website's script)
         const sweetsData = [
@@ -1184,8 +1193,13 @@
 
         // Function to save the current invoice to Firestore
         async function saveInvoice() {
+            if (!isFirebaseReady) {
+                showMessage("Please wait, Firebase is still initializing.", true);
+                console.warn("Save Invoice: Firebase not ready.");
+                return;
+            }
             if (!db || !userId) {
-                showMessage("Firestore not initialized or user not authenticated. Cannot save invoice.", true);
+                showMessage("Firestore is not available or user ID is missing. Cannot save invoice.", true);
                 console.error("Save Invoice Error: Firestore DB or User ID is null.", { db, userId });
                 return;
             }
@@ -1232,8 +1246,13 @@
 
         // Function to load and display saved invoices from Firestore
         async function loadSavedInvoices() {
+            if (!isFirebaseReady) {
+                showMessage("Please wait, Firebase is still initializing.", true);
+                console.warn("Load Invoices: Firebase not ready.");
+                return;
+            }
             if (!db || !userId) {
-                showMessage("Firestore not initialized or user not authenticated. Cannot load invoices.", true);
+                showMessage("Firestore is not available or user ID is missing. Cannot load invoices.", true);
                 console.error("Load Invoices Error: Firestore DB or User ID is null.", { db, userId });
                 return;
             }
@@ -1357,7 +1376,7 @@
             document.getElementById('invoiceDate').value = '';
             document.getElementById('dueDate').value = '';
             document.getElementById('deliveryFee').value = '0.00';
-            document.getElementById('depositReceived').value = '0.00'; // Reset deposit
+            document.getElementById('depositReceived').value = '0.00';
             document.getElementById('hidePricesToggle').checked = false; // Uncheck hide prices
             togglePriceVisibility(); // Ensure prices are visible after reset
             showMessage("Form has been reset.");
@@ -1438,9 +1457,9 @@ Regarding the tax acknowledgment letter: As a small business just starting out, 
             document.getElementById('saveInvoiceBtn').addEventListener('click', saveInvoice);
 
             // New: Event listener for the View Saved Invoices button
-            document.getElementById('viewSavedInvoicesBtn').addEventListener('click', function() {
+            document.getElementById('viewSavedInvoicesBtn').addEventListener('click', async function() {
                 showSection('savedInvoicesSection');
-                loadSavedInvoices(); // Load invoices when the section is shown
+                await loadSavedInvoices(); // Await loading to ensure UI is updated after data fetch
             });
 
             // New: Event listener for the Back to Creator from Saved Invoices button

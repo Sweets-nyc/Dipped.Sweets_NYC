@@ -1371,9 +1371,20 @@
                             </div>
                         `;
                     }
-                    detailsDiv.classList.toggle('show');
-                    icon.classList.toggle('rotate-180');
+
+                    // Explicitly add/remove classes for show/hide and rotation
+                    if (detailsDiv.classList.contains('show')) {
+                        // Currently showing, so hide it
+                        detailsDiv.classList.remove('show');
+                        icon.classList.remove('rotate-180');
+                    } else {
+                        // Currently hidden, so show it
+                        detailsDiv.classList.add('show');
+                        icon.classList.add('rotate-180');
+                    }
+
                     console.log(`Toggling invoice ${invoiceId}. Current show state: ${detailsDiv.classList.contains('show')}`);
+                    console.log(`Icon for invoice ${invoiceId}. Has rotate-180: ${icon.classList.contains('rotate-180')}`);
                 });
 
                 // Attach event listener for the delete button

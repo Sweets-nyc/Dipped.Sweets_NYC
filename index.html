@@ -502,10 +502,10 @@
                 <!-- Circular Logo Placeholder -->
                 <img src="https://placehold.co/80x80/F8E6DD/6F4E37?text=DS" alt="Company Logo" class="invoice-logo">
                 <h2 class="text-4xl font-bold text-[#6F4E37] mb-2">INVOICE</h2>
-                <p class="text-gray-700 text-lg">Dipped Sweets NYC</p>
-                <p class="text-gray-600 text-sm">Handcrafted Dipped Treats</p>
-                <p class="text-gray-600 text-sm">DippedSweets.nyc@gmail.com | +1 (929) 323-9892</p>
-                <p class="text-gray-600 text-sm">Serving The Bronx, Upper East Side & Upper West Side Manhattan, and Astoria, Queens</p>
+                <p class="text-gray-700 text-lg" id="outputCompanyName"></p>
+                <p class="text-gray-600 text-sm" id="outputCompanyTagline"></p>
+                <p class="text-gray-600 text-sm" id="outputCompanyContact"></p>
+                <p class="text-gray-600 text-sm" id="outputCompanyServiceAreas"></p>
             </div>
 
             <hr class="border-t-2 border-[#F8A4B8] my-6">
@@ -584,7 +584,7 @@
 
             <div class="invoice-footer text-gray-600 text-sm">
                 <p>Thank you for your business!</p>
-                <p>Please make payments to [Your Preferred Payment Method/Details Here]</p>
+                <p id="outputPaymentDetails"></p>
             </div>
 
             <div class="flex justify-center gap-4 mt-8">
@@ -622,6 +622,35 @@
     </div>
 
     <script type="module">
+        // =================================================================================================
+        //                                 CONFIGURATION SETTINGS
+        //      Easily customize your business details and default invoice settings here.
+        // =================================================================================================
+
+        const businessInfo = {
+            companyName: "Dipped Sweets NYC",
+            tagline: "Handcrafted Dipped Treats",
+            email: "DippedSweets.nyc@gmail.com",
+            phone: "+1 (929) 323-9892",
+            serviceAreas: "Serving The Bronx, Upper East Side & Upper West Side Manhattan, and Astoria, Queens",
+            paymentDetails: "Please make payments via Zelle to DippedSweets.nyc@gmail.com or CashApp $DippedSweetsNYC."
+        };
+
+        const defaultFormSettings = {
+            invoiceNumber: 'INV-001',
+            // Default date for new invoices (today's date will be set dynamically)
+            dueDate: '2025-10-21', // Example: October 21, 2025
+            deliveryFee: 0.00,
+            depositReceived: 45.00,
+            notes: `Dietary Restrictions: Nut-free options only.\n\nRegarding the tax acknowledgment letter: As a small business just starting out, we're not set up to utilize those kinds of tax deductions at this time.`,
+            hidePrices: false // Default state for the "Hide Prices" checkbox
+        };
+
+        // =================================================================================================
+        //                            END CONFIGURATION SETTINGS
+        // =================================================================================================
+
+
         // Data for your menu items (copied from your website's script)
         const sweetsData = [
             {
@@ -1101,6 +1130,14 @@
          * @param {boolean} fromSaved - Flag to indicate if the invoice is being displayed from saved list.
          */
         function displayInvoiceInOutput(invoiceData, fromSaved = false) {
+            // Populate business info in header
+            document.getElementById('outputCompanyName').textContent = businessInfo.companyName;
+            document.getElementById('outputCompanyTagline').textContent = businessInfo.tagline;
+            document.getElementById('outputCompanyContact').textContent = `${businessInfo.email} | ${businessInfo.phone}`;
+            document.getElementById('outputCompanyServiceAreas').textContent = businessInfo.serviceAreas;
+            document.getElementById('outputPaymentDetails').textContent = businessInfo.paymentDetails;
+
+
             // Populate output fields
             document.getElementById('outputInvoiceNumber').textContent = invoiceData.invoiceNumber;
             document.getElementById('outputInvoiceDate').textContent = invoiceData.invoiceDate;
@@ -1348,9 +1385,9 @@
 
             currentInvoiceData = { // Initialize currentInvoiceData with default values
                 id: crypto.randomUUID(), // New ID for a fresh invoice
-                invoiceNumber: 'INV-001',
-                invoiceDate: `${year}-${month}-${day}`,
-                dueDate: '2025-10-21', // Default due date
+                invoiceNumber: defaultFormSettings.invoiceNumber,
+                invoiceDate: `${year}-${month}-${day}`, // Set to today's date
+                dueDate: defaultFormSettings.dueDate,
                 clientName: '',
                 clientEmail: '',
                 clientPhone: '',
@@ -1358,10 +1395,10 @@
                 deliveryDate: '',
                 deliveryTime: '',
                 deliveryLocation: '',
-                deliveryFee: 0.00,
-                depositReceived: 45.00, // Default deposit
-                notes: `Dietary Restrictions: Nut-free options only.\n\nRegarding the tax acknowledgment letter: As a small business just starting out, we're not set up to utilize those kinds of tax deductions at this time.`,
-                hidePrices: false,
+                deliveryFee: defaultFormSettings.deliveryFee,
+                depositReceived: defaultFormSettings.depositReceived,
+                notes: defaultFormSettings.notes,
+                hidePrices: defaultFormSettings.hidePrices,
                 items: [], // Initialize items array for the new invoice
                 subtotal: 0.00,
                 grandTotal: 0.00,

@@ -1312,20 +1312,12 @@
 
         // Function to reset the form
         function resetForm() {
-            document.getElementById('invoiceFormSection').reset(); // Resets form fields
+            setInitialFormValues(); // Set all initial values
             invoiceItems = []; // Clear items array
-            updateInvoiceItemsList(); // Update displayed list
-            calculateAndDisplayCurrentTotals(); // Reset totals display
-            document.getElementById('invoiceNumber').value = 'INV-001'; // Reset default invoice number
-            document.getElementById('invoiceDate').value = '';
-            document.getElementById('dueDate').value = '';
-            document.getElementById('deliveryFee').value = '0.00';
-            document.getElementById('depositReceived').value = '0.00';
-            document.getElementById('hidePricesToggle').checked = false; // Uncheck hide prices
+            updateInvoiceItemsList(); // Update displayed list (will show "No items added yet.")
+            populateMenuItems('All'); // Re-populate menu items to ensure they are visible and interactive
             togglePriceVisibility(); // Ensure prices are visible after reset
             showMessage("Form has been reset.");
-            // Re-apply default notes and deposit on reset
-            setInitialFormValues();
         }
 
         // Function to set initial form values including notes and deposit
@@ -1335,6 +1327,18 @@
             const month = String(today.getMonth() + 1).padStart(2, '0'); // Months start at 0!
             const day = String(today.getDate()).padStart(2, '0');
             document.getElementById('invoiceDate').value = `${year}-${month}-${day}`;
+
+            document.getElementById('invoiceNumber').value = 'INV-001'; // Ensure default invoice number is always set
+            document.getElementById('clientName').value = '';
+            document.getElementById('clientEmail').value = '';
+            document.getElementById('clientPhone').value = '';
+            document.getElementById('clientAddress').value = '';
+            document.getElementById('customItemDescription').value = '';
+            document.getElementById('customItemQuantity').value = '1';
+            document.getElementById('customItemUnitPrice').value = '0.00';
+            document.getElementById('deliveryDate').value = '';
+            document.getElementById('deliveryTime').value = '';
+            document.getElementById('deliveryLocation').value = '';
 
             // Pre-fill notes for the donation scenario
             document.getElementById('invoiceNotes').value = `Dietary Restrictions: Nut-free options only.
@@ -1347,6 +1351,9 @@ Regarding the tax acknowledgment letter: As a small business just starting out, 
 
             // Set default due date to October 21, 2025
             document.getElementById('dueDate').value = '2025-10-21';
+
+            // Ensure hide prices is unchecked by default
+            document.getElementById('hidePricesToggle').checked = false;
 
             calculateAndDisplayCurrentTotals(); // Update totals based on these initial values
         }
@@ -1395,6 +1402,7 @@ Regarding the tax acknowledgment letter: As a small business just starting out, 
             });
             document.getElementById('backToFormBtn').addEventListener('click', function() {
                 showSection('invoiceFormSection'); // Go back to the main form
+                resetForm(); // Call resetForm to ensure all fields are re-initialized
             });
 
             // Event listener for the Save Invoice button (now using localStorage)
@@ -1409,6 +1417,7 @@ Regarding the tax acknowledgment letter: As a small business just starting out, 
             // Event listener for the Back to Creator from Saved Invoices button
             document.getElementById('backToCreatorFromSavedBtn').addEventListener('click', function() {
                 showSection('invoiceFormSection'); // Go back to the main form
+                resetForm(); // Call resetForm to ensure all fields are re-initialized
             });
 
             // Event listener for the View Saved Invoices button in the output section
@@ -1436,3 +1445,4 @@ Regarding the tax acknowledgment letter: As a small business just starting out, 
     </script>
 </body>
 </html>
+

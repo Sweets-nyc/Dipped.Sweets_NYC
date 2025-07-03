@@ -1277,8 +1277,7 @@
                     if (detailsDiv.classList.contains('show')) {
                         // Currently showing, so hide it
                         detailsDiv.style.maxHeight = detailsDiv.scrollHeight + 'px'; // Set to current height for smooth transition from current state
-                        icon.classList.remove('rotate-180'); // Start rotating back immediately
-
+                        
                         // Use a small delay to allow the browser to register the max-height value
                         // before the transition to 0 starts.
                         setTimeout(() => {
@@ -1287,6 +1286,7 @@
                             detailsDiv.style.marginTop = '0';
                             detailsDiv.style.opacity = '0';
                             detailsDiv.style.visibility = 'hidden';
+                            icon.classList.remove('rotate-180'); // Rotate back
                             // Remove the 'show' class after the transition completes
                             // This ensures the CSS properties for the collapsed state are fully applied
                             detailsDiv.addEventListener('transitionend', function handler() {
@@ -1414,7 +1414,7 @@
 
                         // After the transition, remove explicit maxHeight to allow natural content flow
                         detailsDiv.addEventListener('transitionend', function handler() {
-                            detailsDiv.style.maxHeight = 'none';
+                            detailsDiv.style.maxHeight = 'none'; // Allow content to dictate height
                             detailsDiv.removeEventListener('transitionend', handler);
                         }, { once: true });
                     }

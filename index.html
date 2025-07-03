@@ -1405,16 +1405,15 @@
 
                         detailsDiv.classList.add('show');
                         icon.classList.add('rotate-180');
-                        detailsDiv.style.maxHeight = detailsDiv.scrollHeight + 'px'; // Set actual height for expansion
-                        detailsDiv.style.padding = '2rem';
-                        detailsDiv.style.marginTop = '2rem';
-                        detailsDiv.style.opacity = '1';
-                        detailsDiv.style.visibility = 'visible';
 
-                        // After the transition, set max-height to a large fixed value
-                        // This ensures scrollHeight is always available for subsequent collapses.
+                        // Use setTimeout with 0ms to ensure 'show' class styles are applied before max-height transition
+                        setTimeout(() => {
+                            detailsDiv.style.maxHeight = detailsDiv.scrollHeight + 'px'; // Set actual height for expansion
+                        }, 0);
+
+                        // After the transition, set max-height to 'none' for natural content flow
                         detailsDiv.addEventListener('transitionend', function handler() {
-                            detailsDiv.style.maxHeight = '2000px'; // Keep it at a large fixed value
+                            detailsDiv.style.maxHeight = 'none'; // Allow content to dictate height
                             detailsDiv.removeEventListener('transitionend', handler);
                         }, { once: true });
                     }

@@ -320,7 +320,7 @@
                 transition: max-height 0.7s ease-in-out, padding 0.5s ease-in-out, margin-top 0.5s ease-in-out, opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
             }
             .saved-invoice-details.show {
-                /* max-height will be set by JS dynamically */
+                max-height: 2000px; /* A large enough value to always show content */
                 padding: 2rem; /* Restore full padding */
                 margin-top: 2rem; /* Restore margin */
                 opacity: 1;
@@ -1378,41 +1378,8 @@
                         return;
                     }
 
-                    if (detailsDiv.classList.contains('show')) {
-                        // Currently showing, so hide it
-                        detailsDiv.style.maxHeight = detailsDiv.scrollHeight + 'px'; // Set to current scrollHeight before collapsing
-                        detailsDiv.classList.remove('show'); // Remove 'show' class to trigger collapse transition
-                        icon.classList.remove('rotate-180'); // Rotate back immediately
-
-                        // Force reflow to ensure the max-height transition starts from the current scrollHeight
-                        detailsDiv.offsetWidth;
-
-                        // Set max-height to 0 to collapse
-                        detailsDiv.style.maxHeight = '0';
-
-                        // After transition, ensure properties are reset for proper re-expansion
-                        detailsDiv.addEventListener('transitionend', function handler() {
-                            detailsDiv.style.padding = '0';
-                            detailsDiv.style.marginTop = '0';
-                            detailsDiv.style.opacity = '0';
-                            detailsDiv.style.visibility = 'hidden';
-                            detailsDiv.removeEventListener('transitionend', handler);
-                        }, { once: true });
-
-                    } else {
-                        // Currently hidden, so show it
-                        detailsDiv.classList.add('show'); // Add 'show' class to apply initial padding/margin/opacity
-                        icon.classList.add('rotate-180');
-
-                        // Set max-height to its natural height for the transition to begin
-                        detailsDiv.style.maxHeight = detailsDiv.scrollHeight + 'px';
-
-                        // After transition, set max-height to 'none' to allow content to grow if needed
-                        detailsDiv.addEventListener('transitionend', function handler() {
-                            detailsDiv.style.maxHeight = 'none'; // Allow content to grow freely
-                            detailsDiv.removeEventListener('transitionend', handler);
-                        }, { once: true });
-                    }
+                    detailsDiv.classList.toggle('show');
+                    icon.classList.toggle('rotate-180');
 
                     console.log(`Toggling invoice ${invoiceId}. Current show state: ${detailsDiv.classList.contains('show')}`);
                     console.log(`Icon for invoice ${invoiceId}. Has rotate-180: ${icon.classList.contains('rotate-180')}`);

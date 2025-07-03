@@ -199,13 +199,13 @@
             .form-section, .btn-primary, .btn-secondary, .message-box {
                 display: none !important; /* Hide form elements when printing */
             }
-            /* Target the common invoice display container for print styles */
-            .invoice-display-container {
+            /* Target the main invoice output container for print styles */
+            #invoiceOutputSection.invoice-display-container {
                 display: block !important; /* Ensure invoice output is visible */
-                padding: 0; /* Remove padding from output section for print */
-                margin-top: 0; /* Remove margin from output section for print */
-                border: none; /* Remove border for cleaner print */
-                box-shadow: none; /* Remove shadow for cleaner print */
+                padding: 0 !important; /* Remove padding from output section for print */
+                margin-top: 0 !important; /* Remove margin from output section for print */
+                border: none !important; /* Remove border for cleaner print */
+                box-shadow: none !important; /* Remove shadow for cleaner print */
             }
             h1, h2, h3, h4 {
                 color: #333333 !important; /* Ensure black text for print */
@@ -305,13 +305,17 @@
                 cursor: pointer; /* Make the header clickable */
             }
             .saved-invoice-details {
-                /* Inherits some styles from .invoice-display-container */
                 overflow: hidden;
                 max-height: 0;
-                padding: 0 2rem; /* Keep horizontal padding, but vertical 0 initially */
-                margin-top: 0; /* No margin when collapsed */
+                padding: 0; /* Start with 0 padding */
+                margin-top: 0; /* Start with 0 margin */
                 opacity: 0;
                 visibility: hidden;
+                /* Apply invoice-display-container visual styles here when shown */
+                background-color: #fcfcfc;
+                border: 1px solid #e5e7eb;
+                border-radius: 1rem;
+                box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
                 transition: max-height 0.5s ease-out, padding 0.5s ease-out, margin-top 0.5s ease-out, opacity 0.5s ease-out, visibility 0.5s ease-out;
             }
             .saved-invoice-details.show {
@@ -325,8 +329,14 @@
             .saved-invoice-details p {
                 margin-bottom: 0.5rem;
             }
-            /* No specific table/th/td styles for saved-invoice-items here,
-               as they will inherit from .invoice-display-container children */
+            /* Apply print styles to the expanded saved invoice details */
+            .saved-invoice-details.show {
+                padding: 0 !important;
+                margin-top: 0 !important;
+                border: none !important;
+                box-shadow: none !important;
+                background-color: #fff !important; /* Ensure white background for print */
+            }
             .delete-btn {
                 background: none;
                 border: none;
@@ -1248,7 +1258,8 @@
 
                 // Create the details div (initially empty)
                 const detailsDiv = document.createElement('div');
-                detailsDiv.className = `saved-invoice-details invoice-display-container ${hidePrices ? 'hide-prices-active' : ''}`;
+                // Removed 'invoice-display-container' class here to prevent CSS specificity conflicts
+                detailsDiv.className = `saved-invoice-details ${hidePrices ? 'hide-prices-active' : ''}`;
                 cardDiv.appendChild(detailsDiv); // Append it immediately, but its content will be loaded on click
 
                 // Append the card to the list
@@ -1521,3 +1532,4 @@ Regarding the tax acknowledgment letter: As a small business just starting out, 
     </script>
 </body>
 </html>
+

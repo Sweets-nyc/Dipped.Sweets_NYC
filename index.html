@@ -479,7 +479,7 @@
                 <button id="resetFormBtn" class="btn-secondary flex items-center">
                     Reset Form <i class="fas fa-redo ml-2"></i>
                 </button>
-                <button id="viewSavedInvoicesBtn" class="btn-primary flex items-center">
+                <button id="viewSavedInvoicesBtn" class="btn-primary flex items-center" disabled>
                     View Saved Invoices <i class="fas fa-list-alt ml-2"></i>
                 </button>
             </div>
@@ -577,7 +577,7 @@
             </div>
 
             <div class="flex justify-center gap-4 mt-8">
-                <button id="saveInvoiceBtn" class="btn-primary flex items-center">
+                <button id="saveInvoiceBtn" class="btn-primary flex items-center" disabled>
                     Save Invoice <i class="fas fa-save ml-2"></i>
                 </button>
                 <button id="printInvoiceBtn" class="btn-primary flex items-center">
@@ -585,6 +585,10 @@
                 </button>
                 <button id="backToFormBtn" class="btn-secondary flex items-center">
                     Back to Form <i class="fas fa-arrow-left ml-2"></i>
+                </button>
+                <!-- New: View Saved Invoices button in the output section -->
+                <button id="viewSavedInvoicesFromOutputBtn" class="btn-primary flex items-center" disabled>
+                    View Saved Invoices <i class="fas fa-list-alt ml-2"></i>
                 </button>
             </div>
         </div>
@@ -613,6 +617,7 @@
         // Firebase variables (MANDATORY: use these global variables)
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
         const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        // Corrected the typo here: initialAuthToken should get its value from __initial_auth_token
         const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
 
         let app;
@@ -624,6 +629,13 @@
         console.log("Firebase Config (parsed):", firebaseConfig);
         console.log("App ID:", appId);
         console.log("Initial Auth Token:", initialAuthToken ? "Present" : "Not Present");
+
+        // Function to enable Firebase-dependent buttons
+        function enableFirebaseButtons() {
+            document.getElementById('saveInvoiceBtn').disabled = false;
+            document.getElementById('viewSavedInvoicesBtn').disabled = false;
+            document.getElementById('viewSavedInvoicesFromOutputBtn').disabled = false; // Enable the new button
+        }
 
         // Initialize Firebase
         if (Object.keys(firebaseConfig).length > 0 && firebaseConfig.apiKey) { // Check for apiKey presence
@@ -640,6 +652,7 @@
                         document.getElementById('userIdDisplay').textContent = `User ID (Authenticated): ${userId}`;
                         console.log("User authenticated:", userId);
                         isFirebaseReady = true; // Firebase is ready after auth state is known
+                        enableFirebaseButtons();
                     } else {
                         try {
                             if (initialAuthToken) {
@@ -654,6 +667,7 @@
                                 console.log("Signed in anonymously:", userId);
                             }
                             isFirebaseReady = true; // Firebase is ready after auth attempt
+                            enableFirebaseButtons();
                         } catch (error) {
                             console.error("Firebase authentication error:", error);
                             showMessage(`Authentication failed: ${error.message}. Save/Load functionality may be limited.`, true);
@@ -661,6 +675,7 @@
                             document.getElementById('userIdDisplay').textContent = `User ID (Auth Failed, Fallback): ${userId}`;
                             console.warn("Falling back to random User ID due to authentication failure.");
                             isFirebaseReady = true; // Still ready, but with fallback ID
+                            enableFirebaseButtons(); // Enable even if fallback, to allow interaction (which will then show specific errors)
                         }
                     }
                     console.log("Firebase ready status:", isFirebaseReady);
@@ -672,6 +687,7 @@
                 document.getElementById('userIdDisplay').textContent = `User ID (Init Failed, Fallback): ${userId}`;
                 console.warn("Falling back to random User ID due to Firebase initialization failure.");
                 isFirebaseReady = true; // Mark as ready even if failed, to unblock UI, but operations will fail
+                enableFirebaseButtons(); // Enable even if failed, to allow interaction (which will then show specific errors)
                 console.log("Firebase ready status:", isFirebaseReady);
             }
         } else {
@@ -680,6 +696,7 @@
             userId = crypto.randomUUID(); // Generate a random ID even if Firebase isn't configured
             document.getElementById('userIdDisplay').textContent = `User ID (No Firebase Config): ${userId}`;
             isFirebaseReady = true; // Mark as ready, but features will be disabled
+            enableFirebaseButtons(); // Enable buttons, but save/load will show "Firebase not configured"
             console.log("Firebase ready status:", isFirebaseReady);
         }
 
@@ -1465,6 +1482,12 @@ Regarding the tax acknowledgment letter: As a small business just starting out, 
             // New: Event listener for the Back to Creator from Saved Invoices button
             document.getElementById('backToCreatorFromSavedBtn').addEventListener('click', function() {
                 showSection('invoiceFormSection'); // Go back to the main form
+            });
+
+            // New: Event listener for the View Saved Invoices button in the output section
+            document.getElementById('viewSavedInvoicesFromOutputBtn').addEventListener('click', async function() {
+                showSection('savedInvoicesSection');
+                await loadSavedInvoices(); // Await loading to ensure UI is updated after data fetch
             });
 
             // Listen for changes on the delivery fee and deposit input to update totals

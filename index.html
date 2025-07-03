@@ -602,10 +602,7 @@
                 <button id="viewSavedInvoicesFromOutputBtn" class="btn-primary flex items-center">
                     View Saved Invoices <i class="fas fa-list-alt ml-2"></i>
                 </button>
-                <!-- NEW: Back to Saved Invoices List button -->
-                <button id="backToSavedListBtn" class="btn-secondary flex items-center hidden">
-                    Back to Saved Invoices <i class="fas fa-arrow-left ml-2"></i>
-                </button>
+                <!-- Removed the "Back to Saved Invoices List" button as per user's request -->
             </div>
         </div>
 
@@ -823,15 +820,6 @@
             const activeSection = document.getElementById(sectionId);
             if (activeSection) {
                 activeSection.classList.remove('hidden'); // Show the target section
-            }
-
-            // Manage visibility of "Back to Saved Invoices" button
-            const backToSavedListBtn = document.getElementById('backToSavedListBtn');
-            // This button should only be visible when viewing a specific invoice from the saved list
-            // The displayInvoiceInOutput function will handle showing/hiding it more precisely
-            // For now, we hide it by default when changing sections unless explicitly shown by displayInvoiceInOutput
-            if (sectionId !== 'invoiceOutputSection') {
-                backToSavedListBtn.classList.add('hidden');
             }
         }
 
@@ -1153,12 +1141,23 @@
             togglePriceVisibility(); // Apply visibility to the generated invoice
             showSection('invoiceOutputSection');
 
-            // Show/hide the "Back to Saved Invoices" button based on 'fromSaved' flag
-            const backToSavedListBtn = document.getElementById('backToSavedListBtn');
+            // Get button elements
+            const saveInvoiceBtn = document.getElementById('saveInvoiceBtn');
+            const printInvoiceBtn = document.getElementById('printInvoiceBtn');
+            const backToFormBtn = document.getElementById('backToFormBtn');
+            const viewSavedInvoicesFromOutputBtn = document.getElementById('viewSavedInvoicesFromOutputBtn');
+
+            // Always show Print, View Saved, Back to Form
+            printInvoiceBtn.classList.remove('hidden');
+            viewSavedInvoicesFromOutputBtn.classList.remove('hidden');
+            backToFormBtn.classList.remove('hidden');
+
             if (fromSaved) {
-                backToSavedListBtn.classList.remove('hidden');
+                // If viewing a saved invoice, hide the "Save Invoice" button
+                saveInvoiceBtn.classList.add('hidden');
             } else {
-                backToSavedListBtn.classList.add('hidden');
+                // If viewing a newly generated invoice, show the "Save Invoice" button
+                saveInvoiceBtn.classList.remove('hidden');
             }
         }
 
@@ -1417,7 +1416,8 @@
             });
             document.getElementById('backToFormBtn').addEventListener('click', function() {
                 showSection('invoiceFormSection'); // Go back to the main form
-                // The form should already reflect currentInvoiceData, so no explicit loadFormDataIntoForm needed here
+                // Explicitly load currentInvoiceData into the form to ensure it's not blank
+                loadFormDataIntoForm(currentInvoiceData);
             });
 
             // Event listener for the Save Invoice button (now using localStorage)
@@ -1439,12 +1439,6 @@
             document.getElementById('viewSavedInvoicesFromOutputBtn').addEventListener('click', function() {
                 showSection('savedInvoicesSection');
                 loadSavedInvoices(); // Load and display saved invoices
-            });
-
-            // NEW: Event listener for the "Back to Saved Invoices" button
-            document.getElementById('backToSavedListBtn').addEventListener('click', function() {
-                showSection('savedInvoicesSection');
-                loadSavedInvoices(); // Reload the list to ensure it's up-to-date
             });
 
             // Listen for changes on the delivery fee and deposit input to update totals

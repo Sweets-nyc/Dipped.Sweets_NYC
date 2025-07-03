@@ -1212,50 +1212,76 @@
                 console.log(`Found ${savedInvoices.length} saved invoices.`);
                 savedInvoices.forEach(invoice => {
                     const invoiceId = invoice.id;
-                    const savedDate = invoice.savedAt ? new Date(invoice.savedAt).toLocaleDateString() : 'N/A';
                     const hidePrices = invoice.hidePrices || false;
 
-                    let itemsHtml = '';
-                    if (invoice.items && invoice.items.length > 0) {
-                        itemsHtml = `
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Description</th>
-                                        <th class="text-center">Qty</th>
-                                        <th class="output-price-column text-right">Unit Price</th>
-                                        <th class="output-price-column text-right">Total</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                        `;
-                        invoice.items.forEach(item => {
-                            itemsHtml += `
-                                <tr>
-                                    <td>${item.description}</td>
-                                    <td class="text-center">${item.quantity}</td>
-                                    <td class="output-price-column text-right">${hidePrices ? '' : '$' + item.unitPrice.toFixed(2)}</td>
-                                    <td class="output-price-column text-right">${hidePrices ? '' : '$' + item.total.toFixed(2)}</td>
-                                </tr>
-                            `;
-                        });
-                        itemsHtml += `</tbody></table>`;
-                    } else {
-                        itemsHtml = '<p>No items listed for this invoice.</p>';
-                    }
+                    // Create the main card container
+                    const cardDiv = document.createElement('div');
+                    cardDiv.className = 'saved-invoice-card';
+                    cardDiv.dataset.invoiceId = invoiceId;
 
-                    // Construct the full invoice display within the saved-invoice-details
-                    savedInvoicesList.innerHTML += `
-                        <div class="saved-invoice-card" data-invoice-id="${invoiceId}">
-                            <div class="saved-invoice-header">
-                                <span>Invoice #: ${invoice.invoiceNumber}</span>
-                                <span>Client: ${invoice.clientName}</span>
-                                <button type="button" class="delete-btn" data-invoice-id="${invoiceId}">
-                                    <i class="fas fa-trash-alt"></i>
-                                </button>
-                                <i class="fas fa-chevron-down ml-2 transition-transform duration-300"></i>
-                            </div>
-                            <div class="saved-invoice-details invoice-display-container ${hidePrices ? 'hide-prices-active' : ''}">
+                    // Create the header for the collapsed view
+                    const headerDiv = document.createElement('div');
+                    headerDiv.className = 'saved-invoice-header';
+                    headerDiv.innerHTML = `
+                        <span>Invoice #: ${invoice.invoiceNumber}</span>
+                        <span>Client: ${invoice.clientName}</span>
+                        <button type="button" class="delete-btn" data-invoice-id="${invoiceId}">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                        <i class="fas fa-chevron-down ml-2 transition-transform duration-300"></i>
+                    `;
+                    cardDiv.appendChild(headerDiv);
+
+                    // Append the card to the list first
+                    savedInvoicesList.appendChild(cardDiv);
+
+                    // Add event listeners for expanding/collapsing saved invoice details
+                    const detailsDiv = document.createElement('div'); // Create the details div
+                    detailsDiv.className = `saved-invoice-details invoice-display-container ${hidePrices ? 'hide-prices-active' : ''}`;
+                    // The content of detailsDiv will be generated on click
+
+                    const icon = headerDiv.querySelector('.fa-chevron-down');
+                    const deleteButton = headerDiv.querySelector('.delete-btn');
+
+                    headerDiv.addEventListener('click', function(event) {
+                        // Prevent click on delete button from toggling the card
+                        if (event.target.closest('.delete-btn')) {
+                            return;
+                        }
+
+                        // Check if details are already loaded/attached
+                        if (!cardDiv.contains(detailsDiv)) {
+                            // If not, generate content and append
+                            let itemsHtml = '';
+                            if (invoice.items && invoice.items.length > 0) {
+                                itemsHtml = `
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Description</th>
+                                                <th class="text-center">Qty</th>
+                                                <th class="output-price-column text-right">Unit Price</th>
+                                                <th class="output-price-column text-right">Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                `;
+                                invoice.items.forEach(item => {
+                                    itemsHtml += `
+                                        <tr>
+                                            <td>${item.description}</td>
+                                            <td class="text-center">${item.quantity}</td>
+                                            <td class="output-price-column text-right">${hidePrices ? '' : '$' + item.unitPrice.toFixed(2)}</td>
+                                            <td class="output-price-column text-right">${hidePrices ? '' : '$' + item.total.toFixed(2)}</td>
+                                        </tr>
+                                    `;
+                                });
+                                itemsHtml += `</tbody></table>`;
+                            } else {
+                                itemsHtml = '<p>No items listed for this invoice.</p>';
+                            }
+
+                            detailsDiv.innerHTML = `
                                 <div class="invoice-header">
                                     <img src="https://placehold.co/80x80/F8E6DD/6F4E37?text=DS" alt="Company Logo" class="invoice-logo">
                                     <h2 class="text-4xl font-bold text-[#6F4E37] mb-2">INVOICE</h2>
@@ -1329,29 +1355,13 @@
                                     <p>Thank you for your business!</p>
                                     <p>Please make payments to [Your Preferred Payment Method/Details Here]</p>
                                 </div>
-                            </div>
-                        </div>
-                    `;
-                });
+                            `;
+                            cardDiv.appendChild(detailsDiv); // Append the details div
+                        }
 
-                // Add event listeners for expanding/collapsing saved invoice details
-                document.querySelectorAll('.saved-invoice-card').forEach(card => {
-                    // Attach event listener to the header for toggling
-                    const header = card.querySelector('.saved-invoice-header');
-                    const details = card.querySelector('.saved-invoice-details');
-                    const icon = card.querySelector('.fa-chevron-down');
-                    const deleteButton = card.querySelector('.delete-btn');
-
-                    if (header && details && icon) {
-                        header.addEventListener('click', function(event) {
-                            // Prevent click on delete button from toggling the card
-                            if (event.target.closest('.delete-btn')) {
-                                return;
-                            }
-                            details.classList.toggle('show');
-                            icon.classList.toggle('rotate-180');
-                        });
-                    }
+                        detailsDiv.classList.toggle('show');
+                        icon.classList.toggle('rotate-180');
+                    });
 
                     // Attach event listener for the delete button
                     if (deleteButton) {

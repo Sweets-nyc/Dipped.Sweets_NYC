@@ -1197,180 +1197,189 @@
             savedInvoicesList.innerHTML = ''; // Clear previous list
             noSavedInvoicesMessage.classList.add('hidden'); // Hide no invoices message by default
 
+            let savedInvoices = [];
             try {
                 const storedData = localStorage.getItem('dippedSweetsInvoices');
                 console.log("Attempting to load from localStorage. Raw data:", storedData);
+                if (storedData) { // Only try to parse if data exists
+                    savedInvoices = JSON.parse(storedData);
+                }
+            } catch (e) {
+                console.error("Error parsing saved invoices from localStorage:", e);
+                showMessage("Error loading saved invoices. Data might be corrupted.", true);
+                // Optionally clear corrupted data if you suspect it's causing persistent issues
+                // localStorage.removeItem('dippedSweetsInvoices');
+            }
 
-                const savedInvoices = storedData ? JSON.parse(storedData) : [];
 
-                if (savedInvoices.length === 0) {
-                    noSavedInvoicesMessage.classList.remove('hidden');
-                    console.log("No saved invoices found in localStorage.");
-                    return;
+            if (savedInvoices.length === 0) {
+                noSavedInvoicesMessage.classList.remove('hidden');
+                console.log("No saved invoices found in localStorage.");
+                return;
+            }
+
+            console.log(`Found ${savedInvoices.length} saved invoices.`);
+            savedInvoices.forEach(invoice => {
+                const invoiceId = invoice.id;
+                const hidePrices = invoice.hidePrices || false;
+
+                // Create the main card container
+                const cardDiv = document.createElement('div');
+                cardDiv.className = 'saved-invoice-card';
+                cardDiv.dataset.invoiceId = invoiceId;
+
+                // Create the header for the collapsed view
+                const headerDiv = document.createElement('div');
+                headerDiv.className = 'saved-invoice-header';
+                headerDiv.innerHTML = `
+                    <span>Invoice #: ${invoice.invoiceNumber}</span>
+                    <span>Client: ${invoice.clientName}</span>
+                    <button type="button" class="delete-btn" data-invoice-id="${invoiceId}">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                    <i class="fas fa-chevron-down ml-2 transition-transform duration-300"></i>
+                `;
+                cardDiv.appendChild(headerDiv);
+
+                // Create the details div once for each card
+                const detailsDiv = document.createElement('div');
+                detailsDiv.className = `saved-invoice-details invoice-display-container ${hidePrices ? 'hide-prices-active' : ''}`;
+                cardDiv.appendChild(detailsDiv); // Append it immediately
+
+                // Populate detailsDiv content once
+                let itemsHtml = '';
+                if (invoice.items && invoice.items.length > 0) {
+                    itemsHtml = `
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Description</th>
+                                    <th class="text-center">Qty</th>
+                                    <th class="output-price-column text-right">Unit Price</th>
+                                    <th class="output-price-column text-right">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                    `;
+                    invoice.items.forEach(item => {
+                        itemsHtml += `
+                            <tr>
+                                <td>${item.description}</td>
+                                <td class="text-center">${item.quantity}</td>
+                                <td class="output-price-column text-right">${hidePrices ? '' : '$' + item.unitPrice.toFixed(2)}</td>
+                                <td class="output-price-column text-right">${hidePrices ? '' : '$' + item.total.toFixed(2)}</td>
+                            </tr>
+                        `;
+                    });
+                    itemsHtml += `</tbody></table>`;
+                } else {
+                    itemsHtml = '<p>No items listed for this invoice.</p>';
                 }
 
-                console.log(`Found ${savedInvoices.length} saved invoices.`);
-                savedInvoices.forEach(invoice => {
-                    const invoiceId = invoice.id;
-                    const hidePrices = invoice.hidePrices || false;
+                detailsDiv.innerHTML = `
+                    <div class="invoice-header">
+                        <img src="https://placehold.co/80x80/F8E6DD/6F4E37?text=DS" alt="Company Logo" class="invoice-logo">
+                        <h2 class="text-4xl font-bold text-[#6F4E37] mb-2">INVOICE</h2>
+                        <p class="text-gray-700 text-lg">Dipped Sweets NYC</p>
+                        <p class="text-gray-600 text-sm">Handcrafted Dipped Treats</p>
+                        <p class="text-gray-600 text-sm">DippedSweets.nyc@gmail.com | +1 (929) 323-9892</p>
+                        <p class="text-gray-600 text-sm">Serving The Bronx, Upper East Side & Upper West Side Manhattan, and Astoria, Queens</p>
+                    </div>
 
-                    // Create the main card container
-                    const cardDiv = document.createElement('div');
-                    cardDiv.className = 'saved-invoice-card';
-                    cardDiv.dataset.invoiceId = invoiceId;
+                    <hr class="border-t-2 border-[#F8A4B8] my-6">
 
-                    // Create the header for the collapsed view
-                    const headerDiv = document.createElement('div');
-                    headerDiv.className = 'saved-invoice-header';
-                    headerDiv.innerHTML = `
-                        <span>Invoice #: ${invoice.invoiceNumber}</span>
-                        <span>Client: ${invoice.clientName}</span>
-                        <button type="button" class="delete-btn" data-invoice-id="${invoiceId}">
-                            <i class="fas fa-trash-alt"></i>
-                        </button>
-                        <i class="fas fa-chevron-down ml-2 transition-transform duration-300"></i>
-                    `;
-                    cardDiv.appendChild(headerDiv);
+                    <div class="invoice-details grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-800">
+                        <div>
+                            <h3 class="text-xl font-semibold mb-2">Bill To:</h3>
+                            <p class="font-medium">${invoice.clientName}</p>
+                            <p>${invoice.clientAddress.replace(/\n/g, '<br>')}</p>
+                            <p>${invoice.clientEmail}</p>
+                            <p>${invoice.clientPhone}</p>
+                        </div>
+                        <div class="md:text-right">
+                            <h3 class="text-xl font-semibold mb-2">Invoice Info:</h3>
+                            <p><strong>Invoice #:</strong> ${invoice.invoiceNumber}</p>
+                            <p><strong>Date:</strong> ${invoice.invoiceDate}</p>
+                            <p><strong>Due Date:</strong> ${invoice.dueDate}</p>
+                        </div>
+                    </div>
 
-                    // Create the details div once for each card
-                    const detailsDiv = document.createElement('div');
-                    detailsDiv.className = `saved-invoice-details invoice-display-container ${hidePrices ? 'hide-prices-active' : ''}`;
-                    cardDiv.appendChild(detailsDiv); // Append it immediately
+                    <div class="invoice-items my-8">
+                        <h3 class="text-xl font-semibold mb-4">Items:</h3>
+                        ${itemsHtml}
+                    </div>
 
-                    // Populate detailsDiv content once
-                    let itemsHtml = '';
-                    if (invoice.items && invoice.items.length > 0) {
-                        itemsHtml = `
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Description</th>
-                                        <th class="text-center">Qty</th>
-                                        <th class="output-price-column text-right">Unit Price</th>
-                                        <th class="output-price-column text-right">Total</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                        `;
-                        invoice.items.forEach(item => {
-                            itemsHtml += `
-                                <tr>
-                                    <td>${item.description}</td>
-                                    <td class="text-center">${item.quantity}</td>
-                                    <td class="output-price-column text-right">${hidePrices ? '' : '$' + item.unitPrice.toFixed(2)}</td>
-                                    <td class="output-price-column text-right">${hidePrices ? '' : '$' + item.total.toFixed(2)}</td>
-                                </tr>
-                            `;
-                        });
-                        itemsHtml += `</tbody></table>`;
-                    } else {
-                        itemsHtml = '<p>No items listed for this invoice.</p>';
+                    <div class="invoice-summary text-right text-gray-800">
+                        <div class="output-price-summary-line">
+                            <span>Subtotal:</span>
+                            <span class="${hidePrices ? 'hidden-price' : ''}">$${invoice.subtotal.toFixed(2)}</span>
+                        </div>
+                        <div class="output-price-summary-line">
+                            <span>Delivery Fee:</span>
+                            <span class="${hidePrices ? 'hidden-price' : ''}">$${invoice.deliveryFee.toFixed(2)}</span>
+                        </div>
+                        <div class="output-price-summary-line">
+                            <span>Deposit Received:</span>
+                            <span class="${hidePrices ? 'hidden-price' : ''}">$${invoice.depositReceived.toFixed(2)}</span>
+                        </div>
+                        <div class="text-2xl text-[#6F4E37] output-price-summary-line">
+                            <span>Grand Total:</span>
+                            <span class="${hidePrices ? 'hidden-price' : ''}">$${invoice.grandTotal.toFixed(2)}</span>
+                        </div>
+                        <div class="text-2xl text-[#F44336] font-bold output-price-summary-line">
+                            <span>Amount Due:</span>
+                            <span class="${hidePrices ? 'hidden-price' : ''}">$${invoice.amountDue.toFixed(2)}</span>
+                        </div>
+                    </div>
+
+                    <div class="invoice-notes my-8">
+                        <h3 class="text-xl font-semibold mb-2">Notes:</h3>
+                        <p class="text-gray-700 italic">${invoice.notes}</p>
+                    </div>
+
+                    <div class="invoice-delivery-info my-8">
+                        <h3 class="text-xl font-semibold mb-2">Delivery/Pickup Details:</h3>
+                        <p><strong>Date:</strong> ${invoice.deliveryDate}</p>
+                        <p><strong>Time:</strong> ${invoice.deliveryTime}</p>
+                        <p><strong>Location:</strong> ${invoice.deliveryLocation.replace(/\n/g, '<br>')}</p>
+                    </div>
+
+                    <hr class="border-t-2 border-[#F8A4B8] my-6">
+
+                    <div class="invoice-footer text-gray-600 text-sm">
+                        <p>Thank you for your business!</p>
+                        <p>Please make payments to [Your Preferred Payment Method/Details Here]</p>
+                    </div>
+                `;
+
+                // Append the card to the list
+                savedInvoicesList.appendChild(cardDiv);
+
+                // Get the icon and delete button references after headerDiv is appended to cardDiv
+                const icon = headerDiv.querySelector('.fa-chevron-down');
+                const deleteButton = headerDiv.querySelector('.delete-btn');
+
+                headerDiv.addEventListener('click', function(event) {
+                    // Prevent click on delete button from toggling the card
+                    if (event.target.closest('.delete-btn')) {
+                        return;
                     }
-
-                    detailsDiv.innerHTML = `
-                        <div class="invoice-header">
-                            <img src="https://placehold.co/80x80/F8E6DD/6F4E37?text=DS" alt="Company Logo" class="invoice-logo">
-                            <h2 class="text-4xl font-bold text-[#6F4E37] mb-2">INVOICE</h2>
-                            <p class="text-gray-700 text-lg">Dipped Sweets NYC</p>
-                            <p class="text-gray-600 text-sm">Handcrafted Dipped Treats</p>
-                            <p class="text-gray-600 text-sm">DippedSweets.nyc@gmail.com | +1 (929) 323-9892</p>
-                            <p class="text-gray-600 text-sm">Serving The Bronx, Upper East Side & Upper West Side Manhattan, and Astoria, Queens</p>
-                        </div>
-
-                        <hr class="border-t-2 border-[#F8A4B8] my-6">
-
-                        <div class="invoice-details grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-800">
-                            <div>
-                                <h3 class="text-xl font-semibold mb-2">Bill To:</h3>
-                                <p class="font-medium">${invoice.clientName}</p>
-                                <p>${invoice.clientAddress.replace(/\n/g, '<br>')}</p>
-                                <p>${invoice.clientEmail}</p>
-                                <p>${invoice.clientPhone}</p>
-                            </div>
-                            <div class="md:text-right">
-                                <h3 class="text-xl font-semibold mb-2">Invoice Info:</h3>
-                                <p><strong>Invoice #:</strong> ${invoice.invoiceNumber}</p>
-                                <p><strong>Date:</strong> ${invoice.invoiceDate}</p>
-                                <p><strong>Due Date:</strong> ${invoice.dueDate}</p>
-                            </div>
-                        </div>
-
-                        <div class="invoice-items my-8">
-                            <h3 class="text-xl font-semibold mb-4">Items:</h3>
-                            ${itemsHtml}
-                        </div>
-
-                        <div class="invoice-summary text-right text-gray-800">
-                            <div class="output-price-summary-line">
-                                <span>Subtotal:</span>
-                                <span class="${hidePrices ? 'hidden-price' : ''}">$${invoice.subtotal.toFixed(2)}</span>
-                            </div>
-                            <div class="output-price-summary-line">
-                                <span>Delivery Fee:</span>
-                                <span class="${hidePrices ? 'hidden-price' : ''}">$${invoice.deliveryFee.toFixed(2)}</span>
-                            </div>
-                            <div class="output-price-summary-line">
-                                <span>Deposit Received:</span>
-                                <span class="${hidePrices ? 'hidden-price' : ''}">$${invoice.depositReceived.toFixed(2)}</span>
-                            </div>
-                            <div class="text-2xl text-[#6F4E37] output-price-summary-line">
-                                <span>Grand Total:</span>
-                                <span class="${hidePrices ? 'hidden-price' : ''}">$${invoice.grandTotal.toFixed(2)}</span>
-                            </div>
-                            <div class="text-2xl text-[#F44336] font-bold output-price-summary-line">
-                                <span>Amount Due:</span>
-                                <span class="${hidePrices ? 'hidden-price' : ''}">$${invoice.amountDue.toFixed(2)}</span>
-                            </div>
-                        </div>
-
-                        <div class="invoice-notes my-8">
-                            <h3 class="text-xl font-semibold mb-2">Notes:</h3>
-                            <p class="text-gray-700 italic">${invoice.notes}</p>
-                        </div>
-
-                        <div class="invoice-delivery-info my-8">
-                            <h3 class="text-xl font-semibold mb-2">Delivery/Pickup Details:</h3>
-                            <p><strong>Date:</strong> ${invoice.deliveryDate}</p>
-                            <p><strong>Time:</strong> ${invoice.deliveryTime}</p>
-                            <p><strong>Location:</strong> ${invoice.deliveryLocation.replace(/\n/g, '<br>')}</p>
-                        </div>
-
-                        <hr class="border-t-2 border-[#F8A4B8] my-6">
-
-                        <div class="invoice-footer text-gray-600 text-sm">
-                            <p>Thank you for your business!</p>
-                            <p>Please make payments to [Your Preferred Payment Method/Details Here]</p>
-                        </div>
-                    `;
-
-                    // Get the icon and delete button references after headerDiv is appended to cardDiv
-                    const icon = headerDiv.querySelector('.fa-chevron-down');
-                    const deleteButton = headerDiv.querySelector('.delete-btn');
-
-                    headerDiv.addEventListener('click', function(event) {
-                        // Prevent click on delete button from toggling the card
-                        if (event.target.closest('.delete-btn')) {
-                            return;
-                        }
-                        detailsDiv.classList.toggle('show');
-                        icon.classList.toggle('rotate-180');
-                    });
-
-                    // Attach event listener for the delete button
-                    if (deleteButton) {
-                        deleteButton.addEventListener('click', function(event) {
-                            event.stopPropagation(); // Prevent the card from toggling
-                            const invoiceIdToDelete = this.dataset.invoiceId;
-                            deleteInvoice(invoiceIdToDelete);
-                        });
-                    }
+                    detailsDiv.classList.toggle('show');
+                    icon.classList.toggle('rotate-180');
+                    console.log(`Toggling invoice ${invoiceId}. Current show state: ${detailsDiv.classList.contains('show')}`);
                 });
 
-                showMessage("Saved invoices loaded successfully!");
-            } catch (e) {
-                console.error("Error loading documents: ", e);
-                showMessage(`Error loading invoices: ${e.message}`, true);
-            }
+                // Attach event listener for the delete button
+                if (deleteButton) {
+                    deleteButton.addEventListener('click', function(event) {
+                        event.stopPropagation(); // Prevent the card from toggling
+                        const invoiceIdToDelete = this.dataset.invoiceId;
+                        deleteInvoice(invoiceIdToDelete);
+                    });
+                }
+            });
+
+            showMessage("Saved invoices loaded successfully!");
         }
 
 
@@ -1494,3 +1503,4 @@ Regarding the tax acknowledgment letter: As a small business just starting out, 
     </script>
 </body>
 </html>
+

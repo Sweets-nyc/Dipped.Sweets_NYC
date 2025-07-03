@@ -305,18 +305,22 @@
                 cursor: pointer; /* Make the header clickable */
             }
             .saved-invoice-details {
-                margin-top: 1rem;
-                border-top: 1px dashed #e5e7eb;
-                padding-top: 1rem;
-                display: none; /* Hidden by default */
-                overflow: hidden; /* Hide overflow when collapsed */
-                max-height: 0; /* For smooth transition */
-                transition: max-height 0.5s ease-out, padding-top 0.5s ease-out;
+                /* Inherits some styles from .invoice-display-container */
+                overflow: hidden;
+                max-height: 0;
+                padding: 0 2rem; /* Keep horizontal padding, but vertical 0 initially */
+                margin-top: 0; /* No margin when collapsed */
+                opacity: 0;
+                visibility: hidden;
+                transition: max-height 0.5s ease-out, padding 0.5s ease-out, margin-top 0.5s ease-out, opacity 0.5s ease-out, visibility 0.5s ease-out;
             }
             .saved-invoice-details.show {
-                display: block; /* Show when active */
-                max-height: 2000px; /* Large enough value for content to show */
-                transition: max-height 0.7s ease-in, padding-top 0.5s ease-in;
+                max-height: 2000px; /* Arbitrarily large enough height */
+                padding: 2rem; /* Restore full padding */
+                margin-top: 2rem; /* Restore margin */
+                opacity: 1;
+                visibility: visible;
+                transition: max-height 0.7s ease-in, padding 0.5s ease-in, margin-top 0.5s ease-in, opacity 0.5s ease-in, visibility 0.5s ease-in;
             }
             .saved-invoice-details p {
                 margin-bottom: 0.5rem;

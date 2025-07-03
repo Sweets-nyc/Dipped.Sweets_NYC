@@ -446,27 +446,34 @@
                 </div>
             </div>
 
+            <h2 class="text-3xl font-semibold mb-6">Delivery/Pickup & Financial Details</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                <div>
-                    <label for="deliveryDate" class="block text-gray-700 text-sm font-bold mb-2">Delivery/Pickup Date:</label>
-                    <input type="date" id="deliveryDate">
+                <!-- Delivery/Pickup Details -->
+                <div class="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="deliveryDate" class="block text-gray-700 text-sm font-bold mb-2">Delivery/Pickup Date:</label>
+                        <input type="date" id="deliveryDate">
+                    </div>
+                    <div>
+                        <label for="deliveryTime" class="block text-gray-700 text-sm font-bold mb-2">Delivery/Pickup Time:</label>
+                        <input type="text" id="deliveryTime" placeholder="e.g., 2:00 PM - 3:00 PM" class="w-full sm:w-1/2 lg:w-1/3">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="deliveryLocation" class="block text-gray-700 text-sm font-bold mb-2">Delivery/Pickup Location:</label>
+                        <textarea id="deliveryLocation" rows="2" placeholder="Client's Address or Pickup Point"></textarea>
+                    </div>
                 </div>
-                <div>
-                    <label for="deliveryTime" class="block text-gray-700 text-sm font-bold mb-2">Delivery/Pickup Time:</label>
-                    <input type="text" id="deliveryTime" placeholder="e.g., 2:00 PM - 3:00 PM" class="w-full md:w-2/3">
-                </div>
-                <div class="md:col-span-2">
-                    <label for="deliveryLocation" class="block text-gray-700 text-sm font-bold mb-2">Delivery/Pickup Location:</label>
-                    <textarea id="deliveryLocation" rows="2" placeholder="Client's Address or Pickup Point"></textarea>
-                </div>
-                <div class="price-field">
-                    <label for="deliveryFee" class="block text-gray-700 text-sm font-bold mb-2">Delivery Fee ($):</label>
-                    <input type="number" id="deliveryFee" value="0.00" min="0" step="0.01">
-                </div>
-                <!-- New: Deposit Received Field -->
-                <div class="price-field">
-                    <label for="depositReceived" class="block text-gray-700 text-sm font-bold mb-2">Deposit Received ($):</label>
-                    <input type="number" id="depositReceived" value="0.00" min="0" step="0.01">
+
+                <!-- Financial Adjustments -->
+                <div class="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6 mt-4 pt-4 border-t border-gray-200">
+                    <div class="price-field">
+                        <label for="deliveryFee" class="block text-gray-700 text-sm font-bold mb-2">Delivery Fee ($):</label>
+                        <input type="number" id="deliveryFee" value="0.00" min="0" step="0.01">
+                    </div>
+                    <div class="price-field">
+                        <label for="depositReceived" class="block text-gray-700 text-sm font-bold mb-2">Deposit Received ($):</label>
+                        <input type="number" id="depositReceived" value="0.00" min="0" step="0.01">
+                    </div>
                 </div>
             </div>
 
@@ -487,7 +494,6 @@
                 <button id="resetFormBtn" class="btn-secondary flex items-center">
                     Reset Form <i class="fas fa-redo ml-2"></i>
                 </button>
-                <!-- Added View Saved Invoices button to the form section -->
                 <button id="viewSavedInvoicesBtn" class="btn-primary flex items-center">
                     View Saved Invoices <i class="fas fa-list-alt ml-2"></i>
                 </button>
@@ -497,7 +503,6 @@
         <!-- Invoice Output Section (initially hidden) -->
         <div id="invoiceOutputSection" class="invoice-display-container hidden">
             <div class="invoice-header">
-                <!-- Circular Logo Placeholder -->
                 <img src="https://placehold.co/80x80/F8E6DD/6F4E37?text=DS" alt="Company Logo" class="invoice-logo">
                 <h2 class="text-4xl font-bold text-[#6F4E37] mb-2">INVOICE</h2>
                 <p class="text-gray-700 text-lg" id="outputCompanyName"></p>
@@ -550,7 +555,6 @@
                     <span>Delivery Fee:</span>
                     <span id="outputDeliveryFee">$0.00</span>
                 </div>
-                <!-- New: Deposit Received Output -->
                 <div class="output-price-summary-line">
                     <span>Deposit Received:</span>
                     <span id="outputDepositReceived">$0.00</span>
@@ -559,8 +563,7 @@
                     <span>Grand Total:</span>
                     <span id="outputGrandTotal">$0.00</span>
                 </div>
-                <!-- New: Amount Due Output -->
-                <div class="text-2xl text-[#F44336] font-bold output-price-summary-line"> <!-- Highlight in red for clarity -->
+                <div class="text-2xl text-[#F44336] font-bold output-price-summary-line">
                     <span>Amount Due:</span>
                     <span id="outputAmountDue">$0.00</span>
                 </div>
@@ -586,7 +589,6 @@
             </div>
 
             <div class="flex justify-center gap-4 mt-8">
-                <!-- Added Save Invoice button to the output section -->
                 <button id="saveInvoiceBtn" class="btn-primary flex items-center">
                     Save Invoice <i class="fas fa-save ml-2"></i>
                 </button>
@@ -596,18 +598,16 @@
                 <button id="backToFormBtn" class="btn-secondary flex items-center">
                     Back to Form <i class="fas fa-arrow-left ml-2"></i>
                 </button>
-                <!-- Added View Saved Invoices button to the output section -->
                 <button id="viewSavedInvoicesFromOutputBtn" class="btn-primary flex items-center">
                     View Saved Invoices <i class="fas fa-list-alt ml-2"></i>
                 </button>
             </div>
         </div>
 
-        <!-- Saved Invoices Section (re-added) -->
+        <!-- Saved Invoices Section -->
         <div id="savedInvoicesSection" class="hidden">
             <h2 class="text-3xl font-semibold mb-6 text-center">Your Saved Invoices</h2>
             <div id="savedInvoicesList" class="space-y-4">
-                <!-- Saved invoices will be loaded here -->
                 <p id="noSavedInvoicesMessage" class="text-center text-gray-500 py-4 hidden">No invoices saved yet.</p>
             </div>
             <div class="flex justify-center mt-8">
@@ -931,7 +931,6 @@
             };
 
             currentInvoiceData.items.push(newItem); // Use currentInvoiceData.items
-            console.log("Current invoiceItems after adding:", JSON.parse(JSON.stringify(currentInvoiceData.items))); // Log the array content
             updateInvoiceItemsList();
             calculateAndDisplayCurrentTotals(); // Update totals after adding item
             showMessage(`Added "${description}" x${quantity} to invoice.`);

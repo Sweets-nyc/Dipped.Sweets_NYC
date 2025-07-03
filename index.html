@@ -1276,34 +1276,35 @@
                         return;
                     }
 
-                    // Remove any existing transitionend listener to prevent conflicts
+                    const isShowing = detailsDiv.classList.contains('show');
+
+                    // Clear any previous transitionend listener
                     const oldTransitionEndHandler = detailsDiv.dataset.transitionEndHandler;
                     if (oldTransitionEndHandler) {
                         detailsDiv.removeEventListener('transitionend', window[oldTransitionEndHandler]);
                         delete detailsDiv.dataset.transitionEndHandler;
+                        delete window[oldTransitionEndHandler];
                     }
 
-                    if (detailsDiv.classList.contains('show')) {
-                        // Collapse
-                        detailsDiv.style.maxHeight = detailsDiv.scrollHeight + 'px'; // Set explicit height to animate from
-                        detailsDiv.classList.remove('show'); // Remove 'show' class to start collapsing visual properties
+                    if (isShowing) {
+                        // COLLAPSE
+                        detailsDiv.style.maxHeight = detailsDiv.scrollHeight + 'px'; // Set current height for smooth transition
+                        detailsDiv.offsetWidth; // Force reflow
+                        detailsDiv.style.maxHeight = '0'; // Animate to 0
+
+                        detailsDiv.classList.remove('show'); // Immediately remove 'show' class to start other transitions (padding, opacity, etc.)
                         icon.classList.remove('rotate-180');
 
-                        // Force reflow to ensure the max-height transition starts from the current scrollHeight
-                        detailsDiv.offsetWidth;
-
-                        // Now set max-height to 0 to animate collapse
-                        detailsDiv.style.maxHeight = '0';
-
-                        // Set a unique handler name and store it on the element for later removal
-                        const handlerName = `transitionEndHandler_${invoiceId}`;
+                        // Set a unique handler to clean up after max-height transition
+                        const handlerName = `transitionEndHandler_${invoiceId}_collapse`;
                         window[handlerName] = function() {
-                            // After transition, ensure visibility is truly hidden
-                            if (!detailsDiv.classList.contains('show')) { // Only if still hidden
-                                detailsDiv.style.visibility = 'hidden';
-                                detailsDiv.style.opacity = '0';
+                            // After max-height transition, ensure all properties are reset to hidden state
+                            if (!detailsDiv.classList.contains('show')) { // Only if it's truly collapsed
+                                detailsDiv.style.maxHeight = '0'; // Ensure it's 0
                                 detailsDiv.style.padding = '0';
                                 detailsDiv.style.marginTop = '0';
+                                detailsDiv.style.opacity = '0';
+                                detailsDiv.style.visibility = 'hidden';
                             }
                             detailsDiv.removeEventListener('transitionend', window[handlerName]);
                             delete detailsDiv.dataset.transitionEndHandler;
@@ -1313,8 +1314,8 @@
                         detailsDiv.addEventListener('transitionend', window[handlerName], { once: true });
 
                     } else {
-                        // Expand
-                        // Populate content only if it's not already there
+                        // EXPAND
+                        // Populate content if not already done
                         if (detailsDiv.innerHTML.trim() === '') {
                             let itemsHtml = '';
                             if (invoice.items && invoice.items.length > 0) {
@@ -1422,23 +1423,17 @@
                             `;
                         }
 
-                        detailsDiv.style.visibility = 'visible'; // Make visible immediately
-                        detailsDiv.style.opacity = '1';
-                        detailsDiv.style.padding = '2rem';
-                        detailsDiv.style.marginTop = '2rem';
-
-                        // Calculate height after content is visible and styled
-                        const contentHeight = detailsDiv.scrollHeight;
-                        detailsDiv.style.maxHeight = contentHeight + 'px'; // Animate to content height
-
-                        detailsDiv.classList.add('show'); // Add 'show' class
+                        detailsDiv.classList.add('show'); // Immediately add 'show' class to apply padding, opacity, visibility
+                        detailsDiv.style.maxHeight = '0'; // Start from 0 for max-height transition
+                        detailsDiv.offsetWidth; // Force reflow
+                        detailsDiv.style.maxHeight = detailsDiv.scrollHeight + 'px'; // Animate to full height
                         icon.classList.add('rotate-180');
 
-                        // Set a unique handler name and store it on the element for later removal
-                        const handlerName = `transitionEndHandler_${invoiceId}`;
+                        // Set a unique handler to clean up after max-height transition
+                        const handlerName = `transitionEndHandler_${invoiceId}_expand`;
                         window[handlerName] = function() {
                             // After expansion, remove explicit max-height to allow content to grow naturally
-                            if (detailsDiv.classList.contains('show')) { // Only if still showing
+                            if (detailsDiv.classList.contains('show')) { // Only if it's still showing
                                 detailsDiv.style.maxHeight = 'none';
                             }
                             detailsDiv.removeEventListener('transitionend', window[handlerName]);

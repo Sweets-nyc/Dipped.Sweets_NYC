@@ -283,74 +283,62 @@
             }
 
             /* Styles for saved invoices list */
-            .saved-invoice-card {
+            .saved-invoice-item {
                 background-color: #fefefe;
                 border: 1px solid #e5e7eb;
                 border-radius: 0.75rem;
-                padding: 1.5rem;
-                margin-bottom: 1rem;
-                box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-                transition: all 0.2s ease-in-out;
-            }
-            .saved-invoice-card:hover {
-                box-shadow: 0 6px 15px rgba(0,0,0,0.1);
-                transform: translateY(-2px);
-            }
-            .saved-invoice-header {
+                padding: 1rem 1.5rem;
+                margin-bottom: 0.75rem;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.05);
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
+                font-weight: 500;
+                color: #333333;
+                transition: all 0.2s ease-in-out;
+            }
+            .saved-invoice-item:hover {
+                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+                transform: translateY(-1px);
+            }
+            .saved-invoice-item span {
+                flex-shrink: 0; /* Prevent text from shrinking too much */
+            }
+            .saved-invoice-item .invoice-info {
+                flex-grow: 1; /* Allow info to take available space */
+                display: flex;
+                flex-wrap: wrap; /* Allow wrapping on smaller screens */
+                gap: 0.5rem 1.5rem; /* Gap between info pieces */
+                align-items: center;
+            }
+            .saved-invoice-item .invoice-actions {
+                flex-shrink: 0;
+                display: flex;
+                gap: 0.75rem;
+                margin-left: 1rem; /* Space between info and buttons */
+            }
+            .view-btn, .delete-btn {
+                padding: 0.5rem 1rem;
+                border-radius: 0.5rem;
                 font-weight: 600;
-                color: #6F4E37;
-                cursor: pointer; /* Make the header clickable */
+                cursor: pointer;
+                transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
             }
-            .saved-invoice-details {
-                overflow: hidden;
-                max-height: 0;
-                padding: 0;
-                margin-top: 0;
-                opacity: 0;
-                visibility: hidden;
-                background-color: #fcfcfc;
-                border: 1px solid #e5e7eb;
-                border-radius: 1rem;
-                box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
-                /* Single transition property for all animated properties */
-                transition: max-height 0.5s ease-in-out,
-                            padding 0.5s ease-in-out,
-                            margin-top 0.5s ease-in-out,
-                            opacity 0.5s ease-in-out,
-                            visibility 0.5s ease-in-out;
+            .view-btn {
+                background-color: #F8A4B8; /* Soft Pink */
+                color: white;
             }
-            .saved-invoice-details.show {
-                /* max-height will be set by JS */
-                padding: 2rem;
-                margin-top: 2rem;
-                opacity: 1;
-                visibility: visible;
-            }
-            .saved-invoice-details p {
-                margin-bottom: 0.5rem;
-            }
-            /* Apply print styles to the expanded saved invoice details */
-            .saved-invoice-details.show {
-                padding: 0 !important;
-                margin-top: 0 !important;
-                border: none !important;
-                box-shadow: none !important;
-                background-color: #fff !important; /* Ensure white background for print */
+            .view-btn:hover {
+                background-color: #E28FA0;
+                transform: translateY(-1px);
             }
             .delete-btn {
-                background: none;
-                border: none;
-                color: #f44336;
-                cursor: pointer;
-                font-size: 1.2rem;
-                margin-left: 1rem;
-                transition: color 0.2s ease-in-out;
+                background-color: #f44336; /* Red */
+                color: white;
             }
             .delete-btn:hover {
-                color: #d32f2f;
+                background-color: #d32f2f;
+                transform: translateY(-1px);
             }
         </style>
 </head>
@@ -1045,81 +1033,99 @@
             });
         }
 
+        /**
+         * Collects invoice data from the form inputs.
+         * @returns {object} An object containing all invoice data.
+         */
+        function collectInvoiceDataFromForm() {
+            return {
+                id: crypto.randomUUID(), // Unique ID for this invoice
+                invoiceNumber: document.getElementById('invoiceNumber').value || 'N/A',
+                invoiceDate: document.getElementById('invoiceDate').value || 'N/A',
+                dueDate: document.getElementById('dueDate').value || 'N/A',
+                clientName: document.getElementById('clientName').value || 'N/A',
+                clientEmail: document.getElementById('clientEmail').value || 'N/A',
+                clientPhone: document.getElementById('clientPhone').value || 'N/A',
+                clientAddress: document.getElementById('clientAddress').value || 'N/A',
+                deliveryDate: document.getElementById('deliveryDate').value || 'N/A',
+                deliveryTime: document.getElementById('deliveryTime').value || 'N/A',
+                deliveryLocation: document.getElementById('deliveryLocation').value || 'N/A',
+                deliveryFee: parseFloat(document.getElementById('deliveryFee').value) || 0,
+                depositReceived: parseFloat(document.getElementById('depositReceived').value) || 0,
+                notes: document.getElementById('invoiceNotes').value || 'No additional notes.',
+                hidePrices: document.getElementById('hidePricesToggle').checked,
+                items: JSON.parse(JSON.stringify(invoiceItems)), // Deep copy of current items
+                savedAt: new Date().toISOString() // ISO string for date/time
+            };
+        }
 
-        // Function to generate and display the invoice
-        function generateInvoice() {
-            // Get input values
-            const invoiceNumber = document.getElementById('invoiceNumber').value || 'N/A';
-            const invoiceDate = document.getElementById('invoiceDate').value || 'N/A';
-            const dueDate = document.getElementById('dueDate').value || 'N/A';
-            const clientName = document.getElementById('clientName').value || 'N/A';
-            const clientEmail = document.getElementById('clientEmail').value || 'N/A';
-            const clientPhone = document.getElementById('clientPhone').value || 'N/A';
-            const clientAddress = document.getElementById('clientAddress').value || 'N/A';
-            const deliveryDate = document.getElementById('deliveryDate').value || 'N/A';
-            const deliveryTime = document.getElementById('deliveryTime').value || 'N/A';
-            const deliveryLocation = document.getElementById('deliveryLocation').value || 'N/A';
-            const deliveryFee = parseFloat(document.getElementById('deliveryFee').value) || 0;
-            const depositReceived = parseFloat(document.getElementById('depositReceived').value) || 0;
-            const invoiceNotes = document.getElementById('invoiceNotes').value || 'No additional notes.';
-            const hidePrices = document.getElementById('hidePricesToggle').checked;
-
-
-            // Basic validation
-            if (!clientName || invoiceItems.length === 0) {
-                showMessage("Please enter client name and add at least one item to generate invoice.", true);
-                return;
-            }
-
-            // Calculate totals
-            let subtotal = invoiceItems.reduce((sum, item) => sum + item.total, 0);
-            let grandTotal = subtotal + deliveryFee;
-            let amountDue = grandTotal - depositReceived;
-
+        /**
+         * Populates the invoice output section with the given invoice data.
+         * @param {object} invoiceData - The invoice object to display.
+         */
+        function displayInvoiceInOutput(invoiceData) {
             // Populate output fields
-            document.getElementById('outputInvoiceNumber').textContent = invoiceNumber;
-            document.getElementById('outputInvoiceDate').textContent = invoiceDate;
-            document.getElementById('outputDueDate').textContent = dueDate;
-            document.getElementById('outputClientName').textContent = clientName;
-            document.getElementById('outputClientAddress').textContent = clientAddress.replace(/\n/g, '<br>');
-            document.getElementById('outputClientEmail').textContent = clientEmail;
-            document.getElementById('outputClientPhone').textContent = clientPhone;
-            document.getElementById('outputDeliveryDate').textContent = deliveryDate;
-            document.getElementById('outputDeliveryTime').textContent = deliveryTime;
-            document.getElementById('outputDeliveryLocation').textContent = deliveryLocation.replace(/\n/g, '<br>');
-            document.getElementById('outputNotes').textContent = invoiceNotes;
+            document.getElementById('outputInvoiceNumber').textContent = invoiceData.invoiceNumber;
+            document.getElementById('outputInvoiceDate').textContent = invoiceData.invoiceDate;
+            document.getElementById('outputDueDate').textContent = invoiceData.dueDate;
+            document.getElementById('outputClientName').textContent = invoiceData.clientName;
+            document.getElementById('outputClientAddress').innerHTML = invoiceData.clientAddress.replace(/\n/g, '<br>');
+            document.getElementById('outputClientEmail').textContent = invoiceData.clientEmail;
+            document.getElementById('outputClientPhone').textContent = invoiceData.clientPhone;
+            document.getElementById('outputDeliveryDate').textContent = invoiceData.deliveryDate;
+            document.getElementById('outputDeliveryTime').textContent = invoiceData.deliveryTime;
+            document.getElementById('outputDeliveryLocation').innerHTML = invoiceData.deliveryLocation.replace(/\n/g, '<br>');
+            document.getElementById('outputNotes').textContent = invoiceData.notes;
 
             // Populate invoice items table
             const outputItemsTableBody = document.getElementById('outputItemsTableBody');
             let itemsHtml = '';
-            invoiceItems.forEach(item => {
+            invoiceData.items.forEach(item => {
                 itemsHtml += `
                     <tr>
                         <td>${item.description}</td>
                         <td class="text-center">${item.quantity}</td>
-                        <td class="output-price-column text-right">${hidePrices ? '' : '$' + item.unitPrice.toFixed(2)}</td>
-                        <td class="output-price-column text-right">${hidePrices ? '' : '$' + item.total.toFixed(2)}</td>
+                        <td class="output-price-column text-right">${invoiceData.hidePrices ? '' : '$' + item.unitPrice.toFixed(2)}</td>
+                        <td class="output-price-column text-right">${invoiceData.hidePrices ? '' : '$' + item.total.toFixed(2)}</td>
                     </tr>
                 `;
             });
             outputItemsTableBody.innerHTML = itemsHtml;
 
             // Populate summary
-            document.getElementById('outputSubtotal').textContent = `$${subtotal.toFixed(2)}`;
-            document.getElementById('outputDeliveryFee').textContent = `$${deliveryFee.toFixed(2)}`;
-            document.getElementById('outputDepositReceived').textContent = `$${depositReceived.toFixed(2)}`;
-            document.getElementById('outputGrandTotal').textContent = `$${grandTotal.toFixed(2)}`;
-            document.getElementById('outputAmountDue').textContent = `$${amountDue.toFixed(2)}`;
+            document.getElementById('outputSubtotal').textContent = `$${invoiceData.subtotal.toFixed(2)}`;
+            document.getElementById('outputDeliveryFee').textContent = `$${invoiceData.deliveryFee.toFixed(2)}`;
+            document.getElementById('outputDepositReceived').textContent = `$${invoiceData.depositReceived.toFixed(2)}`;
+            document.getElementById('outputGrandTotal').textContent = `$${invoiceData.grandTotal.toFixed(2)}`;
+            document.getElementById('outputAmountDue').textContent = `$${invoiceData.amountDue.toFixed(2)}`;
 
-            // Show invoice output, hide form
-            showSection('invoiceOutputSection');
-            showMessage("Invoice generated successfully!");
+            // Set the hide prices toggle state for the output section
+            document.getElementById('hidePricesToggle').checked = invoiceData.hidePrices;
             togglePriceVisibility(); // Apply visibility to the generated invoice
+            showSection('invoiceOutputSection');
+        }
+
+
+        // Function to generate and display the invoice (from form)
+        function generateInvoice() {
+            const invoiceData = collectInvoiceDataFromForm();
+
+            // Basic validation
+            if (!invoiceData.clientName || invoiceData.items.length === 0) {
+                showMessage("Please enter client name and add at least one item to generate invoice.", true);
+                return;
+            }
+
+            displayInvoiceInOutput(invoiceData);
+            showMessage("Invoice generated successfully!");
         }
 
         // Function to save the current invoice to localStorage
         function saveInvoice() {
             // Collect all data from the *output* section to ensure it's the generated invoice
+            // We can reuse the collectInvoiceDataFromForm here if we ensure form is updated before saving
+            // Or, more robustly, get the data from the currently displayed output.
+            // For simplicity and to ensure what's shown is what's saved, let's collect from output.
             const invoiceData = {
                 id: crypto.randomUUID(), // Unique ID for this saved invoice
                 invoiceNumber: document.getElementById('outputInvoiceNumber').textContent,
@@ -1133,6 +1139,7 @@
                 deliveryTime: document.getElementById('outputDeliveryTime').textContent,
                 deliveryLocation: document.getElementById('outputDeliveryLocation').innerHTML.replace(/<br>/g, '\n'),
                 notes: document.getElementById('outputNotes').textContent,
+                // Parse numbers from displayed text content
                 subtotal: parseFloat(document.getElementById('outputSubtotal').textContent.replace('$', '')),
                 deliveryFee: parseFloat(document.getElementById('outputDeliveryFee').textContent.replace('$', '')),
                 depositReceived: parseFloat(document.getElementById('outputDepositReceived').textContent.replace('$', '')),
@@ -1239,218 +1246,38 @@
                 const invoiceId = invoice.id;
                 const hidePrices = invoice.hidePrices || false;
 
-                // Create the main card container
-                const cardDiv = document.createElement('div');
-                cardDiv.className = 'saved-invoice-card';
-                cardDiv.dataset.invoiceId = invoiceId;
+                const listItem = document.createElement('div');
+                listItem.className = 'saved-invoice-item';
+                listItem.dataset.invoiceId = invoiceId;
 
-                // Create the header for the collapsed view
-                const headerDiv = document.createElement('div');
-                headerDiv.className = 'saved-invoice-header';
-                headerDiv.innerHTML = `
-                    <span>Invoice #: ${invoice.invoiceNumber}</span>
-                    <span>Client: ${invoice.clientName}</span>
-                    <span class="${hidePrices ? 'hidden-price' : ''}">Total: $${invoice.grandTotal.toFixed(2)}</span>
-                    <button type="button" class="delete-btn" data-invoice-id="${invoiceId}">
-                        <i class="fas fa-trash-alt"></i>
-                    </button>
-                    <i class="fas fa-chevron-down ml-2 transition-transform duration-300"></i>
+                listItem.innerHTML = `
+                    <div class="invoice-info">
+                        <span><strong>Invoice #:</strong> ${invoice.invoiceNumber}</span>
+                        <span><strong>Client:</strong> ${invoice.clientName}</span>
+                        <span class="${hidePrices ? 'hidden-price' : ''}"><strong>Total:</strong> $${invoice.grandTotal.toFixed(2)}</span>
+                    </div>
+                    <div class="invoice-actions">
+                        <button type="button" class="view-btn" data-invoice-id="${invoiceId}">View Invoice</button>
+                        <button type="button" class="delete-btn" data-invoice-id="${invoiceId}">Delete</button>
+                    </div>
                 `;
-                cardDiv.appendChild(headerDiv);
 
-                // Create the details div (initially empty)
-                const detailsDiv = document.createElement('div');
-                detailsDiv.className = `saved-invoice-details ${hidePrices ? 'hide-prices-active' : ''}`;
-                cardDiv.appendChild(detailsDiv); // Append it immediately, but its content will be loaded on click
+                savedInvoicesList.appendChild(listItem);
 
-                // Append the card to the list
-                savedInvoicesList.appendChild(cardDiv);
-
-                // Get the icon and delete button references after headerDiv is appended to cardDiv
-                const icon = headerDiv.querySelector('.fa-chevron-down');
-                const deleteButton = headerDiv.querySelector('.delete-btn');
-
-                headerDiv.addEventListener('click', function(event) {
-                    // Prevent click on delete button from toggling the card
-                    if (event.target.closest('.delete-btn')) {
-                        return;
-                    }
-
-                    const isShowing = detailsDiv.classList.contains('show');
-
-                    // Clear any previous transitionend listener
-                    const oldTransitionEndHandler = detailsDiv.dataset.transitionEndHandler;
-                    if (oldTransitionEndHandler) {
-                        detailsDiv.removeEventListener('transitionend', window[oldTransitionEndHandler]);
-                        delete detailsDiv.dataset.transitionEndHandler;
-                        delete window[oldTransitionEndHandler];
-                    }
-
-                    if (isShowing) {
-                        // COLLAPSE
-                        detailsDiv.style.maxHeight = detailsDiv.scrollHeight + 'px'; // Set current height for smooth transition
-                        detailsDiv.offsetWidth; // Force reflow
-
-                        // Set a unique handler for the collapse transition
-                        const handlerName = `transitionEndHandler_${invoiceId}_collapse`;
-                        window[handlerName] = function() {
-                            // After max-height transition, remove the 'show' class and reset other styles
-                            detailsDiv.classList.remove('show');
-                            detailsDiv.style.maxHeight = '0'; // Ensure it's truly 0
-                            detailsDiv.style.padding = '0';
-                            detailsDiv.style.marginTop = '0';
-                            detailsDiv.style.opacity = '0';
-                            detailsDiv.style.visibility = 'hidden';
-                            detailsDiv.removeEventListener('transitionend', window[handlerName]);
-                            delete detailsDiv.dataset.transitionEndHandler;
-                            delete window[handlerName];
-                        };
-                        detailsDiv.dataset.transitionEndHandler = handlerName;
-                        detailsDiv.addEventListener('transitionend', window[handlerName], { once: true });
-
-                        detailsDiv.style.maxHeight = '0'; // Animate to 0
-                        icon.classList.remove('rotate-180');
-
+                // Attach event listeners to the new buttons
+                listItem.querySelector('.view-btn').addEventListener('click', function() {
+                    const invoiceToView = savedInvoices.find(inv => inv.id === invoiceId);
+                    if (invoiceToView) {
+                        displayInvoiceInOutput(invoiceToView);
+                        showMessage(`Displaying Invoice #${invoiceToView.invoiceNumber}`);
                     } else {
-                        // EXPAND
-                        // Populate content if not already done
-                        if (detailsDiv.innerHTML.trim() === '') {
-                            let itemsHtml = '';
-                            if (invoice.items && invoice.items.length > 0) {
-                                itemsHtml = `
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <th>Description</th>
-                                                <th class="text-center">Qty</th>
-                                                <th class="output-price-column text-right">Unit Price</th>
-                                                <th class="output-price-column text-right">Total</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                `;
-                                invoice.items.forEach(item => {
-                                    itemsHtml += `
-                                            <tr>
-                                                <td>${item.description}</td>
-                                                <td class="text-center">${item.quantity}</td>
-                                                <td class="output-price-column text-right">${hidePrices ? '' : '$' + item.unitPrice.toFixed(2)}</td>
-                                                <td class="output-price-column text-right">${hidePrices ? '' : '$' + item.total.toFixed(2)}</td>
-                                            </tr>
-                                        `;
-                                });
-                                itemsHtml += `</tbody></table>`;
-                            } else {
-                                itemsHtml = '<p>No items listed for this invoice.</p>';
-                            }
-
-                            detailsDiv.innerHTML = `
-                                <div class="invoice-header">
-                                    <img src="https://placehold.co/80x80/F8E6DD/6F4E37?text=DS" alt="Company Logo" class="invoice-logo">
-                                    <h2 class="text-4xl font-bold text-[#6F4E37] mb-2">INVOICE</h2>
-                                    <p class="text-gray-700 text-lg">Dipped Sweets NYC</p>
-                                    <p class="text-gray-600 text-sm">Handcrafted Dipped Treats</p>
-                                    <p class="text-gray-600 text-sm">DippedSweets.nyc@gmail.com | +1 (929) 323-9892</p>
-                                    <p class="text-gray-600 text-sm">Serving The Bronx, Upper East Side & Upper West Side Manhattan, and Astoria, Queens</p>
-                                </div>
-
-                                <hr class="border-t-2 border-[#F8A4B8] my-6">
-
-                                <div class="invoice-details grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-800">
-                                    <div>
-                                        <h3 class="text-xl font-semibold mb-2">Bill To:</h3>
-                                        <p class="font-medium">${invoice.clientName}</p>
-                                        <p>${invoice.clientAddress.replace(/\n/g, '<br>')}</p>
-                                        <p>${invoice.clientEmail}</p>
-                                        <p>${invoice.clientPhone}</p>
-                                    </div>
-                                    <div class="md:text-right">
-                                        <h3 class="text-xl font-semibold mb-2">Invoice Info:</h3>
-                                        <p><strong>Invoice #:</strong> ${invoice.invoiceNumber}</p>
-                                        <p><strong>Date:</strong> ${invoice.invoiceDate}</p>
-                                        <p><strong>Due Date:</strong> ${invoice.dueDate}</p>
-                                    </div>
-                                </div>
-
-                                <div class="invoice-items my-8">
-                                    <h3 class="text-xl font-semibold mb-4">Items:</h3>
-                                    ${itemsHtml}
-                                </div>
-
-                                <div class="invoice-summary text-right text-gray-800">
-                                    <div class="output-price-summary-line">
-                                        <span>Subtotal:</span>
-                                        <span class="${hidePrices ? 'hidden-price' : ''}">$${invoice.subtotal.toFixed(2)}</span>
-                                    </div>
-                                    <div class="output-price-summary-line">
-                                        <span>Delivery Fee:</span>
-                                        <span class="${hidePrices ? 'hidden-price' : ''}">$${invoice.deliveryFee.toFixed(2)}</span>
-                                    </div>
-                                    <div class="output-price-summary-line">
-                                        <span>Deposit Received:</span>
-                                        <span class="${hidePrices ? 'hidden-price' : ''}">$${invoice.depositReceived.toFixed(2)}</span>
-                                    </div>
-                                    <div class="text-2xl text-[#6F4E37] output-price-summary-line">
-                                        <span>Grand Total:</span>
-                                        <span class="${hidePrices ? 'hidden-price' : ''}">$${invoice.grandTotal.toFixed(2)}</span>
-                                    </div>
-                                    <div class="text-2xl text-[#F44336] font-bold output-price-summary-line">
-                                        <span>Amount Due:</span>
-                                        <span class="${hidePrices ? 'hidden-price' : ''}">$${invoice.amountDue.toFixed(2)}</span>
-                                    </div>
-                                </div>
-
-                                <div class="invoice-notes my-8">
-                                    <h3 class="text-xl font-semibold mb-2">Notes:</h3>
-                                    <p class="text-gray-700 italic">${invoice.notes}</p>
-                                </div>
-
-                                <div class="invoice-delivery-info my-8">
-                                    <h3 class="text-xl font-semibold mb-2">Delivery/Pickup Details:</h3>
-                                    <p><strong>Date:</strong> ${invoice.deliveryDate}</p>
-                                    <p><strong>Time:</strong> ${invoice.deliveryTime}</p>
-                                    <p><strong>Location:</strong> ${invoice.deliveryLocation.replace(/\n/g, '<br>')}</p>
-                                </div>
-
-                                <hr class="border-t-2 border-[#F8A4B8] my-6">
-
-                                <div class="invoice-footer text-gray-600 text-sm">
-                                    <p>Thank you for your business!</p>
-                                    <p>Please make payments to [Your Preferred Payment Method/Details Here]</p>
-                                </div>
-                            `;
-                        }
-
-                        detailsDiv.classList.add('show'); // Immediately add 'show' class to apply padding, opacity, visibility
-                        detailsDiv.style.maxHeight = '0'; // Start from 0 for max-height transition
-                        detailsDiv.offsetWidth; // Force reflow
-                        detailsDiv.style.maxHeight = detailsDiv.scrollHeight + 'px'; // Animate to full height
-                        icon.classList.add('rotate-180');
-
-                        // Set a unique handler to clean up after max-height transition
-                        const handlerName = `transitionEndHandler_${invoiceId}_expand`;
-                        window[handlerName] = function() {
-                            // After expansion, remove explicit max-height to allow content to grow naturally
-                            if (detailsDiv.classList.contains('show')) { // Only if it's still showing
-                                detailsDiv.style.maxHeight = 'none';
-                            }
-                            detailsDiv.removeEventListener('transitionend', window[handlerName]);
-                            delete detailsDiv.dataset.transitionEndHandler;
-                            delete window[handlerName];
-                        };
-                        detailsDiv.dataset.transitionEndHandler = handlerName;
-                        detailsDiv.addEventListener('transitionend', window[handlerName], { once: true });
+                        showMessage("Error: Invoice not found.", true);
                     }
                 });
 
-                // Attach event listener for the delete button
-                if (deleteButton) {
-                    deleteButton.addEventListener('click', function(event) {
-                        event.stopPropagation(); // Prevent the card from toggling
-                        const invoiceIdToDelete = this.dataset.invoiceId;
-                        deleteInvoice(invoiceIdToDelete);
-                    });
-                }
+                listItem.querySelector('.delete-btn').addEventListener('click', function() {
+                    deleteInvoice(invoiceId);
+                });
             });
 
             showMessage("Saved invoices loaded successfully!");

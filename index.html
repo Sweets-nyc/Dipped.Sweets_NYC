@@ -479,7 +479,10 @@
                 <button id="resetFormBtn" class="btn-secondary flex items-center">
                     Reset Form <i class="fas fa-redo ml-2"></i>
                 </button>
-                <!-- Removed Firebase-dependent buttons -->
+                <!-- Added View Saved Invoices button to the form section -->
+                <button id="viewSavedInvoicesBtn" class="btn-primary flex items-center">
+                    View Saved Invoices <i class="fas fa-list-alt ml-2"></i>
+                </button>
             </div>
         </div>
 
@@ -575,17 +578,36 @@
             </div>
 
             <div class="flex justify-center gap-4 mt-8">
-                <!-- Removed Firebase-dependent buttons -->
+                <!-- Added Save Invoice button to the output section -->
+                <button id="saveInvoiceBtn" class="btn-primary flex items-center">
+                    Save Invoice <i class="fas fa-save ml-2"></i>
+                </button>
                 <button id="printInvoiceBtn" class="btn-primary flex items-center">
                     Print Invoice <i class="fas fa-print ml-2"></i>
                 </button>
                 <button id="backToFormBtn" class="btn-secondary flex items-center">
                     Back to Form <i class="fas fa-arrow-left ml-2"></i>
                 </button>
+                <!-- Added View Saved Invoices button to the output section -->
+                <button id="viewSavedInvoicesFromOutputBtn" class="btn-primary flex items-center">
+                    View Saved Invoices <i class="fas fa-list-alt ml-2"></i>
+                </button>
             </div>
         </div>
 
-        <!-- Removed Saved Invoices Section as Firebase is being removed -->
+        <!-- Saved Invoices Section (re-added) -->
+        <div id="savedInvoicesSection" class="hidden">
+            <h2 class="text-3xl font-semibold mb-6 text-center">Your Saved Invoices</h2>
+            <div id="savedInvoicesList" class="space-y-4">
+                <!-- Saved invoices will be loaded here -->
+                <p id="noSavedInvoicesMessage" class="text-center text-gray-500 py-4 hidden">No invoices saved yet.</p>
+            </div>
+            <div class="flex justify-center mt-8">
+                <button id="backToCreatorFromSavedBtn" class="btn-secondary flex items-center">
+                    Back to Invoice Creator <i class="fas fa-arrow-left ml-2"></i>
+                </button>
+            </div>
+        </div>
     </div>
 
     <script type="module">
@@ -779,7 +801,8 @@
 
         // Function to control which sections are visible
         function showSection(sectionId) {
-            const allSections = document.querySelectorAll('.form-section, .invoice-output'); /* Removed #savedInvoicesSection */
+            // Include #savedInvoicesSection in the selection
+            const allSections = document.querySelectorAll('.form-section, .invoice-output, #savedInvoicesSection');
             allSections.forEach(section => {
                 section.classList.add('hidden'); // Hide all sections
             });
@@ -1072,7 +1095,155 @@
             togglePriceVisibility(); // Apply visibility to the generated invoice
         }
 
-        // Removed saveInvoice and loadSavedInvoices functions as Firebase is removed
+        // Function to save the current invoice to localStorage
+        function saveInvoice() {
+            // Collect all data from the *output* section to ensure it's the generated invoice
+            const invoiceData = {
+                id: crypto.randomUUID(), // Unique ID for this saved invoice
+                invoiceNumber: document.getElementById('outputInvoiceNumber').textContent,
+                invoiceDate: document.getElementById('outputInvoiceDate').textContent,
+                dueDate: document.getElementById('outputDueDate').textContent,
+                clientName: document.getElementById('outputClientName').textContent,
+                clientAddress: document.getElementById('outputClientAddress').innerHTML.replace(/<br>/g, '\n'),
+                clientEmail: document.getElementById('outputClientEmail').textContent,
+                clientPhone: document.getElementById('outputClientPhone').textContent,
+                deliveryDate: document.getElementById('outputDeliveryDate').textContent,
+                deliveryTime: document.getElementById('outputDeliveryTime').textContent,
+                deliveryLocation: document.getElementById('outputDeliveryLocation').innerHTML.replace(/<br>/g, '\n'),
+                notes: document.getElementById('outputNotes').textContent,
+                subtotal: parseFloat(document.getElementById('outputSubtotal').textContent.replace('$', '')),
+                deliveryFee: parseFloat(document.getElementById('outputDeliveryFee').textContent.replace('$', '')),
+                depositReceived: parseFloat(document.getElementById('outputDepositReceived').textContent.replace('$', '')),
+                grandTotal: parseFloat(document.getElementById('outputGrandTotal').textContent.replace('$', '')),
+                amountDue: parseFloat(document.getElementById('outputAmountDue').textContent.replace('$', '')),
+                hidePrices: document.getElementById('hidePricesToggle').checked,
+                items: invoiceItems.map(item => ({ // Use the original invoiceItems array for full detail
+                    description: item.description,
+                    quantity: item.quantity,
+                    unitPrice: item.unitPrice,
+                    total: item.total
+                })),
+                savedAt: new Date().toISOString() // ISO string for date/time
+            };
+
+            try {
+                // Get existing invoices from localStorage
+                const savedInvoices = JSON.parse(localStorage.getItem('dippedSweetsInvoices')) || [];
+                savedInvoices.push(invoiceData);
+                localStorage.setItem('dippedSweetsInvoices', JSON.stringify(savedInvoices));
+                showMessage(`Invoice saved successfully!`);
+                console.log("Invoice saved to localStorage:", invoiceData);
+            } catch (e) {
+                console.error("Error saving invoice to localStorage: ", e);
+                showMessage(`Error saving invoice: ${e.message}`, true);
+            }
+        }
+
+        // Function to load and display saved invoices from localStorage
+        function loadSavedInvoices() {
+            const savedInvoicesList = document.getElementById('savedInvoicesList');
+            const noSavedInvoicesMessage = document.getElementById('noSavedInvoicesMessage');
+            savedInvoicesList.innerHTML = ''; // Clear previous list
+            noSavedInvoicesMessage.classList.add('hidden'); // Hide no invoices message by default
+
+            try {
+                const savedInvoices = JSON.parse(localStorage.getItem('dippedSweetsInvoices')) || [];
+
+                if (savedInvoices.length === 0) {
+                    noSavedInvoicesMessage.classList.remove('hidden');
+                    console.log("No saved invoices found in localStorage.");
+                    return;
+                }
+
+                console.log(`Found ${savedInvoices.length} saved invoices.`);
+                savedInvoices.forEach(invoice => {
+                    const invoiceId = invoice.id;
+                    const savedDate = invoice.savedAt ? new Date(invoice.savedAt).toLocaleDateString() : 'N/A';
+                    const hidePrices = invoice.hidePrices || false;
+
+                    let itemsHtml = '';
+                    if (invoice.items && invoice.items.length > 0) {
+                        itemsHtml = `
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Description</th>
+                                        <th class="text-center">Qty</th>
+                                        <th class="${hidePrices ? 'hidden-price' : ''} text-right">Unit Price</th>
+                                        <th class="${hidePrices ? 'hidden-price' : ''} text-right">Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                        `;
+                        invoice.items.forEach(item => {
+                            itemsHtml += `
+                                <tr>
+                                    <td>${item.description}</td>
+                                    <td class="text-center">${item.quantity}</td>
+                                    <td class="${hidePrices ? 'hidden-price' : ''} text-right">${hidePrices ? '' : '$' + item.unitPrice.toFixed(2)}</td>
+                                    <td class="${hidePrices ? 'hidden-price' : ''} text-right">${hidePrices ? '' : '$' + item.total.toFixed(2)}</td>
+                                </tr>
+                            `;
+                        });
+                        itemsHtml += `</tbody></table>`;
+                    } else {
+                        itemsHtml = '<p>No items listed for this invoice.</p>';
+                    }
+
+                    savedInvoicesList.innerHTML += `
+                        <div class="saved-invoice-card" data-invoice-id="${invoiceId}">
+                            <div class="saved-invoice-header">
+                                <span>Invoice #: ${invoice.invoiceNumber}</span>
+                                <span>Client: ${invoice.clientName}</span>
+                                <span>Date: ${invoice.invoiceDate}</span>
+                                <span class="${hidePrices ? 'hidden-price' : ''}">Grand Total: $${invoice.grandTotal.toFixed(2)}</span>
+                                <i class="fas fa-chevron-down ml-2 transition-transform duration-300"></i>
+                            </div>
+                            <div class="saved-invoice-details">
+                                <p><strong>Due Date:</strong> ${invoice.dueDate}</p>
+                                <p><strong>Client Email:</strong> ${invoice.clientEmail}</p>
+                                <p><strong>Client Phone:</strong> ${invoice.clientPhone}</p>
+                                <p><strong>Client Address:</strong> ${invoice.clientAddress.replace(/\n/g, '<br>')}</p>
+                                <p><strong>Delivery Date:</strong> ${invoice.deliveryDate}</p>
+                                <p><strong>Delivery Time:</strong> ${invoice.deliveryTime}</p>
+                                <p><strong>Delivery Location:</strong> ${invoice.deliveryLocation.replace(/\n/g, '<br>')}</p>
+                                <p><strong>Notes:</strong> ${invoice.notes}</p>
+                                <div class="saved-invoice-items">
+                                    <h4>Items:</h4>
+                                    ${itemsHtml}
+                                </div>
+                                <div class="text-right mt-4">
+                                    <p class="${hidePrices ? 'hidden-price' : ''}"><strong>Subtotal:</strong> $${invoice.subtotal.toFixed(2)}</p>
+                                    <p class="${hidePrices ? 'hidden-price' : ''}"><strong>Delivery Fee:</strong> $${invoice.deliveryFee.toFixed(2)}</p>
+                                    <p class="${hidePrices ? 'hidden-price' : ''}"><strong>Deposit Received:</strong> $${invoice.depositReceived.toFixed(2)}</p>
+                                    <p class="${hidePrices ? 'hidden-price' : ''} font-bold text-lg text-[#6F4E37]"><strong>Grand Total:</strong> $${invoice.grandTotal.toFixed(2)}</p>
+                                    <p class="${hidePrices ? 'hidden-price' : ''} font-bold text-lg text-[#F44336]"><strong>Amount Due:</strong> $${invoice.amountDue.toFixed(2)}</p>
+                                </div>
+                                <p class="text-sm text-gray-500 mt-4">Saved On: ${savedDate}</p>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                // Add event listeners for expanding/collapsing saved invoice details
+                document.querySelectorAll('.saved-invoice-card').forEach(card => {
+                    card.addEventListener('click', function() {
+                        const details = this.querySelector('.saved-invoice-details');
+                        const icon = this.querySelector('.fa-chevron-down');
+                        if (details) {
+                            details.classList.toggle('show');
+                            icon.classList.toggle('rotate-180');
+                        }
+                    });
+                });
+
+                showMessage("Saved invoices loaded successfully!");
+            } catch (e) {
+                console.error("Error loading documents: ", e);
+                showMessage(`Error loading invoices: ${e.message}`, true);
+            }
+        }
+
 
         // Function to reset the form
         function resetForm() {
@@ -1161,19 +1332,25 @@ Regarding the tax acknowledgment letter: As a small business just starting out, 
                 showSection('invoiceFormSection'); // Go back to the main form
             });
 
-            // Removed event listeners for Firebase-dependent buttons
-            // document.getElementById('saveInvoiceBtn').addEventListener('click', saveInvoice);
-            // document.getElementById('viewSavedInvoicesBtn').addEventListener('click', async function() {
-            //     showSection('savedInvoicesSection');
-            //     await loadSavedInvoices();
-            // });
-            // document.getElementById('backToCreatorFromSavedBtn').addEventListener('click', function() {
-            //     showSection('invoiceFormSection');
-            // });
-            // document.getElementById('viewSavedInvoicesFromOutputBtn').addEventListener('click', async function() {
-            //     showSection('savedInvoicesSection');
-            //     await loadSavedInvoices();
-            // });
+            // Event listener for the Save Invoice button (now using localStorage)
+            document.getElementById('saveInvoiceBtn').addEventListener('click', saveInvoice);
+
+            // Event listener for the View Saved Invoices button (now using localStorage)
+            document.getElementById('viewSavedInvoicesBtn').addEventListener('click', function() {
+                showSection('savedInvoicesSection');
+                loadSavedInvoices(); // Load and display saved invoices
+            });
+
+            // Event listener for the Back to Creator from Saved Invoices button
+            document.getElementById('backToCreatorFromSavedBtn').addEventListener('click', function() {
+                showSection('invoiceFormSection'); // Go back to the main form
+            });
+
+            // Event listener for the View Saved Invoices button in the output section
+            document.getElementById('viewSavedInvoicesFromOutputBtn').addEventListener('click', function() {
+                showSection('savedInvoicesSection');
+                loadSavedInvoices(); // Load and display saved invoices
+            });
 
             // Listen for changes on the delivery fee and deposit input to update totals
             document.getElementById('deliveryFee').addEventListener('input', calculateAndDisplayCurrentTotals);

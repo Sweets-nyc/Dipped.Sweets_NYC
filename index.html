@@ -338,7 +338,7 @@
 
     <div class="container">
         <h1 class="text-4xl font-bold mb-8 text-center">Dipped Sweets NYC - Invoice</h1>
-        <p id="userIdDisplay" class="text-sm text-gray-500 text-center mb-4"></p>
+        <!-- Removed userIdDisplay as Firebase is being removed -->
 
 
         <!-- Invoice Input Form -->
@@ -479,9 +479,7 @@
                 <button id="resetFormBtn" class="btn-secondary flex items-center">
                     Reset Form <i class="fas fa-redo ml-2"></i>
                 </button>
-                <button id="viewSavedInvoicesBtn" class="btn-primary flex items-center" disabled>
-                    View Saved Invoices <i class="fas fa-list-alt ml-2"></i>
-                </button>
+                <!-- Removed Firebase-dependent buttons -->
             </div>
         </div>
 
@@ -577,131 +575,20 @@
             </div>
 
             <div class="flex justify-center gap-4 mt-8">
-                <button id="saveInvoiceBtn" class="btn-primary flex items-center" disabled>
-                    Save Invoice <i class="fas fa-save ml-2"></i>
-                </button>
+                <!-- Removed Firebase-dependent buttons -->
                 <button id="printInvoiceBtn" class="btn-primary flex items-center">
                     Print Invoice <i class="fas fa-print ml-2"></i>
                 </button>
                 <button id="backToFormBtn" class="btn-secondary flex items-center">
                     Back to Form <i class="fas fa-arrow-left ml-2"></i>
                 </button>
-                <!-- New: View Saved Invoices button in the output section -->
-                <button id="viewSavedInvoicesFromOutputBtn" class="btn-primary flex items-center" disabled>
-                    View Saved Invoices <i class="fas fa-list-alt ml-2"></i>
-                </button>
             </div>
         </div>
 
-        <!-- Saved Invoices Section (initially hidden) -->
-        <div id="savedInvoicesSection" class="hidden">
-            <h2 class="text-3xl font-semibold mb-6 text-center">Your Saved Invoices</h2>
-            <div id="savedInvoicesList" class="space-y-4">
-                <!-- Saved invoices will be loaded here -->
-                <p id="noSavedInvoicesMessage" class="text-center text-gray-500 py-4 hidden">No invoices saved yet.</p>
-            </div>
-            <div class="flex justify-center mt-8">
-                <button id="backToCreatorFromSavedBtn" class="btn-secondary flex items-center">
-                    Back to Invoice Creator <i class="fas fa-arrow-left ml-2"></i>
-                </button>
-            </div>
-        </div>
+        <!-- Removed Saved Invoices Section as Firebase is being removed -->
     </div>
 
     <script type="module">
-        // Firebase imports
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, getDocs, query, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-        // Firebase variables (MANDATORY: use these global variables)
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
-        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-
-        let app;
-        let db;
-        let auth;
-        let userId = null; // To store the authenticated user ID
-        let isFirebaseReady = false; // New flag to indicate Firebase is ready for operations
-
-        console.log("Firebase Config (parsed at start):", firebaseConfig);
-        console.log("App ID:", appId);
-        console.log("Initial Auth Token:", initialAuthToken ? "Present" : "Not Present");
-
-        // Function to enable Firebase-dependent buttons
-        function enableFirebaseButtons() {
-            document.getElementById('saveInvoiceBtn').disabled = false;
-            document.getElementById('viewSavedInvoicesBtn').disabled = false;
-            document.getElementById('viewSavedInvoicesFromOutputBtn').disabled = false; // Enable the new button
-        }
-
-        // Initialize Firebase
-        if (Object.keys(firebaseConfig).length > 0 && firebaseConfig.apiKey) { // Check for apiKey presence
-            try {
-                app = initializeApp(firebaseConfig);
-                db = getFirestore(app);
-                auth = getAuth(app);
-                console.log("Firebase app, db, auth initialized successfully.");
-
-                // Authenticate user and set isFirebaseReady flag
-                onAuthStateChanged(auth, async (user) => {
-                    if (user) {
-                        userId = user.uid;
-                        document.getElementById('userIdDisplay').textContent = `User ID (Authenticated): ${userId}`;
-                        console.log("User authenticated:", userId);
-                        isFirebaseReady = true; // Firebase is ready after auth state is known
-                        enableFirebaseButtons();
-                    } else {
-                        try {
-                            if (initialAuthToken) {
-                                const userCredential = await signInWithCustomToken(auth, initialAuthToken);
-                                userId = userCredential.user.uid;
-                                document.getElementById('userIdDisplay').textContent = `User ID (Custom Token): ${userId}`;
-                                console.log("Signed in with custom token:", userId);
-                            } else {
-                                const userCredential = await signInAnonymously(auth);
-                                userId = userCredential.user.uid;
-                                document.getElementById('userIdDisplay').textContent = `User ID (Anonymous): ${userId}`;
-                                console.log("Signed in anonymously:", userId);
-                            }
-                            isFirebaseReady = true; // Firebase is ready after auth attempt
-                            enableFirebaseButtons();
-                        } catch (error) {
-                            console.error("Firebase authentication error:", error);
-                            showMessage(`Authentication failed: ${error.message}. Save/Load functionality may be limited.`, true);
-                            userId = crypto.randomUUID(); // Fallback to a random ID if auth fails
-                            document.getElementById('userIdDisplay').textContent = `User ID (Auth Failed, Fallback): ${userId}`;
-                            console.warn("Falling back to random User ID due to authentication failure.");
-                            isFirebaseReady = true; // Still ready, but with fallback ID
-                            enableFirebaseButtons(); // Enable even if fallback, to allow interaction (which will then show specific errors)
-                        }
-                    }
-                    console.log("Firebase ready status:", isFirebaseReady);
-                });
-            } catch (initError) {
-                console.error("Error initializing Firebase:", initError);
-                showMessage(`Firebase initialization failed: ${initError.message}. Save/Load functionality disabled.`, true);
-                userId = crypto.randomUUID(); // Fallback to a random ID if init fails
-                document.getElementById('userIdDisplay').textContent = `User ID (Init Failed, Fallback): ${userId}`;
-                console.warn("Falling back to random User ID due to Firebase initialization failure.");
-                isFirebaseReady = true; // Mark as ready even if failed, to unblock UI, but operations will fail
-                enableFirebaseButtons(); // Enable even if failed, to allow interaction (which will then show specific errors)
-                console.log("Firebase ready status:", isFirebaseReady);
-            }
-        } else {
-            // This block is executed if firebaseConfig is empty or missing apiKey
-            console.error("Firebase configuration is missing or incomplete. Received firebaseConfig:", firebaseConfig);
-            console.warn("Firebase config not found or incomplete. Firestore features will be disabled.");
-            showMessage("Firebase not configured. Save/Load functionality disabled.", true);
-            userId = crypto.randomUUID(); // Generate a random ID even if Firebase isn't configured
-            document.getElementById('userIdDisplay').textContent = `User ID (No Firebase Config): ${userId}`;
-            isFirebaseReady = true; // Mark as ready, but features will be disabled
-            enableFirebaseButtons(); // Enable buttons, but save/load will show "Firebase not configured"
-            console.log("Firebase ready status:", isFirebaseReady);
-        }
-
-
         // Data for your menu items (copied from your website's script)
         const sweetsData = [
             {
@@ -785,18 +672,6 @@
                 category: "Cake Pops",
                 displayOnMainMenu: true
             },
-            // Removed "Velvet Swirl Cake Pops"
-            /*
-            {
-                img: "c7c5357a-99b0-439a-8213-04c22bc5b94e.jpeg",
-                title: "Velvet Swirl Cake Pops",
-                description: "Decadent red velvet cake pops with elegant white chocolate swirls.",
-                simplePrice: 3.42,
-                partyPrice: 3.08,
-                category: "Cake Pops",
-                displayOnMainMenu: false
-            },
-            */
             {
                 img: "273f61a4-d741-4cb7-822f-0bf7e9edffb1.jpeg",
                 title: "Brownie Batter Cake Pops",
@@ -860,18 +735,6 @@
                 category: "Individual Sample Cups",
                 displayOnMainMenu: true
             },
-            // Removed "Silky Chocolate Mousse Cups (Sample)"
-            /*
-            {
-                img: "66a024fc-b8a5-400f-afdf-47d5e30a07ac.jpeg",
-                title: "Silky Chocolate Mousse Cups (Sample)",
-                description: "Light and airy chocolate mousse, a perfect individual portion of indulgence.",
-                simplePrice: 6.00,
-                partyPrice: 4.00,
-                category: "Individual Sample Cups",
-                displayOnMainMenu: true
-            },
-            */
             {
                 img: "b5b46884-95db-49c8-82e8-6ea5bdf01f69.jpeg",
                 title: "Creme Brulee Cups (Sample)",
@@ -916,7 +779,7 @@
 
         // Function to control which sections are visible
         function showSection(sectionId) {
-            const allSections = document.querySelectorAll('.form-section, .invoice-output, #savedInvoicesSection');
+            const allSections = document.querySelectorAll('.form-section, .invoice-output'); /* Removed #savedInvoicesSection */
             allSections.forEach(section => {
                 section.classList.add('hidden'); // Hide all sections
             });
@@ -1209,180 +1072,7 @@
             togglePriceVisibility(); // Apply visibility to the generated invoice
         }
 
-        // Function to save the current invoice to Firestore
-        async function saveInvoice() {
-            if (!isFirebaseReady) {
-                showMessage("Please wait, Firebase is still initializing.", true);
-                console.warn("Save Invoice: Firebase not ready.");
-                return;
-            }
-            if (!db || !userId) {
-                showMessage("Firestore is not available or user ID is missing. Cannot save invoice.", true);
-                console.error("Save Invoice Error: Firestore DB or User ID is null.", { db, userId });
-                return;
-            }
-
-            // Collect all data from the *output* section to ensure it's the generated invoice
-            const invoiceData = {
-                invoiceNumber: document.getElementById('outputInvoiceNumber').textContent,
-                invoiceDate: document.getElementById('outputInvoiceDate').textContent,
-                dueDate: document.getElementById('outputDueDate').textContent,
-                clientName: document.getElementById('outputClientName').textContent,
-                clientAddress: document.getElementById('outputClientAddress').innerHTML.replace(/<br>/g, '\n'), // Convert <br> back to newline
-                clientEmail: document.getElementById('outputClientEmail').textContent,
-                clientPhone: document.getElementById('outputClientPhone').textContent,
-                deliveryDate: document.getElementById('outputDeliveryDate').textContent,
-                deliveryTime: document.getElementById('outputDeliveryTime').textContent,
-                deliveryLocation: document.getElementById('outputDeliveryLocation').innerHTML.replace(/<br>/g, '\n'),
-                notes: document.getElementById('outputNotes').textContent,
-                subtotal: parseFloat(document.getElementById('outputSubtotal').textContent.replace('$', '')),
-                deliveryFee: parseFloat(document.getElementById('outputDeliveryFee').textContent.replace('$', '')),
-                depositReceived: parseFloat(document.getElementById('outputDepositReceived').textContent.replace('$', '')),
-                grandTotal: parseFloat(document.getElementById('outputGrandTotal').textContent.replace('$', '')),
-                amountDue: parseFloat(document.getElementById('outputAmountDue').textContent.replace('$', '')),
-                hidePrices: document.getElementById('hidePricesToggle').checked,
-                items: invoiceItems.map(item => ({ // Use the original invoiceItems array for full detail
-                    description: item.description,
-                    quantity: item.quantity,
-                    unitPrice: item.unitPrice,
-                    total: item.total
-                })),
-                savedAt: serverTimestamp(), // Firestore timestamp
-                userId: userId // Store the user ID for security rules
-            };
-
-            try {
-                // Collection path: /artifacts/{appId}/users/{userId}/invoices
-                const docRef = await addDoc(collection(db, `artifacts/${appId}/users/${userId}/invoices`), invoiceData);
-                showMessage(`Invoice saved successfully! ID: ${docRef.id}`);
-                console.log("Document written with ID: ", docRef.id);
-            } catch (e) {
-                console.error("Error adding document: ", e);
-                showMessage(`Error saving invoice: ${e.message}`, true);
-            }
-        }
-
-        // Function to load and display saved invoices from Firestore
-        async function loadSavedInvoices() {
-            if (!isFirebaseReady) {
-                showMessage("Please wait, Firebase is still initializing.", true);
-                console.warn("Load Invoices: Firebase not ready.");
-                return;
-            }
-            if (!db || !userId) {
-                showMessage("Firestore is not available or user ID is missing. Cannot load invoices.", true);
-                console.error("Load Invoices Error: Firestore DB or User ID is null.", { db, userId });
-                return;
-            }
-
-            const savedInvoicesList = document.getElementById('savedInvoicesList');
-            const noSavedInvoicesMessage = document.getElementById('noSavedInvoicesMessage');
-            savedInvoicesList.innerHTML = ''; // Clear previous list
-            noSavedInvoicesMessage.classList.add('hidden'); // Hide no invoices message by default
-
-            try {
-                // Collection path: /artifacts/{appId}/users/{userId}/invoices
-                const invoicesColRef = collection(db, `artifacts/${appId}/users/${userId}/invoices`);
-                const q = query(invoicesColRef); // No orderBy to avoid index issues
-
-                const querySnapshot = await getDocs(q);
-
-                if (querySnapshot.empty) {
-                    noSavedInvoicesMessage.classList.remove('hidden');
-                    console.log("No saved invoices found for this user.");
-                    return;
-                }
-
-                console.log(`Found ${querySnapshot.size} saved invoices.`);
-                querySnapshot.forEach(doc => {
-                    const invoice = doc.data();
-                    const invoiceId = doc.id;
-                    const savedDate = invoice.savedAt ? new Date(invoice.savedAt.seconds * 1000).toLocaleDateString() : 'N/A';
-                    const hidePrices = invoice.hidePrices || false;
-
-                    let itemsHtml = '';
-                    if (invoice.items && invoice.items.length > 0) {
-                        itemsHtml = `
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>Description</th>
-                                        <th class="text-center">Qty</th>
-                                        <th class="${hidePrices ? 'hidden-price' : ''} text-right">Unit Price</th>
-                                        <th class="${hidePrices ? 'hidden-price' : ''} text-right">Total</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                        `;
-                        invoice.items.forEach(item => {
-                            itemsHtml += `
-                                <tr>
-                                    <td>${item.description}</td>
-                                    <td class="text-center">${item.quantity}</td>
-                                    <td class="${hidePrices ? 'hidden-price' : ''} text-right">${hidePrices ? '' : '$' + item.unitPrice.toFixed(2)}</td>
-                                    <td class="${hidePrices ? 'hidden-price' : ''} text-right">${hidePrices ? '' : '$' + item.total.toFixed(2)}</td>
-                                </tr>
-                            `;
-                        });
-                        itemsHtml += `</tbody></table>`;
-                    } else {
-                        itemsHtml = '<p>No items listed for this invoice.</p>';
-                    }
-
-                    savedInvoicesList.innerHTML += `
-                        <div class="saved-invoice-card" data-invoice-id="${invoiceId}">
-                            <div class="saved-invoice-header">
-                                <span>Invoice #: ${invoice.invoiceNumber}</span>
-                                <span>Client: ${invoice.clientName}</span>
-                                <span>Date: ${invoice.invoiceDate}</span>
-                                <span class="${hidePrices ? 'hidden-price' : ''}">Grand Total: $${invoice.grandTotal.toFixed(2)}</span>
-                                <i class="fas fa-chevron-down ml-2 transition-transform duration-300"></i>
-                            </div>
-                            <div class="saved-invoice-details">
-                                <p><strong>Due Date:</strong> ${invoice.dueDate}</p>
-                                <p><strong>Client Email:</strong> ${invoice.clientEmail}</p>
-                                <p><strong>Client Phone:</strong> ${invoice.clientPhone}</p>
-                                <p><strong>Client Address:</strong> ${invoice.clientAddress.replace(/\n/g, '<br>')}</p>
-                                <p><strong>Delivery Date:</strong> ${invoice.deliveryDate}</p>
-                                <p><strong>Delivery Time:</strong> ${invoice.deliveryTime}</p>
-                                <p><strong>Delivery Location:</strong> ${invoice.deliveryLocation.replace(/\n/g, '<br>')}</p>
-                                <p><strong>Notes:</strong> ${invoice.notes}</p>
-                                <div class="saved-invoice-items">
-                                    <h4>Items:</h4>
-                                    ${itemsHtml}
-                                </div>
-                                <div class="text-right mt-4">
-                                    <p class="${hidePrices ? 'hidden-price' : ''}"><strong>Subtotal:</strong> $${invoice.subtotal.toFixed(2)}</p>
-                                    <p class="${hidePrices ? 'hidden-price' : ''}"><strong>Delivery Fee:</strong> $${invoice.deliveryFee.toFixed(2)}</p>
-                                    <p class="${hidePrices ? 'hidden-price' : ''}"><strong>Deposit Received:</strong> $${invoice.depositReceived.toFixed(2)}</p>
-                                    <p class="${hidePrices ? 'hidden-price' : ''} font-bold text-lg text-[#6F4E37]"><strong>Grand Total:</strong> $${invoice.grandTotal.toFixed(2)}</p>
-                                    <p class="${hidePrices ? 'hidden-price' : ''} font-bold text-lg text-[#F44336]"><strong>Amount Due:</strong> $${invoice.amountDue.toFixed(2)}</p>
-                                </div>
-                                <p class="text-sm text-gray-500 mt-4">Saved On: ${savedDate}</p>
-                            </div>
-                        </div>
-                    `;
-                });
-
-                // Add event listeners for expanding/collapsing saved invoice details
-                document.querySelectorAll('.saved-invoice-card').forEach(card => {
-                    card.addEventListener('click', function() {
-                        const details = this.querySelector('.saved-invoice-details');
-                        const icon = this.querySelector('.fa-chevron-down');
-                        if (details) {
-                            details.classList.toggle('show');
-                            icon.classList.toggle('rotate-180');
-                        }
-                    });
-                });
-
-                showMessage("Saved invoices loaded successfully!");
-            } catch (e) {
-                console.error("Error loading documents: ", e);
-                showMessage(`Error loading invoices: ${e.message}`, true);
-            }
-        }
-
+        // Removed saveInvoice and loadSavedInvoices functions as Firebase is removed
 
         // Function to reset the form
         function resetForm() {
@@ -1471,25 +1161,19 @@ Regarding the tax acknowledgment letter: As a small business just starting out, 
                 showSection('invoiceFormSection'); // Go back to the main form
             });
 
-            // Event listener for the Save Invoice button
-            document.getElementById('saveInvoiceBtn').addEventListener('click', saveInvoice);
-
-            // New: Event listener for the View Saved Invoices button
-            document.getElementById('viewSavedInvoicesBtn').addEventListener('click', async function() {
-                showSection('savedInvoicesSection');
-                await loadSavedInvoices(); // Await loading to ensure UI is updated after data fetch
-            });
-
-            // New: Event listener for the Back to Creator from Saved Invoices button
-            document.getElementById('backToCreatorFromSavedBtn').addEventListener('click', function() {
-                showSection('invoiceFormSection'); // Go back to the main form
-            });
-
-            // New: Event listener for the View Saved Invoices button in the output section
-            document.getElementById('viewSavedInvoicesFromOutputBtn').addEventListener('click', async function() {
-                showSection('savedInvoicesSection');
-                await loadSavedInvoices(); // Await loading to ensure UI is updated after data fetch
-            });
+            // Removed event listeners for Firebase-dependent buttons
+            // document.getElementById('saveInvoiceBtn').addEventListener('click', saveInvoice);
+            // document.getElementById('viewSavedInvoicesBtn').addEventListener('click', async function() {
+            //     showSection('savedInvoicesSection');
+            //     await loadSavedInvoices();
+            // });
+            // document.getElementById('backToCreatorFromSavedBtn').addEventListener('click', function() {
+            //     showSection('invoiceFormSection');
+            // });
+            // document.getElementById('viewSavedInvoicesFromOutputBtn').addEventListener('click', async function() {
+            //     showSection('savedInvoicesSection');
+            //     await loadSavedInvoices();
+            // });
 
             // Listen for changes on the delivery fee and deposit input to update totals
             document.getElementById('deliveryFee').addEventListener('input', calculateAndDisplayCurrentTotals);

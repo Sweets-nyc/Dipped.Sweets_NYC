@@ -1276,28 +1276,28 @@
 
                     if (detailsDiv.classList.contains('show')) {
                         // Currently showing, so hide it
-                        detailsDiv.style.maxHeight = detailsDiv.scrollHeight + 'px'; // Set to current height for smooth transition from current state
-                        
-                        // Use a small delay to allow the browser to register the max-height value
-                        // before the transition to 0 starts.
-                        setTimeout(() => {
-                            detailsDiv.style.maxHeight = '0';
-                            detailsDiv.style.padding = '0';
-                            detailsDiv.style.marginTop = '0';
-                            detailsDiv.style.opacity = '0';
-                            detailsDiv.style.visibility = 'hidden';
-                            icon.classList.remove('rotate-180'); // Rotate back
-                            // Remove the 'show' class after the transition completes
-                            // This ensures the CSS properties for the collapsed state are fully applied
-                            detailsDiv.addEventListener('transitionend', function handler() {
-                                detailsDiv.classList.remove('show');
-                                detailsDiv.removeEventListener('transitionend', handler);
-                            }, { once: true }); // Use { once: true } to remove listener after first use
-                        }, 10); // Small delay
+                        detailsDiv.style.maxHeight = detailsDiv.scrollHeight + 'px'; // Set current height explicitly
+                        icon.classList.remove('rotate-180'); // Rotate back immediately
+
+                        // Force reflow to ensure max-height is registered before transition
+                        detailsDiv.offsetWidth; // This line forces a reflow
+
+                        // Animate to collapsed state
+                        detailsDiv.style.maxHeight = '0';
+                        detailsDiv.style.padding = '0';
+                        detailsDiv.style.marginTop = '0';
+                        detailsDiv.style.opacity = '0';
+                        detailsDiv.style.visibility = 'hidden';
+
+                        // Remove the 'show' class after the transition completes
+                        detailsDiv.addEventListener('transitionend', function handler() {
+                            detailsDiv.classList.remove('show');
+                            detailsDiv.removeEventListener('transitionend', handler);
+                        }, { once: true });
                     } else {
                         // Currently hidden, so show it
                         if (detailsDiv.innerHTML.trim() === '') {
-                            // Populate content
+                            // Populate content if not already done
                             let itemsHtml = '';
                             if (invoice.items && invoice.items.length > 0) {
                                 itemsHtml = `
@@ -1412,9 +1412,10 @@
                         detailsDiv.style.opacity = '1'; // Set opacity for expansion
                         detailsDiv.style.visibility = 'visible'; // Set visibility for expansion
 
-                        // After the transition, remove explicit maxHeight to allow natural content flow
+                        // After the transition, set max-height to a large fixed value
+                        // This prevents issues with subsequent collapse attempts where scrollHeight might be 0.
                         detailsDiv.addEventListener('transitionend', function handler() {
-                            detailsDiv.style.maxHeight = 'none'; // Allow content to dictate height
+                            detailsDiv.style.maxHeight = '2000px'; // Keep it at a large fixed value
                             detailsDiv.removeEventListener('transitionend', handler);
                         }, { once: true });
                     }

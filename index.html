@@ -290,7 +290,6 @@
                 padding: 1.5rem;
                 margin-bottom: 1rem;
                 box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-                cursor: pointer;
                 transition: all 0.2s ease-in-out;
             }
             .saved-invoice-card:hover {
@@ -303,21 +302,39 @@
                 align-items: center;
                 font-weight: 600;
                 color: #6F4E37;
+                cursor: pointer; /* Make the header clickable */
             }
             .saved-invoice-details {
                 margin-top: 1rem;
                 border-top: 1px dashed #e5e7eb;
                 padding-top: 1rem;
                 display: none; /* Hidden by default */
+                overflow: hidden; /* Hide overflow when collapsed */
+                max-height: 0; /* For smooth transition */
+                transition: max-height 0.5s ease-out, padding-top 0.5s ease-out;
             }
             .saved-invoice-details.show {
-                display: block;
+                display: block; /* Show when active */
+                max-height: 2000px; /* Large enough value for content to show */
+                transition: max-height 0.7s ease-in, padding-top 0.5s ease-in;
             }
             .saved-invoice-details p {
                 margin-bottom: 0.5rem;
             }
             /* No specific table/th/td styles for saved-invoice-items here,
                as they will inherit from .invoice-display-container children */
+            .delete-btn {
+                background: none;
+                border: none;
+                color: #f44336;
+                cursor: pointer;
+                font-size: 1.2rem;
+                margin-left: 1rem;
+                transition: color 0.2s ease-in-out;
+            }
+            .delete-btn:hover {
+                color: #d32f2f;
+            }
         }
     </style>
 </head>
@@ -1129,6 +1146,50 @@
             }
         }
 
+        // Function to delete an invoice from localStorage
+        function deleteInvoice(invoiceId) {
+            // Create a custom confirmation dialog
+            const confirmDelete = document.createElement('div');
+            confirmDelete.className = 'fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-[1001]';
+            confirmDelete.innerHTML = `
+                <div class="bg-white p-8 rounded-lg shadow-xl text-center">
+                    <p class="text-lg font-semibold mb-4">Are you sure you want to delete this invoice?</p>
+                    <div class="flex justify-center gap-4">
+                        <button id="confirmDeleteBtn" class="btn-primary bg-red-500 hover:bg-red-700">Delete</button>
+                        <button id="cancelDeleteBtn" class="btn-secondary">Cancel</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(confirmDelete);
+
+            document.getElementById('confirmDeleteBtn').onclick = () => {
+                try {
+                    let savedInvoices = JSON.parse(localStorage.getItem('dippedSweetsInvoices')) || [];
+                    const initialLength = savedInvoices.length;
+                    savedInvoices = savedInvoices.filter(invoice => invoice.id !== invoiceId);
+                    localStorage.setItem('dippedSweetsInvoices', JSON.stringify(savedInvoices));
+                    if (savedInvoices.length < initialLength) {
+                        showMessage("Invoice deleted successfully!");
+                    } else {
+                        showMessage("Invoice not found or could not be deleted.", true);
+                    }
+                    console.log("Invoice deleted. Current localStorage content:", localStorage.getItem('dippedSweetsInvoices'));
+                    loadSavedInvoices(); // Reload the list after deletion
+                } catch (e) {
+                    console.error("Error deleting invoice from localStorage: ", e);
+                    showMessage(`Error deleting invoice: ${e.message}`, true);
+                } finally {
+                    document.body.removeChild(confirmDelete); // Remove the confirmation dialog
+                }
+            };
+
+            document.getElementById('cancelDeleteBtn').onclick = () => {
+                document.body.removeChild(confirmDelete); // Remove the confirmation dialog
+                showMessage("Deletion cancelled.");
+            };
+        }
+
+
         // Function to load and display saved invoices from localStorage
         function loadSavedInvoices() {
             const savedInvoicesList = document.getElementById('savedInvoicesList');
@@ -1191,6 +1252,9 @@
                                 <span>Client: ${invoice.clientName}</span>
                                 <span>Date: ${invoice.invoiceDate}</span>
                                 <span class="${hidePrices ? 'hidden-price' : ''}">Grand Total: $${invoice.grandTotal.toFixed(2)}</span>
+                                <button type="button" class="delete-btn" data-invoice-id="${invoiceId}">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
                                 <i class="fas fa-chevron-down ml-2 transition-transform duration-300"></i>
                             </div>
                             <div class="saved-invoice-details invoice-display-container ${hidePrices ? 'hide-prices-active' : ''}">
@@ -1274,14 +1338,31 @@
 
                 // Add event listeners for expanding/collapsing saved invoice details
                 document.querySelectorAll('.saved-invoice-card').forEach(card => {
-                    card.addEventListener('click', function() {
-                        const details = this.querySelector('.saved-invoice-details');
-                        const icon = this.querySelector('.fa-chevron-down');
-                        if (details) {
+                    // Attach event listener to the header for toggling
+                    const header = card.querySelector('.saved-invoice-header');
+                    const details = card.querySelector('.saved-invoice-details');
+                    const icon = card.querySelector('.fa-chevron-down');
+                    const deleteButton = card.querySelector('.delete-btn');
+
+                    if (header && details && icon) {
+                        header.addEventListener('click', function(event) {
+                            // Prevent click on delete button from toggling the card
+                            if (event.target.closest('.delete-btn')) {
+                                return;
+                            }
                             details.classList.toggle('show');
                             icon.classList.toggle('rotate-180');
-                        }
-                    });
+                        });
+                    }
+
+                    // Attach event listener for the delete button
+                    if (deleteButton) {
+                        deleteButton.addEventListener('click', function(event) {
+                            event.stopPropagation(); // Prevent the card from toggling
+                            const invoiceIdToDelete = this.dataset.invoiceId;
+                            deleteInvoice(invoiceIdToDelete);
+                        });
+                    }
                 });
 
                 showMessage("Saved invoices loaded successfully!");

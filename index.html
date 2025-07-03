@@ -1290,28 +1290,26 @@
                         // COLLAPSE
                         detailsDiv.style.maxHeight = detailsDiv.scrollHeight + 'px'; // Set current height for smooth transition
                         detailsDiv.offsetWidth; // Force reflow
-                        detailsDiv.style.maxHeight = '0'; // Animate to 0
 
-                        detailsDiv.classList.remove('show'); // Immediately remove 'show' class to start other transitions (padding, opacity, etc.)
-                        icon.classList.remove('rotate-180');
-
-                        // Set a unique handler to clean up after max-height transition
+                        // Set a unique handler for the collapse transition
                         const handlerName = `transitionEndHandler_${invoiceId}_collapse`;
                         window[handlerName] = function() {
-                            // After max-height transition, ensure all properties are reset to hidden state
-                            if (!detailsDiv.classList.contains('show')) { // Only if it's truly collapsed
-                                detailsDiv.style.maxHeight = '0'; // Ensure it's 0
-                                detailsDiv.style.padding = '0';
-                                detailsDiv.style.marginTop = '0';
-                                detailsDiv.style.opacity = '0';
-                                detailsDiv.style.visibility = 'hidden';
-                            }
+                            // After max-height transition, remove the 'show' class and reset other styles
+                            detailsDiv.classList.remove('show');
+                            detailsDiv.style.maxHeight = '0'; // Ensure it's truly 0
+                            detailsDiv.style.padding = '0';
+                            detailsDiv.style.marginTop = '0';
+                            detailsDiv.style.opacity = '0';
+                            detailsDiv.style.visibility = 'hidden';
                             detailsDiv.removeEventListener('transitionend', window[handlerName]);
                             delete detailsDiv.dataset.transitionEndHandler;
                             delete window[handlerName];
                         };
                         detailsDiv.dataset.transitionEndHandler = handlerName;
                         detailsDiv.addEventListener('transitionend', window[handlerName], { once: true });
+
+                        detailsDiv.style.maxHeight = '0'; // Animate to 0
+                        icon.classList.remove('rotate-180');
 
                     } else {
                         // EXPAND

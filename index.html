@@ -1133,6 +1133,7 @@
                 localStorage.setItem('dippedSweetsInvoices', JSON.stringify(savedInvoices));
                 showMessage(`Invoice saved successfully!`);
                 console.log("Invoice saved to localStorage:", invoiceData);
+                console.log("Current localStorage content for 'dippedSweetsInvoices':", localStorage.getItem('dippedSweetsInvoices'));
             } catch (e) {
                 console.error("Error saving invoice to localStorage: ", e);
                 showMessage(`Error saving invoice: ${e.message}`, true);
@@ -1147,7 +1148,10 @@
             noSavedInvoicesMessage.classList.add('hidden'); // Hide no invoices message by default
 
             try {
-                const savedInvoices = JSON.parse(localStorage.getItem('dippedSweetsInvoices')) || [];
+                const storedData = localStorage.getItem('dippedSweetsInvoices');
+                console.log("Attempting to load from localStorage. Raw data:", storedData);
+
+                const savedInvoices = storedData ? JSON.parse(storedData) : [];
 
                 if (savedInvoices.length === 0) {
                     noSavedInvoicesMessage.classList.remove('hidden');

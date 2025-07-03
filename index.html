@@ -791,8 +791,8 @@
             }
         ];
 
-        // Array to hold the items added to the current invoice
-        let invoiceItems = [];
+        // Global variable to hold the current invoice data being worked on
+        let currentInvoiceData = {};
 
         // Function to display messages to the user
         function showMessage(message, isError = false) {
@@ -815,7 +815,6 @@
 
         // Function to control which sections are visible
         function showSection(sectionId) {
-            // Include #savedInvoicesSection in the selection
             const allSections = document.querySelectorAll('.form-section, .invoice-display-container, #savedInvoicesSection');
             allSections.forEach(section => {
                 section.classList.add('hidden'); // Hide all sections
@@ -828,14 +827,10 @@
 
             // Manage visibility of "Back to Saved Invoices" button
             const backToSavedListBtn = document.getElementById('backToSavedListBtn');
-            if (sectionId === 'invoiceOutputSection') {
-                // Only show this button if we are viewing a *saved* invoice, not a newly generated one
-                // This logic needs to be tied to how displayInvoiceInOutput is called
-                // For now, let's assume if we are in output, it could be from saved.
-                // A more robust solution would pass a flag.
-                // For this specific request, we'll make it visible when any invoice is displayed.
-                backToSavedListBtn.classList.remove('hidden');
-            } else {
+            // This button should only be visible when viewing a specific invoice from the saved list
+            // The displayInvoiceInOutput function will handle showing/hiding it more precisely
+            // For now, we hide it by default when changing sections unless explicitly shown by displayInvoiceInOutput
+            if (sectionId !== 'invoiceOutputSection') {
                 backToSavedListBtn.classList.add('hidden');
             }
         }
@@ -906,7 +901,7 @@
             });
         }
 
-        // Function to add an item to the invoiceItems array and update the list
+        // Function to add an item to the currentInvoiceData.items array and update the list
         function addItemToInvoice(description, fullDescription, quantity, unitPrice) {
             const calculatedUnitPrice = parseFloat(unitPrice);
             const total = calculatedUnitPrice * quantity;
@@ -921,18 +916,18 @@
                 total: total
             };
 
-            invoiceItems.push(newItem); // Always add as a new item
-            console.log("Current invoiceItems after adding:", JSON.parse(JSON.stringify(invoiceItems))); // Log the array content
+            currentInvoiceData.items.push(newItem); // Use currentInvoiceData.items
+            console.log("Current invoiceItems after adding:", JSON.parse(JSON.stringify(currentInvoiceData.items))); // Log the array content
             updateInvoiceItemsList();
             calculateAndDisplayCurrentTotals(); // Update totals after adding item
             showMessage(`Added "${description}" x${quantity} to invoice.`);
         }
 
-        // Function to remove an item from the invoiceItems array by its unique ID
+        // Function to remove an item from the currentInvoiceData.items array by its unique ID
         function removeItemFromInvoice(itemId) {
-            const initialLength = invoiceItems.length;
-            invoiceItems = invoiceItems.filter(item => item.id !== itemId);
-            if (invoiceItems.length < initialLength) {
+            const initialLength = currentInvoiceData.items.length;
+            currentInvoiceData.items = currentInvoiceData.items.filter(item => item.id !== itemId);
+            if (currentInvoiceData.items.length < initialLength) {
                 updateInvoiceItemsList();
                 calculateAndDisplayCurrentTotals();
                 showMessage(`Removed item from invoice.`);
@@ -942,7 +937,7 @@
         // Function to update an item's quantity directly in the list by its unique ID
         function updateItemQuantityInList(itemId, newQuantity) {
             newQuantity = parseInt(newQuantity);
-            const itemToUpdate = invoiceItems.find(item => item.id === itemId);
+            const itemToUpdate = currentInvoiceData.items.find(item => item.id === itemId);
 
             if (!itemToUpdate) {
                 showMessage("Item not found.", true);
@@ -963,18 +958,18 @@
             showMessage(`Quantity for "${itemToUpdate.description}" updated to ${newQuantity}.`);
         }
 
-        // Function to update the displayed list of invoice items
+        // Function to update the displayed list of invoice items in the form
         function updateInvoiceItemsList() {
             const itemsContainer = document.getElementById('itemsContainer');
             const noItemsMessage = document.getElementById('noItemsMessage');
             let htmlContent = '';
             const hidePrices = document.getElementById('hidePricesToggle').checked;
 
-            if (invoiceItems.length === 0) {
+            if (currentInvoiceData.items.length === 0) {
                 if (noItemsMessage) noItemsMessage.style.display = 'block';
             } else {
                 if (noItemsMessage) noItemsMessage.style.display = 'none';
-                invoiceItems.forEach(item => {
+                currentInvoiceData.items.forEach(item => {
                     htmlContent += `
                         <div class="item-row">
                             <div>${item.description}</div>
@@ -1001,7 +996,7 @@
 
         // Function to calculate and display current subtotal in the form section
         function calculateAndDisplayCurrentTotals() {
-            let subtotal = invoiceItems.reduce((sum, item) => sum + item.total, 0);
+            let subtotal = currentInvoiceData.items.reduce((sum, item) => sum + item.total, 0);
             document.getElementById('currentSubtotal').textContent = `$${subtotal.toFixed(2)}`;
             // Recalculate and update grand total and amount due based on current inputs
             const deliveryFee = parseFloat(document.getElementById('deliveryFee').value) || 0;
@@ -1009,6 +1004,7 @@
             const grandTotal = subtotal + deliveryFee;
             const amountDue = grandTotal - depositReceived;
 
+            // Update the output section's totals (even if hidden)
             document.getElementById('outputSubtotal').textContent = `$${subtotal.toFixed(2)}`;
             document.getElementById('outputDeliveryFee').textContent = `$${deliveryFee.toFixed(2)}`;
             document.getElementById('outputDepositReceived').textContent = `$${depositReceived.toFixed(2)}`;
@@ -1025,7 +1021,6 @@
             // Toggle a class on the body to allow print CSS to react
             document.body.classList.toggle('hide-prices-active', hidePrices);
 
-
             // Toggle visibility in the input form's item list header
             document.querySelectorAll('.price-column').forEach(el => {
                 el.style.display = hidePrices ? 'none' : 'block';
@@ -1041,7 +1036,6 @@
             }
 
             // Toggle visibility in the invoice output section
-            // These are now primarily controlled by the @media print CSS based on body class
             document.querySelectorAll('.output-price-column').forEach(el => {
                 el.style.display = hidePrices ? 'none' : 'table-cell'; // Use table-cell for table headers/data
             });
@@ -1051,29 +1045,66 @@
         }
 
         /**
-         * Collects invoice data from the form inputs.
-         * @returns {object} An object containing all invoice data.
+         * Collects invoice data from the form inputs and updates currentInvoiceData.
+         * @returns {object} A deep copy of the updated currentInvoiceData.
          */
-        function collectInvoiceDataFromForm() {
-            return {
-                id: crypto.randomUUID(), // Unique ID for this invoice
-                invoiceNumber: document.getElementById('invoiceNumber').value || 'N/A',
-                invoiceDate: document.getElementById('invoiceDate').value || 'N/A',
-                dueDate: document.getElementById('dueDate').value || 'N/A',
-                clientName: document.getElementById('clientName').value || 'N/A',
-                clientEmail: document.getElementById('clientEmail').value || 'N/A',
-                clientPhone: document.getElementById('clientPhone').value || 'N/A',
-                clientAddress: document.getElementById('clientAddress').value || 'N/A',
-                deliveryDate: document.getElementById('deliveryDate').value || 'N/A',
-                deliveryTime: document.getElementById('deliveryTime').value || 'N/A',
-                deliveryLocation: document.getElementById('deliveryLocation').value || 'N/A',
-                deliveryFee: parseFloat(document.getElementById('deliveryFee').value) || 0,
-                depositReceived: parseFloat(document.getElementById('depositReceived').value) || 0,
-                notes: document.getElementById('invoiceNotes').value || 'No additional notes.',
-                hidePrices: document.getElementById('hidePricesToggle').checked,
-                items: JSON.parse(JSON.stringify(invoiceItems)), // Deep copy of current items
-                savedAt: new Date().toISOString() // ISO string for date/time
-            };
+        function collectFormDataFromForm() {
+            currentInvoiceData.invoiceNumber = document.getElementById('invoiceNumber').value || 'N/A';
+            currentInvoiceData.invoiceDate = document.getElementById('invoiceDate').value || 'N/A';
+            currentInvoiceData.dueDate = document.getElementById('dueDate').value || 'N/A';
+            currentInvoiceData.clientName = document.getElementById('clientName').value || 'N/A';
+            currentInvoiceData.clientEmail = document.getElementById('clientEmail').value || 'N/A';
+            currentInvoiceData.clientPhone = document.getElementById('clientPhone').value || 'N/A';
+            currentInvoiceData.clientAddress = document.getElementById('clientAddress').value || 'N/A';
+            currentInvoiceData.deliveryDate = document.getElementById('deliveryDate').value || 'N/A';
+            currentInvoiceData.deliveryTime = document.getElementById('deliveryTime').value || 'N/A';
+            currentInvoiceData.deliveryLocation = document.getElementById('deliveryLocation').value || 'N/A';
+            currentInvoiceData.deliveryFee = parseFloat(document.getElementById('deliveryFee').value) || 0;
+            currentInvoiceData.depositReceived = parseFloat(document.getElementById('depositReceived').value) || 0;
+            currentInvoiceData.notes = document.getElementById('invoiceNotes').value || 'No additional notes.';
+            currentInvoiceData.hidePrices = document.getElementById('hidePricesToggle').checked;
+
+            // Calculate totals and update currentInvoiceData
+            currentInvoiceData.subtotal = currentInvoiceData.items.reduce((sum, item) => sum + item.total, 0);
+            currentInvoiceData.grandTotal = currentInvoiceData.subtotal + currentInvoiceData.deliveryFee;
+            currentInvoiceData.amountDue = currentInvoiceData.grandTotal - currentInvoiceData.depositReceived;
+
+            return JSON.parse(JSON.stringify(currentInvoiceData)); // Return a deep copy
+        }
+
+        /**
+         * Populates all form input fields and the items list with the given invoice data.
+         * This is used to load an existing invoice (saved or current working) into the form for editing.
+         * @param {object} data - The invoice object to load into the form.
+         */
+        function loadFormDataIntoForm(data) {
+            document.getElementById('invoiceNumber').value = data.invoiceNumber || '';
+            document.getElementById('invoiceDate').value = data.invoiceDate || '';
+            document.getElementById('dueDate').value = data.dueDate || '';
+            document.getElementById('clientName').value = data.clientName || '';
+            document.getElementById('clientEmail').value = data.clientEmail || '';
+            document.getElementById('clientPhone').value = data.clientPhone || '';
+            document.getElementById('clientAddress').value = data.clientAddress || '';
+            document.getElementById('deliveryDate').value = data.deliveryDate || '';
+            document.getElementById('deliveryTime').value = data.deliveryTime || '';
+            document.getElementById('deliveryLocation').value = data.deliveryLocation || '';
+            document.getElementById('deliveryFee').value = (data.deliveryFee || 0).toFixed(2);
+            document.getElementById('depositReceived').value = (data.depositReceived || 0).toFixed(2);
+            document.getElementById('invoiceNotes').value = data.notes || '';
+            document.getElementById('hidePricesToggle').checked = data.hidePrices || false;
+
+            // Update the global currentInvoiceData and its items
+            currentInvoiceData = JSON.parse(JSON.stringify(data)); // Deep copy entire data object
+            if (!currentInvoiceData.items) { // Ensure items array exists
+                currentInvoiceData.items = [];
+            }
+
+            // Update the displayed items list in the form
+            updateInvoiceItemsList();
+            // Recalculate totals based on the loaded data (will update currentSubtotal)
+            calculateAndDisplayCurrentTotals();
+            // Apply price visibility based on loaded data
+            togglePriceVisibility();
         }
 
         /**
@@ -1134,60 +1165,44 @@
 
         // Function to generate and display the invoice (from form)
         function generateInvoice() {
-            const invoiceData = collectInvoiceDataFromForm();
+            // First, update currentInvoiceData with latest form inputs
+            collectFormDataFromForm();
 
             // Basic validation
-            if (!invoiceData.clientName || invoiceData.items.length === 0) {
+            if (!currentInvoiceData.clientName || currentInvoiceData.items.length === 0) {
                 showMessage("Please enter client name and add at least one item to generate invoice.", true);
                 return;
             }
 
-            displayInvoiceInOutput(invoiceData, false); // Not from saved
+            displayInvoiceInOutput(currentInvoiceData, false); // Not from saved
             showMessage("Invoice generated successfully!");
         }
 
         // Function to save the current invoice to localStorage
         function saveInvoice() {
-            // Collect all data from the *output* section to ensure it's the generated invoice
-            // We can reuse the collectInvoiceDataFromForm here if we ensure form is updated before saving
-            // Or, more robustly, get the data from the currently displayed output.
-            // For simplicity and to ensure what's shown is what's saved, let's collect from output.
-            const invoiceData = {
-                id: crypto.randomUUID(), // Unique ID for this saved invoice
-                invoiceNumber: document.getElementById('outputInvoiceNumber').textContent,
-                invoiceDate: document.getElementById('outputInvoiceDate').textContent,
-                dueDate: document.getElementById('outputDueDate').textContent,
-                clientName: document.getElementById('outputClientName').textContent,
-                clientAddress: document.getElementById('outputClientAddress').innerHTML.replace(/<br>/g, '\n'),
-                clientEmail: document.getElementById('outputClientEmail').textContent,
-                clientPhone: document.getElementById('outputClientPhone').textContent,
-                deliveryDate: document.getElementById('outputDeliveryDate').textContent,
-                deliveryTime: document.getElementById('outputDeliveryTime').textContent,
-                deliveryLocation: document.getElementById('outputDeliveryLocation').innerHTML.replace(/<br>/g, '\n'),
-                notes: document.getElementById('outputNotes').textContent,
-                // Parse numbers from displayed text content
-                subtotal: parseFloat(document.getElementById('outputSubtotal').textContent.replace('$', '')),
-                deliveryFee: parseFloat(document.getElementById('outputDeliveryFee').textContent.replace('$', '')),
-                depositReceived: parseFloat(document.getElementById('outputDepositReceived').textContent.replace('$', '')),
-                grandTotal: parseFloat(document.getElementById('outputGrandTotal').textContent.replace('$', '')),
-                amountDue: parseFloat(document.getElementById('outputAmountDue').textContent.replace('$', '')),
-                hidePrices: document.getElementById('hidePricesToggle').checked,
-                items: invoiceItems.map(item => ({ // Use the original invoiceItems array for full detail
-                    description: item.description,
-                    quantity: item.quantity,
-                    unitPrice: item.unitPrice,
-                    total: item.total
-                })),
-                savedAt: new Date().toISOString() // ISO string for date/time
-            };
+            // Ensure currentInvoiceData is up-to-date with latest form values before saving
+            const invoiceToSave = collectFormDataFromForm();
 
             try {
                 // Get existing invoices from localStorage
                 const savedInvoices = JSON.parse(localStorage.getItem('dippedSweetsInvoices')) || [];
-                savedInvoices.push(invoiceData);
+                // Add a new ID if it's a new invoice, or update if it's an existing one being re-saved
+                if (!invoiceToSave.id) {
+                    invoiceToSave.id = crypto.randomUUID();
+                }
+                invoiceToSave.savedAt = new Date().toISOString(); // Update saved timestamp
+
+                // Check if an invoice with this ID already exists and replace it
+                const existingIndex = savedInvoices.findIndex(inv => inv.id === invoiceToSave.id);
+                if (existingIndex > -1) {
+                    savedInvoices[existingIndex] = invoiceToSave;
+                } else {
+                    savedInvoices.push(invoiceToSave);
+                }
+
                 localStorage.setItem('dippedSweetsInvoices', JSON.stringify(savedInvoices));
                 showMessage(`Invoice saved successfully!`);
-                console.log("Invoice saved to localStorage:", invoiceData);
+                console.log("Invoice saved to localStorage:", invoiceToSave);
                 console.log("Current localStorage content for 'dippedSweetsInvoices':", localStorage.getItem('dippedSweetsInvoices'));
             } catch (e) {
                 console.error("Error saving invoice to localStorage: ", e);
@@ -1295,6 +1310,8 @@
                     const invoiceToView = savedInvoices.find(inv => inv.id === invoiceId);
                     if (invoiceToView) {
                         displayInvoiceInOutput(invoiceToView, true); // Pass true for 'fromSaved'
+                        // When viewing a saved invoice, we want its data to become the current working data
+                        currentInvoiceData = JSON.parse(JSON.stringify(invoiceToView)); // Deep copy
                         showMessage(`Displaying Invoice #${invoiceToView.invoiceNumber}`);
                     } else {
                         showMessage("Error: Invoice not found.", true);
@@ -1310,52 +1327,50 @@
         }
 
 
-        // Function to reset the form
+        /**
+         * Resets the form to its initial default state, clearing all inputs and items.
+         * This is intended for starting a completely new invoice.
+         */
         function resetForm() {
-            setInitialFormValues(); // Set all initial values
-            invoiceItems = []; // Clear items array
-            updateInvoiceItemsList(); // Update displayed list (will show "No items added yet.")
+            setInitialFormValues(); // This will re-initialize currentInvoiceData with defaults
             populateMenuItems('All'); // Re-populate menu items to ensure they are visible and interactive
             togglePriceVisibility(); // Ensure prices are visible after reset
             showMessage("Form has been reset.");
         }
 
-        // Function to set initial form values including notes and deposit
+        /**
+         * Sets the initial default values for the form fields and initializes currentInvoiceData.
+         */
         function setInitialFormValues() {
             const today = new Date();
             const year = today.getFullYear();
-            const month = String(today.getMonth() + 1).padStart(2, '0'); // Months start at 0!
+            const month = String(today.getMonth() + 1).padStart(2, '0');
             const day = String(today.getDate()).padStart(2, '0');
-            document.getElementById('invoiceDate').value = `${year}-${month}-${day}`;
 
-            document.getElementById('invoiceNumber').value = 'INV-001'; // Ensure default invoice number is always set
-            document.getElementById('clientName').value = '';
-            document.getElementById('clientEmail').value = '';
-            document.getElementById('clientPhone').value = '';
-            document.getElementById('clientAddress').value = '';
-            document.getElementById('customItemDescription').value = '';
-            document.getElementById('customItemQuantity').value = '1';
-            document.getElementById('customItemUnitPrice').value = '0.00';
-            document.getElementById('deliveryDate').value = '';
-            document.getElementById('deliveryTime').value = '';
-            document.getElementById('deliveryLocation').value = '';
+            currentInvoiceData = { // Initialize currentInvoiceData with default values
+                id: crypto.randomUUID(), // New ID for a fresh invoice
+                invoiceNumber: 'INV-001',
+                invoiceDate: `${year}-${month}-${day}`,
+                dueDate: '2025-10-21', // Default due date
+                clientName: '',
+                clientEmail: '',
+                clientPhone: '',
+                clientAddress: '',
+                deliveryDate: '',
+                deliveryTime: '',
+                deliveryLocation: '',
+                deliveryFee: 0.00,
+                depositReceived: 45.00, // Default deposit
+                notes: `Dietary Restrictions: Nut-free options only.\n\nRegarding the tax acknowledgment letter: As a small business just starting out, we're not set up to utilize those kinds of tax deductions at this time.`,
+                hidePrices: false,
+                items: [], // Initialize items array for the new invoice
+                subtotal: 0.00,
+                grandTotal: 0.00,
+                amountDue: 0.00,
+                savedAt: ''
+            };
 
-            // Pre-fill notes for the donation scenario
-            document.getElementById('invoiceNotes').value = `Dietary Restrictions: Nut-free options only.
-
-Regarding the tax acknowledgment letter: As a small business just starting out, we're not set up to utilize those kinds of tax deductions at this time.`;
-
-            // Set default delivery fee and deposit
-            document.getElementById('deliveryFee').value = '0.00';
-            document.getElementById('depositReceived').value = '45.00';
-
-            // Set default due date to October 21, 2025
-            document.getElementById('dueDate').value = '2025-10-21';
-
-            // Ensure hide prices is unchecked by default
-            document.getElementById('hidePricesToggle').checked = false;
-
-            calculateAndDisplayCurrentTotals(); // Update totals based on these initial values
+            loadFormDataIntoForm(currentInvoiceData); // Load these initial values into the form
         }
 
 
@@ -1402,7 +1417,7 @@ Regarding the tax acknowledgment letter: As a small business just starting out, 
             });
             document.getElementById('backToFormBtn').addEventListener('click', function() {
                 showSection('invoiceFormSection'); // Go back to the main form
-                resetForm(); // Call resetForm to ensure all fields are re-initialized
+                // The form should already reflect currentInvoiceData, so no explicit loadFormDataIntoForm needed here
             });
 
             // Event listener for the Save Invoice button (now using localStorage)
@@ -1417,7 +1432,7 @@ Regarding the tax acknowledgment letter: As a small business just starting out, 
             // Event listener for the Back to Creator from Saved Invoices button
             document.getElementById('backToCreatorFromSavedBtn').addEventListener('click', function() {
                 showSection('invoiceFormSection'); // Go back to the main form
-                resetForm(); // Call resetForm to ensure all fields are re-initialized
+                resetForm(); // Call resetForm to ensure all fields are re-initialized for a new invoice
             });
 
             // Event listener for the View Saved Invoices button in the output section
@@ -1445,4 +1460,3 @@ Regarding the tax acknowledgment letter: As a small business just starting out, 
     </script>
 </body>
 </html>
-

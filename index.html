@@ -349,8 +349,7 @@
             .delete-btn:hover {
                 color: #d32f2f;
             }
-        }
-    </style>
+        </style>
 </head>
 <body>
     <!-- Message Box container -->
@@ -1275,123 +1274,149 @@
                         return;
                     }
 
-                    // If details are not yet loaded, populate them
-                    if (detailsDiv.innerHTML.trim() === '') {
-                        let itemsHtml = '';
-                        if (invoice.items && invoice.items.length > 0) {
-                            itemsHtml = `
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>Description</th>
-                                            <th class="text-center">Qty</th>
-                                            <th class="output-price-column text-right">Unit Price</th>
-                                            <th class="output-price-column text-right">Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                            `;
-                            invoice.items.forEach(item => {
-                                itemsHtml += `
-                                    <tr>
-                                        <td>${item.description}</td>
-                                        <td class="text-center">${item.quantity}</td>
-                                        <td class="output-price-column text-right">${hidePrices ? '' : '$' + item.unitPrice.toFixed(2)}</td>
-                                        <td class="output-price-column text-right">${hidePrices ? '' : '$' + item.total.toFixed(2)}</td>
-                                    </tr>
-                                `;
-                            });
-                            itemsHtml += `</tbody></table>`;
-                        } else {
-                            itemsHtml = '<p>No items listed for this invoice.</p>';
-                        }
-
-                        detailsDiv.innerHTML = `
-                            <div class="invoice-header">
-                                <img src="https://placehold.co/80x80/F8E6DD/6F4E37?text=DS" alt="Company Logo" class="invoice-logo">
-                                <h2 class="text-4xl font-bold text-[#6F4E37] mb-2">INVOICE</h2>
-                                <p class="text-gray-700 text-lg">Dipped Sweets NYC</p>
-                                <p class="text-gray-600 text-sm">Handcrafted Dipped Treats</p>
-                                <p class="text-gray-600 text-sm">DippedSweets.nyc@gmail.com | +1 (929) 323-9892</p>
-                                <p class="text-gray-600 text-sm">Serving The Bronx, Upper East Side & Upper West Side Manhattan, and Astoria, Queens</p>
-                            </div>
-
-                            <hr class="border-t-2 border-[#F8A4B8] my-6">
-
-                            <div class="invoice-details grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-800">
-                                <div>
-                                    <h3 class="text-xl font-semibold mb-2">Bill To:</h3>
-                                    <p class="font-medium">${invoice.clientName}</p>
-                                    <p>${invoice.clientAddress.replace(/\n/g, '<br>')}</p>
-                                    <p>${invoice.clientEmail}</p>
-                                    <p>${invoice.clientPhone}</p>
-                                </div>
-                                <div class="md:text-right">
-                                    <h3 class="text-xl font-semibold mb-2">Invoice Info:</h3>
-                                    <p><strong>Invoice #:</strong> ${invoice.invoiceNumber}</p>
-                                    <p><strong>Date:</strong> ${invoice.invoiceDate}</p>
-                                    <p><strong>Due Date:</strong> ${invoice.dueDate}</p>
-                                </div>
-                            </div>
-
-                            <div class="invoice-items my-8">
-                                <h3 class="text-xl font-semibold mb-4">Items:</h3>
-                                ${itemsHtml}
-                            </div>
-
-                            <div class="invoice-summary text-right text-gray-800">
-                                <div class="output-price-summary-line">
-                                    <span>Subtotal:</span>
-                                    <span class="${hidePrices ? 'hidden-price' : ''}">$${invoice.subtotal.toFixed(2)}</span>
-                                </div>
-                                <div class="output-price-summary-line">
-                                    <span>Delivery Fee:</span>
-                                    <span class="${hidePrices ? 'hidden-price' : ''}">$${invoice.deliveryFee.toFixed(2)}</span>
-                                </div>
-                                <div class="output-price-summary-line">
-                                    <span>Deposit Received:</span>
-                                    <span class="${hidePrices ? 'hidden-price' : ''}">$${invoice.depositReceived.toFixed(2)}</span>
-                                </div>
-                                <div class="text-2xl text-[#6F4E37] output-price-summary-line">
-                                    <span>Grand Total:</span>
-                                    <span class="${hidePrices ? 'hidden-price' : ''}">$${invoice.grandTotal.toFixed(2)}</span>
-                                </div>
-                                <div class="text-2xl text-[#F44336] font-bold output-price-summary-line">
-                                    <span>Amount Due:</span>
-                                    <span class="${hidePrices ? 'hidden-price' : ''}">$${invoice.amountDue.toFixed(2)}</span>
-                                </div>
-                            </div>
-
-                            <div class="invoice-notes my-8">
-                                <h3 class="text-xl font-semibold mb-2">Notes:</h3>
-                                <p class="text-gray-700 italic">${invoice.notes}</p>
-                            </div>
-
-                            <div class="invoice-delivery-info my-8">
-                                <h3 class="text-xl font-semibold mb-2">Delivery/Pickup Details:</h3>
-                                <p><strong>Date:</strong> ${invoice.deliveryDate}</p>
-                                <p><strong>Time:</strong> ${invoice.deliveryTime}</p>
-                                <p><strong>Location:</strong> ${invoice.deliveryLocation.replace(/\n/g, '<br>')}</p>
-                            </div>
-
-                            <hr class="border-t-2 border-[#F8A4B8] my-6">
-
-                            <div class="invoice-footer text-gray-600 text-sm">
-                                <p>Thank you for your business!</p>
-                                <p>Please make payments to [Your Preferred Payment Method/Details Here]</p>
-                            </div>
-                        `;
-                    }
-
-                    // Explicitly add/remove classes for show/hide and rotation
                     if (detailsDiv.classList.contains('show')) {
                         // Currently showing, so hide it
-                        detailsDiv.classList.remove('show');
-                        icon.classList.remove('rotate-180');
+                        detailsDiv.style.maxHeight = detailsDiv.scrollHeight + 'px'; // Set to current height for smooth transition from current state
+                        icon.classList.remove('rotate-180'); // Start rotating back immediately
+
+                        // Use a small delay to allow the browser to register the max-height value
+                        // before the transition to 0 starts.
+                        setTimeout(() => {
+                            detailsDiv.style.maxHeight = '0';
+                            detailsDiv.style.padding = '0';
+                            detailsDiv.style.marginTop = '0';
+                            detailsDiv.style.opacity = '0';
+                            detailsDiv.style.visibility = 'hidden';
+                            // Remove the 'show' class after the transition completes
+                            // This ensures the CSS properties for the collapsed state are fully applied
+                            detailsDiv.addEventListener('transitionend', function handler() {
+                                detailsDiv.classList.remove('show');
+                                detailsDiv.removeEventListener('transitionend', handler);
+                            }, { once: true }); // Use { once: true } to remove listener after first use
+                        }, 10); // Small delay
                     } else {
                         // Currently hidden, so show it
+                        if (detailsDiv.innerHTML.trim() === '') {
+                            // Populate content
+                            let itemsHtml = '';
+                            if (invoice.items && invoice.items.length > 0) {
+                                itemsHtml = `
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Description</th>
+                                                <th class="text-center">Qty</th>
+                                                <th class="output-price-column text-right">Unit Price</th>
+                                                <th class="output-price-column text-right">Total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                `;
+                                invoice.items.forEach(item => {
+                                    itemsHtml += `
+                                        <tr>
+                                            <td>${item.description}</td>
+                                            <td class="text-center">${item.quantity}</td>
+                                            <td class="output-price-column text-right">${hidePrices ? '' : '$' + item.unitPrice.toFixed(2)}</td>
+                                            <td class="output-price-column text-right">${hidePrices ? '' : '$' + item.total.toFixed(2)}</td>
+                                        </tr>
+                                    `;
+                                });
+                                itemsHtml += `</tbody></table>`;
+                            } else {
+                                itemsHtml = '<p>No items listed for this invoice.</p>';
+                            }
+
+                            detailsDiv.innerHTML = `
+                                <div class="invoice-header">
+                                    <img src="https://placehold.co/80x80/F8E6DD/6F4E37?text=DS" alt="Company Logo" class="invoice-logo">
+                                    <h2 class="text-4xl font-bold text-[#6F4E37] mb-2">INVOICE</h2>
+                                    <p class="text-gray-700 text-lg">Dipped Sweets NYC</p>
+                                    <p class="text-gray-600 text-sm">Handcrafted Dipped Treats</p>
+                                    <p class="text-gray-600 text-sm">DippedSweets.nyc@gmail.com | +1 (929) 323-9892</p>
+                                    <p class="text-gray-600 text-sm">Serving The Bronx, Upper East Side & Upper West Side Manhattan, and Astoria, Queens</p>
+                                </div>
+
+                                <hr class="border-t-2 border-[#F8A4B8] my-6">
+
+                                <div class="invoice-details grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-800">
+                                    <div>
+                                        <h3 class="text-xl font-semibold mb-2">Bill To:</h3>
+                                        <p class="font-medium">${invoice.clientName}</p>
+                                        <p>${invoice.clientAddress.replace(/\n/g, '<br>')}</p>
+                                        <p>${invoice.clientEmail}</p>
+                                        <p>${invoice.clientPhone}</p>
+                                    </div>
+                                    <div class="md:text-right">
+                                        <h3 class="text-xl font-semibold mb-2">Invoice Info:</h3>
+                                        <p><strong>Invoice #:</strong> ${invoice.invoiceNumber}</p>
+                                        <p><strong>Date:</strong> ${invoice.invoiceDate}</p>
+                                        <p><strong>Due Date:</strong> ${invoice.dueDate}</p>
+                                    </div>
+                                </div>
+
+                                <div class="invoice-items my-8">
+                                    <h3 class="text-xl font-semibold mb-4">Items:</h3>
+                                    ${itemsHtml}
+                                </div>
+
+                                <div class="invoice-summary text-right text-gray-800">
+                                    <div class="output-price-summary-line">
+                                        <span>Subtotal:</span>
+                                        <span class="${hidePrices ? 'hidden-price' : ''}">$${invoice.subtotal.toFixed(2)}</span>
+                                    </div>
+                                    <div class="output-price-summary-line">
+                                        <span>Delivery Fee:</span>
+                                        <span class="${hidePrices ? 'hidden-price' : ''}">$${invoice.deliveryFee.toFixed(2)}</span>
+                                    </div>
+                                    <div class="output-price-summary-line">
+                                        <span>Deposit Received:</span>
+                                        <span class="${hidePrices ? 'hidden-price' : ''}">$${invoice.depositReceived.toFixed(2)}</span>
+                                    </div>
+                                    <div class="text-2xl text-[#6F4E37] output-price-summary-line">
+                                        <span>Grand Total:</span>
+                                        <span class="${hidePrices ? 'hidden-price' : ''}">$${invoice.grandTotal.toFixed(2)}</span>
+                                    </div>
+                                    <div class="text-2xl text-[#F44336] font-bold output-price-summary-line">
+                                        <span>Amount Due:</span>
+                                        <span class="${hidePrices ? 'hidden-price' : ''}">$${invoice.amountDue.toFixed(2)}</span>
+                                    </div>
+                                </div>
+
+                                <div class="invoice-notes my-8">
+                                    <h3 class="text-xl font-semibold mb-2">Notes:</h3>
+                                    <p class="text-gray-700 italic">${invoice.notes}</p>
+                                </div>
+
+                                <div class="invoice-delivery-info my-8">
+                                    <h3 class="text-xl font-semibold mb-2">Delivery/Pickup Details:</h3>
+                                    <p><strong>Date:</strong> ${invoice.deliveryDate}</p>
+                                    <p><strong>Time:</strong> ${invoice.deliveryTime}</p>
+                                    <p><strong>Location:</strong> ${invoice.deliveryLocation.replace(/\n/g, '<br>')}</p>
+                                </div>
+
+                                <hr class="border-t-2 border-[#F8A4B8] my-6">
+
+                                <div class="invoice-footer text-gray-600 text-sm">
+                                    <p>Thank you for your business!</p>
+                                    <p>Please make payments to [Your Preferred Payment Method/Details Here]</p>
+                                </div>
+                            `;
+                        }
+
                         detailsDiv.classList.add('show');
                         icon.classList.add('rotate-180');
+                        detailsDiv.style.maxHeight = detailsDiv.scrollHeight + 'px'; // Set actual height for expansion
+                        detailsDiv.style.padding = '2rem'; // Set padding for expansion
+                        detailsDiv.style.marginTop = '2rem'; // Set margin for expansion
+                        detailsDiv.style.opacity = '1'; // Set opacity for expansion
+                        detailsDiv.style.visibility = 'visible'; // Set visibility for expansion
+
+                        // After the transition, remove explicit maxHeight to allow natural content flow
+                        detailsDiv.addEventListener('transitionend', function handler() {
+                            detailsDiv.style.maxHeight = 'none';
+                            detailsDiv.removeEventListener('transitionend', handler);
+                        }, { once: true });
                     }
 
                     console.log(`Toggling invoice ${invoiceId}. Current show state: ${detailsDiv.classList.contains('show')}`);
@@ -1532,4 +1557,3 @@ Regarding the tax acknowledgment letter: As a small business just starting out, 
     </script>
 </body>
 </html>
-

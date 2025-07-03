@@ -617,7 +617,6 @@
         // Firebase variables (MANDATORY: use these global variables)
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
         const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
-        // Corrected the typo here: initialAuthToken should get its value from __initial_auth_token
         const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
 
         let app;
@@ -626,7 +625,7 @@
         let userId = null; // To store the authenticated user ID
         let isFirebaseReady = false; // New flag to indicate Firebase is ready for operations
 
-        console.log("Firebase Config (parsed):", firebaseConfig);
+        console.log("Firebase Config (parsed at start):", firebaseConfig);
         console.log("App ID:", appId);
         console.log("Initial Auth Token:", initialAuthToken ? "Present" : "Not Present");
 
@@ -691,6 +690,8 @@
                 console.log("Firebase ready status:", isFirebaseReady);
             }
         } else {
+            // This block is executed if firebaseConfig is empty or missing apiKey
+            console.error("Firebase configuration is missing or incomplete. Received firebaseConfig:", firebaseConfig);
             console.warn("Firebase config not found or incomplete. Firestore features will be disabled.");
             showMessage("Firebase not configured. Save/Load functionality disabled.", true);
             userId = crypto.randomUUID(); // Generate a random ID even if Firebase isn't configured

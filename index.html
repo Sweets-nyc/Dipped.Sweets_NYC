@@ -813,7 +813,1498 @@
                 displayOnMainMenu: true
             },
             {
-                img: "churrrr.jpg",
+                img: "<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dipped Sweets NYC - Invoice Creator</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Poppins (for headings), Inter (for body) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Custom styles for the Inter font and basic body styling */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FFF8F0; /* Creamy white */
+            color: #333333; /* Dark grey */
+            line-height: 1.6;
+            padding: 2rem;
+        }
+        h1, h2, h3, h4 {
+            font-family: 'Poppins', sans-serif;
+            color: #6F4E37; /* Chocolate Brown */
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 2.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            max-width: 1000px; /* Wider container for invoice */
+            margin: 0 auto;
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="date"],
+        input[type="number"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db; /* gray-300 */
+            border-radius: 0.5rem; /* rounded-lg */
+            font-size: 1rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="tel"]:focus,
+        input[type="date"]:focus,
+        input[type="number"]:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #F8A4B8; /* Soft Pink */
+            box-shadow: 0 0 0 3px rgba(248, 164, 184, 0.3); /* Ring effect */
+        }
+        .btn-primary {
+            background-color: #F8A4B8; /* Soft Pink */
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem; /* rounded-xl */
+            font-weight: 600;
+            transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
+            cursor: pointer;
+        }
+        .btn-primary:hover {
+            background-color: #E28FA0; /* Darker Pink */
+            transform: translateY(-2px);
+        }
+        .btn-secondary {
+            background-color: #E0B400; /* Golden Yellow */
+            color: #6F4E37; /* Chocolate Brown */
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out;
+            cursor: pointer;
+        }
+        .btn-secondary:hover {
+            background-color: #FFD700; /* Brighter Golden Yellow */
+            transform: translateY(-2px);
+        }
+        .item-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr 0.5fr; /* Description, Qty, Unit Price, Total, Remove */
+            gap: 1rem;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px dashed #e5e7eb; /* gray-200 */
+        }
+        .item-row:last-child {
+            border-bottom: none;
+        }
+
+        /* Common styles for invoice display (both output and saved view) */
+        .invoice-display-container {
+            background-color: #fcfcfc;
+            border: 1px solid #e5e7eb;
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-top: 2rem;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .invoice-header, .invoice-footer {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        .invoice-header {
+            position: relative; /* Added relative positioning for logo */
+        }
+        .invoice-details, .invoice-items, .invoice-summary {
+            margin-bottom: 1.5rem;
+        }
+        .invoice-items table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .invoice-items th, .invoice-items td {
+            border: 1px solid #e5e7eb;
+            padding: 0.75rem;
+            text-align: left;
+        }
+        .invoice-items th {
+            background-color: #F8E6DD; /* Light peach */
+            font-weight: 600;
+            color: #6F4E37;
+        }
+        .invoice-summary div {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+        }
+        .invoice-summary div:last-child {
+            font-weight: bold;
+            font-size: 1.25rem;
+            border-top: 2px solid #6F4E37;
+            padding-top: 1rem;
+            margin-top: 0.5rem;
+        }
+        /* Message Box styles */
+        .message-box {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #4CAF50; /* Green for success */
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+            font-size: 1rem;
+            text-align: center;
+        }
+        .message-box.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        .message-box.error {
+            background-color: #f44336; /* Red for error */
+        }
+        /* Styles for hiding prices */
+        .hidden-price {
+            display: none !important;
+        }
+        /* Logo styling for screen output */
+        .invoice-logo { /* Changed from ID to class */
+            position: absolute;
+            top: 1rem; /* Adjust as needed */
+            left: 1rem; /* Adjust as needed */
+            width: 80px; /* Size for screen */
+            height: 80px; /* Size for screen */
+            border-radius: 50%; /* Circular shape */
+            object-fit: cover; /* Ensure image covers the area */
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1); /* Subtle shadow */
+        }
+        @media print {
+            body {
+                background-color: #fff;
+                padding: 0.25rem; /* Further reduced padding for print */
+                font-size: 8pt; /* Even smaller base font size for print */
+                -webkit-print-color-adjust: exact; /* Ensure background colors print */
+                print-color-adjust: exact;
+            }
+            .container {
+                box-shadow: none;
+                border: none;
+                padding: 0;
+                margin: 0;
+                max-width: 100%;
+                width: 100%;
+            }
+            .form-section, .btn-primary, .btn-secondary, .message-box {
+                display: none !important; /* Hide form elements when printing */
+            }
+            /* Target the main invoice output container for print styles */
+            #invoiceOutputSection.invoice-display-container {
+                display: block !important; /* Ensure invoice output is visible */
+                padding: 0 !important; /* Remove padding from output section for print */
+                margin-top: 0 !important; /* Remove margin from output section for print */
+                border: none !important; /* Remove border for cleaner print */
+                box-shadow: none !important; /* Remove shadow for cleaner print */
+            }
+            h1, h2, h3, h4 {
+                color: #333333 !important; /* Ensure black text for print */
+                text-shadow: none !important; /* Remove text shadows */
+            }
+            .invoice-header {
+                position: relative; /* Ensure positioning context */
+                text-align: left; /* Align text to left for print */
+                padding-top: 0.5rem; /* Add some padding at the top for print */
+                padding-left: 90px; /* Make space for the logo on the left */
+                margin-bottom: 0.8rem; /* Reduced margin */
+            }
+            .invoice-header h2 {
+                font-size: 28pt !important; /* Larger for main title "INVOICE" */
+                margin-bottom: 0.1rem !important; /* Reduced margin */
+                color: #333333 !important; /* Ensure black text */
+            }
+            .invoice-header p {
+                font-size: 9pt !important; /* Smaller text for company details */
+                line-height: 1.2 !important;
+            }
+            .invoice-logo { /* Target the class for print */
+                position: absolute;
+                top: 0.5rem; /* Adjust as needed for print */
+                left: 0.5rem; /* Adjust as needed for print */
+                width: 80px; /* Larger size for print */
+                height: 80px; /* Larger size for print */
+                border-radius: 50%;
+                object-fit: cover;
+                box-shadow: none; /* Remove shadow for print */
+            }
+            .invoice-details, .invoice-items, .invoice-summary, .invoice-notes, .invoice-delivery-info {
+                margin-bottom: 0.5rem !important; /* Further reduced margins between sections */
+            }
+            .invoice-details h3, .invoice-items h3, .invoice-notes h3, .invoice-delivery-info h3 {
+                font-size: 12pt !important; /* Even smaller sub-headings */
+                margin-bottom: 0.3rem !important; /* Reduced margin */
+            }
+            .invoice-details p, .invoice-notes p, .invoice-delivery-info p {
+                font-size: 9pt !important; /* Even smaller body text */
+            }
+            .invoice-items table, .invoice-items th, .invoice-items td {
+                border: 1px solid #cccccc !important; /* Lighter border for print */
+                font-size: 9pt !important; /* Even smaller table font size */
+                padding: 0.3rem !important; /* Further reduced padding in table cells */
+            }
+            .invoice-items th {
+                background-color: #f0f0f0 !important; /* Lighter background for print */
+                color: #333333 !important;
+            }
+            .invoice-summary div {
+                padding: 0.2rem 0 !important; /* Further reduced padding in summary lines */
+                font-size: 9pt !important; /* Even smaller summary font size */
+            }
+            .invoice-summary div:last-child {
+                font-size: 12pt !important; /* Grand total slightly larger, but overall smaller */
+                padding-top: 0.5rem !important;
+                margin-top: 0.3rem !important;
+                border-top: 1px solid #6F4E37 !important; /* Thinner border for print */
+            }
+            .invoice-footer {
+                font-size: 8pt !important;
+                margin-top: 1rem !important;
+            }
+            /* Ensure price columns are hidden if toggle is active */
+            .output-price-column, .output-price-summary-line {
+                display: none !important; /* This ensures they are hidden if the checkbox is checked */
+            }
+            /* If prices are NOT hidden, ensure they display correctly */
+            body:not(.hide-prices-active) .output-price-column {
+                display: table-cell !important;
+            }
+            body:not(.hide-prices-active) .output-price-summary-line {
+                display: flex !important;
+            }
+
+            /* Styles for saved invoices list */
+            .saved-invoice-item {
+                background-color: #fefefe;
+                border: 1px solid #e5e7eb;
+                border-radius: 0.75rem;
+                padding: 1rem 1.5rem;
+                margin-bottom: 0.75rem;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                font-weight: 500;
+                color: #333333;
+                transition: all 0.2s ease-in-out;
+            }
+            .saved-invoice-item:hover {
+                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+                transform: translateY(-1px);
+            }
+            .saved-invoice-item span {
+                flex-shrink: 0; /* Prevent text from shrinking too much */
+            }
+            .saved-invoice-item .invoice-info {
+                flex-grow: 1; /* Allow info to take available space */
+                display: flex;
+                flex-wrap: wrap; /* Allow wrapping on smaller screens */
+                gap: 0.5rem 1.5rem; /* Gap between info pieces */
+                align-items: center;
+            }
+            .saved-invoice-item .invoice-actions {
+                flex-shrink: 0;
+                display: flex;
+                gap: 0.75rem;
+                margin-left: 1rem; /* Space between info and buttons */
+            }
+            .view-btn, .delete-btn {
+                padding: 0.5rem 1rem;
+                border-radius: 0.5rem;
+                font-weight: 600;
+                cursor: pointer;
+                transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+            }
+            .view-btn {
+                background-color: #F8A4B8; /* Soft Pink */
+                color: white;
+            }
+            .view-btn:hover {
+                background-color: #E28FA0;
+                transform: translateY(-1px);
+            }
+            .delete-btn {
+                background-color: #f44336; /* Red */
+                color: white;
+            }
+            .delete-btn:hover {
+                background-color: #d32f2f;
+                transform: translateY(-1px);
+            }
+        </style>
+</head>
+<body>
+    <!-- Message Box container -->
+    <div id="messageBox" class="message-box fixed top-4 left-1/2 -translate-x-1/2 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-[1000] opacity-0 transition-opacity duration-300 ease-in-out"></div>
+
+    <div class="container">
+        <h1 class="text-4xl font-bold mb-8 text-center">Dipped Sweets NYC - Invoice</h1>
+
+        <!-- Invoice Input Form -->
+        <div id="invoiceFormSection" class="form-section">
+            <h2 class="text-3xl font-semibold mb-6">Invoice Details</h2>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div>
+                    <label for="invoiceNumber" class="block text-gray-700 text-sm font-bold mb-2">Invoice Number:</label>
+                    <input type="text" id="invoiceNumber" placeholder="INV-001" value="INV-001">
+                </div>
+                <div>
+                    <label for="invoiceDate" class="block text-gray-700 text-sm font-bold mb-2">Invoice Date:</label>
+                    <input type="date" id="invoiceDate">
+                </div>
+                <div>
+                    <label for="dueDate" class="block text-gray-700 text-sm font-bold mb-2">Due Date:</label>
+                    <input type="date" id="dueDate">
+                </div>
+            </div>
+
+            <h2 class="text-3xl font-semibold mb-6">Client Information</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div>
+                    <label for="clientName" class="block text-gray-700 text-sm font-bold mb-2">Client Name:</label>
+                    <input type="text" id="clientName" placeholder="John Doe">
+                </div>
+                <div>
+                    <label for="clientEmail" class="block text-gray-700 text-sm font-bold mb-2">Client Email:</label>
+                    <input type="email" id="clientEmail" placeholder="john.doe@example.com">
+                </div>
+                <div>
+                    <label for="clientPhone" class="block text-gray-700 text-sm font-bold mb-2">Client Phone:</label>
+                    <input type="tel" id="clientPhone" placeholder="(123) 456-7890">
+                </div>
+                <div class="md:col-span-2">
+                    <label for="clientAddress" class="block text-gray-700 text-sm font-bold mb-2">Client Address:</label>
+                    <textarea id="clientAddress" rows="2" placeholder="123 Sweet Street, New York, NY 10001"></textarea>
+                </div>
+            </div>
+
+            <h2 class="text-3xl font-semibold mb-6">Order Items</h2>
+            <div class="mb-6">
+                <label for="itemCategory" class="block text-gray-700 text-sm font-bold mb-2">Select from Menu Category:</label>
+                <select id="itemCategory" class="mb-4">
+                    <option value="All">All Menu Items</option>
+                    <option value="Dipped Strawberries">Dipped Strawberries</option>
+                    <option value="Dipped Pretzels">Dipped Pretzels</option>
+                    <option value="Cake Pops">Cake Pops</option>
+                    <option value="Rice Crispy & Dipped Cupcakes">Rice Crispy & Dipped Cupcakes</option>
+                    <option value="Individual Sample Cups">Individual Sample Cups</option>
+                </select>
+
+                <div id="menuItemsSelection" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                    <!-- Menu items will be dynamically loaded here -->
+                </div>
+            </div>
+
+            <h3 class="text-2xl font-semibold mb-4">Add Custom Item (if not on menu)</h3>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                <div class="md:col-span-2">
+                    <label for="customItemDescription" class="block text-gray-700 text-sm font-bold mb-2">Description:</label>
+                    <input type="text" id="customItemDescription" placeholder="Custom Cake Design">
+                </div>
+                <div>
+                    <label for="customItemQuantity" class="block text-gray-700 text-sm font-bold mb-2">Quantity:</label>
+                    <input type="number" id="customItemQuantity" value="1" min="1">
+                </div>
+                <div class="price-field">
+                    <label for="customItemUnitPrice" class="block text-gray-700 text-sm font-bold mb-2">Unit Price ($):</label>
+                    <input type="number" id="customItemUnitPrice" value="0.00" min="0" step="0.01">
+                </div>
+                <div class="md:col-span-4 flex justify-end">
+                    <button type="button" id="addCustomItemBtn" class="btn-secondary">Add Custom Item</button>
+                </div>
+            </div>
+
+            <h3 class="text-2xl font-semibold mb-4">Invoice Items List</h3>
+            <div id="invoiceItemsList" class="bg-gray-100 p-6 rounded-lg mb-8">
+                <div class="item-row font-bold text-gray-800 border-b-2 border-gray-300 pb-2">
+                    <div>Description</div>
+                    <div class="text-center">Qty</div>
+                    <div class="price-column text-right">Unit Price</div>
+                    <div class="price-column text-right">Total</div>
+                    <div></div>
+                </div>
+                <div id="itemsContainer">
+                    <!-- Added items will appear here -->
+                </div>
+                <!-- Moved noItemsMessage outside itemsContainer so it's not overwritten -->
+                <p id="noItemsMessage" class="text-center text-gray-500 py-4">No items added yet.</p>
+
+                <div class="flex justify-end mt-4">
+                    <div class="text-right text-lg font-bold text-gray-800 price-summary-line">
+                        Subtotal: <span id="currentSubtotal">$0.00</span>
+                    </div>
+                </div>
+            </div>
+
+            <h2 class="text-3xl font-semibold mb-6">Delivery/Pickup & Financial Details</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <!-- Delivery/Pickup Details -->
+                <div class="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="deliveryDate" class="block text-gray-700 text-sm font-bold mb-2">Delivery/Pickup Date:</label>
+                        <input type="date" id="deliveryDate">
+                    </div>
+                    <div>
+                        <label for="deliveryTime" class="block text-gray-700 text-sm font-bold mb-2">Delivery/Pickup Time:</label>
+                        <input type="text" id="deliveryTime" placeholder="e.g., 2:00 PM - 3:00 PM" class="w-full sm:w-1/2 lg:w-1/3">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="deliveryLocation" class="block text-gray-700 text-sm font-bold mb-2">Delivery/Pickup Location:</label>
+                        <textarea id="deliveryLocation" rows="2" placeholder="Client's Address or Pickup Point"></textarea>
+                    </div>
+                </div>
+
+                <!-- Financial Adjustments -->
+                <div class="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6 mt-4 pt-4 border-t border-gray-200">
+                    <div class="price-field">
+                        <label for="deliveryFee" class="block text-gray-700 text-sm font-bold mb-2">Delivery Fee ($):</label>
+                        <input type="number" id="deliveryFee" value="0.00" min="0" step="0.01">
+                    </div>
+                    <div class="price-field">
+                        <label for="depositReceived" class="block text-gray-700 text-sm font-bold mb-2">Deposit Received ($):</label>
+                        <input type="number" id="depositReceived" value="0.00" min="0" step="0.01">
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-8">
+                <label for="invoiceNotes" class="block text-gray-700 text-sm font-bold mb-2">Notes / Special Instructions:</label>
+                <textarea id="invoiceNotes" rows="3" placeholder="Any additional notes for the client or internal use."></textarea>
+            </div>
+
+            <div class="flex items-center justify-center gap-4 mb-8">
+                <input type="checkbox" id="hidePricesToggle" class="h-5 w-5 text-[#F8A4B8] focus:ring-[#F8A4B8] border-gray-300 rounded">
+                <label for="hidePricesToggle" class="text-gray-700 text-base font-bold">Hide Prices (for donations/quotes)</label>
+            </div>
+
+            <div class="flex justify-center gap-4">
+                <button id="generateInvoiceBtn" class="btn-primary flex items-center">
+                    Generate Invoice <i class="fas fa-file-invoice ml-2"></i>
+                </button>
+                <button id="resetFormBtn" class="btn-secondary flex items-center">
+                    Reset Form <i class="fas fa-redo ml-2"></i>
+                </button>
+                <button id="viewSavedInvoicesBtn" class="btn-primary flex items-center">
+                    View Saved Invoices <i class="fas fa-list-alt ml-2"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Invoice Output Section (initially hidden) -->
+        <div id="invoiceOutputSection" class="invoice-display-container hidden">
+            <div class="invoice-header">
+                <img src="IMG_8127.PNG" alt="Company Logo" class="invoice-logo">
+                <h2 class="text-4xl font-bold text-[#6F4E37] mb-2">INVOICE</h2>
+                <p class="text-gray-700 text-lg" id="outputCompanyName"></p>
+                <p class="text-gray-600 text-sm" id="outputCompanyTagline"></p>
+                <p class="text-gray-600 text-sm" id="outputCompanyContact"></p>
+                <p class="text-gray-600 text-sm" id="outputCompanyServiceAreas"></p>
+            </div>
+
+            <hr class="border-t-2 border-[#F8A4B8] my-6">
+
+            <div class="invoice-details grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-800">
+                <div>
+                    <h3 class="text-xl font-semibold mb-2">Bill To:</h3>
+                    <p id="outputClientName" class="font-medium"></p>
+                    <p id="outputClientAddress"></p>
+                    <p id="outputClientEmail"></p>
+                    <p id="outputClientPhone"></p>
+                </div>
+                <div class="md:text-right">
+                    <h3 class="text-xl font-semibold mb-2">Invoice Info:</h3>
+                    <p><strong>Invoice #:</strong> <span id="outputInvoiceNumber"></span></p>
+                    <p><strong>Date:</strong> <span id="outputInvoiceDate"></span></p>
+                    <p><strong>Due Date:</strong> <span id="outputDueDate"></span></p>
+                </div>
+            </div>
+
+            <div class="invoice-items my-8">
+                <h3 class="text-xl font-semibold mb-4">Items:</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Description</th>
+                            <th class="text-center">Qty</th>
+                            <th class="output-price-column text-right">Unit Price</th>
+                            <th class="output-price-column text-right">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody id="outputItemsTableBody">
+                        <!-- Invoice items will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="invoice-summary text-right text-gray-800">
+                <div class="output-price-summary-line">
+                    <span>Subtotal:</span>
+                    <span id="outputSubtotal">$0.00</span>
+                </div>
+                <div class="output-price-summary-line">
+                    <span>Delivery Fee:</span>
+                    <span id="outputDeliveryFee">$0.00</span>
+                </div>
+                <div class="output-price-summary-line">
+                    <span>Deposit Received:</span>
+                    <span id="outputDepositReceived">$0.00</span>
+                </div>
+                <div class="text-2xl text-[#6F4E37] output-price-summary-line">
+                    <span>Grand Total:</span>
+                    <span id="outputGrandTotal">$0.00</span>
+                </div>
+                <div class="text-2xl text-[#F44336] font-bold output-price-summary-line">
+                    <span>Amount Due:</span>
+                    <span id="outputAmountDue">$0.00</span>
+                </div>
+            </div>
+
+            <div class="invoice-notes my-8">
+                <h3 class="text-xl font-semibold mb-2">Notes:</h3>
+                <p id="outputNotes" class="text-gray-700 italic"></p>
+            </div>
+
+            <div class="invoice-delivery-info my-8">
+                <h3 class="text-xl font-semibold mb-2">Delivery/Pickup Details:</h3>
+                <p><strong>Date:</strong> <span id="outputDeliveryDate"></span></p>
+                <p><strong>Time:</strong> <span id="outputDeliveryTime"></span></p>
+                <p><strong>Location:</strong> <span id="outputDeliveryLocation"></span></p>
+            </div>
+
+            <hr class="border-t-2 border-[#F8A4B8] my-6">
+
+            <div class="invoice-footer text-gray-600 text-sm">
+                <p>Thank you for your business!</p>
+                <p id="outputPaymentDetails"></p>
+            </div>
+
+            <div class="flex justify-center gap-4 mt-8">
+                <button id="saveInvoiceBtn" class="btn-primary flex items-center">
+                    Save Invoice <i class="fas fa-save ml-2"></i>
+                </button>
+                <button id="printInvoiceBtn" class="btn-primary flex items-center">
+                    Print Invoice <i class="fas fa-print ml-2"></i>
+                </button>
+                <button id="backToFormBtn" class="btn-secondary flex items-center">
+                    Back to Form <i class="fas fa-arrow-left ml-2"></i>
+                </button>
+                <button id="viewSavedInvoicesFromOutputBtn" class="btn-primary flex items-center">
+                    View Saved Invoices <i class="fas fa-list-alt ml-2"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Saved Invoices Section -->
+        <div id="savedInvoicesSection" class="hidden">
+            <h2 class="text-3xl font-semibold mb-6 text-center">Your Saved Invoices</h2>
+            <div id="savedInvoicesList" class="space-y-4">
+                <p id="noSavedInvoicesMessage" class="text-center text-gray-500 py-4 hidden">No invoices saved yet.</p>
+            </div>
+            <div class="flex justify-center mt-8">
+                <button id="backToCreatorFromSavedBtn" class="btn-secondary flex items-center">
+                    Back to Invoice Creator <i class="fas fa-arrow-left ml-2"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        // =================================================================================================
+        //                                 CONFIGURATION SETTINGS
+        //      Easily customize your business details and default invoice settings here.
+        // =================================================================================================
+
+        const businessInfo = {
+            companyName: "Dipped Sweets NYC",
+            tagline: "Handcrafted Dipped Treats",
+            email: "DippedSweets.nyc@gmail.com",
+            phone: "+1 (929) 323-9892",
+            serviceAreas: "Serving The Bronx, Upper East Side & Upper West Side Manhattan, and Astoria, Queens",
+            paymentDetails: "Please make payments via Zelle to DippedSweets.nyc@gmail.com or CashApp $DippedSweetsNYC."
+        };
+
+        const defaultFormSettings = {
+            invoiceNumber: 'INV-001',
+            // Default date for new invoices (today's date will be set dynamically)
+            dueDate: '2025-10-21', // Example: October 21, 2025
+            deliveryFee: 0.00,
+            depositReceived: 45.00,
+            notes: `Dietary Restrictions: Nut-free options only.\n\nRegarding the tax acknowledgment letter: As a small business just starting out, we're not set up to utilize those kinds of tax deductions at this time.`,
+            hidePrices: false // Default state for the "Hide Prices" checkbox
+        };
+
+        // =================================================================================================
+        //                            END CONFIGURATION SETTINGS
+        // =================================================================================================
+
+
+        // Data for your menu items (copied from your website's script)
+        const sweetsData = [
+            {
+                img: "db0735d2-681f-466d-a5d5-a7fceae3664c.jpeg",
+                title: "Classic Dipped Strawberries",
+                description: "Fresh, juicy strawberries hand-dipped in premium milk, dark, or white chocolate.",
+                simplePrice: 3.00, // Updated
+                partyPrice: 2.50, // Updated
+                category: "Dipped Strawberries",
+                displayOnMainMenu: true
+            },
+            {
+                img: "2b0fd04a-dfe1-42b1-b087-2e3c51fe7a3b.jpeg",
+                title: "White Chocolate Drizzle Strawberries",
+                description: "Fresh strawberries dipped in milk chocolate, elegantly drizzled with white chocolate.",
+                simplePrice: 3.25, // Updated
+                partyPrice: 2.75, // Updated
+                category: "Dipped Strawberries",
+                displayOnMainMenu: false
+            },
+            {
+                img: "927b7bcd-ac6a-4c5b-b5b6-df40e195cf4e.jpeg",
+                title: "Oreo Crunch Strawberries",
+                description: "Strawberries dipped in white chocolate and coated with crushed Oreo cookies.",
+                simplePrice: 3.50,
+                partyPrice: 3.00, // Updated
+                category: "Dipped Strawberries",
+                displayOnMainMenu: false
+            },
+            {
+                img: "5bc5629f-61c9-422b-8882-d1e3b3390d3e.jpeg",
+                title: "Confetti Dream Strawberries",
+                description: "Milk chocolate-dipped strawberries adorned with festive, colorful sprinkles.",
+                simplePrice: 3.25,
+                partyPrice: 2.75, // Updated
+                category: "Dipped Strawberries",
+                displayOnMainMenu: false
+            },
+            {
+                img: "43MGOODAVXURGXTKKV6QSADP.webp",
+                title: "Custom Dipped Strawberries",
+                description: "Design your own! Choose your chocolate, toppings, and drizzles for a truly unique treat.",
+                simplePrice: 0.00, // Inquire for Price
+                partyPrice: 0.00, // Inquire for Price
+                category: "Dipped Strawberries",
+                displayOnMainMenu: false
+            },
+            {
+                img: "Clean-Eating-Chocolate-Dipped-Strawberries-CleanFoodCrush.jpg",
+                title: "Nuty Strawberries",
+                description: "Fresh strawberries dipped in rich milk chocolate, adorned with dried cut nuts of your choice.",
+                simplePrice: 3.50, // Updated
+                partyPrice: 3.00, // Updated
+                category: "Dipped Strawberries",
+                displayOnMainMenu: false
+            },
+            {
+                img: "fruit.avif",
+                title: "Fresh Fruit Salad Platter",
+                description: "A refreshing mix of seasonal fresh fruits, perfect for a large gathering.",
+                simplePrice: 65.00,
+                partyPrice: 65.00,
+                category: "Individual Sample Cups",
+                displayOnMainMenu: true
+            },
+            {
+                img: "c3a68bd5-1d2a-4bd7-8438-92e2190ad0ae.jpeg",
+                title: "Chocolate Dipped Pretzels",
+                description: "Crunchy pretzel twists coated in chocolate and sprinkled with joy.",
+                simplePrice: 1.50, // Updated
+                partyPrice: 1.25, // Updated
+                category: "Dipped Pretzels",
+                displayOnMainMenu: true
+            },
+            {
+                img: "45819452-78ee-497a-96f1-3f913ffa95ff.jpeg",
+                title: "Gourmet Pretzel Rods",
+                description: "Long pretzel rods elegantly dipped and decorated with various toppings.",
+                simplePrice: 1.50, // Updated
+                partyPrice: 1.25, // Updated
+                category: "Dipped Pretzels",
+                displayOnMainMenu: true
+            },
+            {
+                img: "7d70783c-71df-41f5-9a6f-1bb84b1dec8a.jpeg",
+                title: "Classic Cake Pops",
+                description: "Moist cake bites on a stick, hand-dipped in chocolate and decorated with sprinkles.",
+                simplePrice: 3.17,
+                partyPrice: 2.83,
+                category: "Cake Pops",
+                displayOnMainMenu: true
+            },
+            {
+                img: "273f61a4-d741-4cb7-822f-0bf7e9edffb1.jpeg",
+                title: "Brownie Batter Cake Pops",
+                description: "Rich brownie-flavored cake pops dipped in dark chocolate and topped with mini chocolate chips.",
+                simplePrice: 3.25, // Updated
+                partyPrice: 2.92, // Updated
+                category: "Cake Pops",
+                displayOnMainMenu: false
+            },
+            {
+                img: "94801b50-345d-4d51-afc8-73c332b3a0d6.jpeg",
+                title: "Simple Chocolate Covered Oreos",
+                description: "Classic Oreos dipped in smooth chocolate, available in various colors and simple drizzles.",
+                simplePrice: 2.75, // Updated
+                partyPrice: 2.25, // Updated
+                category: "Cake Pops",
+                displayOnMainMenu: false
+            },
+            {
+                img: "793e79b7-20a1-46cf-afa0-5f55534205ee.jpeg",
+                title: "Cookie Dough Cake Pops",
+                description: "Sweet cookie dough cake pops dipped in milk chocolate, a delightful treat.",
+                simplePrice: 3.25, // Updated
+                partyPrice: 2.92, // Updated
+                category: "Cake Pops",
+                displayOnMainMenu: false
+            },
+            {
+                img: "rice krispies.jpg",
+                title: "Dipped Rice Crispy Treats",
+                description: "Chewy rice crispy treats generously coated in rich chocolate and fun toppings.",
+                simplePrice: 3.25, // Updated
+                partyPrice: 2.75, // Updated
+                category: "Rice Crispy & Dipped Cupcakes",
+                displayOnMainMenu: true
+            },
+            {
+                img: "a67682b1-e2ad-4e9b-8dce-a834af8df359.jpeg",
+                title: "Mini Dipped Cupcakes",
+                description: "Delightful mini cupcakes, frosted and then partially dipped in chocolate.",
+                simplePrice: 2.50, // Updated
+                partyPrice: 2.00, // Updated
+                category: "Rice Crispy & Dipped Cupcakes",
+                displayOnMainMenu: true
+            },
+            {
+                img: "tres leches.jpg",
+                title: "Tres Leches Cups (Sample)",
+                description: "Small, moist sponge cakes soaked in three kinds of milk, a creamy delight.",
+                simplePrice: 2.50, // Updated
+                partyPrice: 2.00, // Updated
+                category: "Individual Sample Cups",
+                displayOnMainMenu: true
+            },
+            {
+                img: "f2cc655a-26b1-4bb9-a9f2-4bc20d4f775d.jpeg",
+                title: "Individual Flan Desserts (Sample)",
+                description: "Rich, creamy caramel custard baked to perfection, a classic Latin dessert.",
+                simplePrice: 2.50, // Updated
+                partyPrice: 2.00, // Updated
+                category: "Individual Sample Cups",
+                displayOnMainMenu: true
+            },
+            {
+                img: "https://placehold.co/100x75/F8E6DD/6F4E37?text=Cheesecake", // Placeholder image
+                title: "Cheesecakes (Oreo, Graham, Strawberry)",
+                description: "Creamy cheesecakes available in Oreo, Graham Cracker, and Normal Strawberry flavors.",
+                simplePrice: 2.50, // Added
+                partyPrice: 2.00, // Added
+                category: "Individual Sample Cups",
+                displayOnMainMenu: true
+            },
+            {
+                img: "823f3f9d-c336-4992-b8f1-64ae3e2761e1.jpeg",
+                title: "Dipped Churro Bites (Sample)",
+                description: "Crispy churro bites, dipped in chocolate and dusted with cinnamon sugar.",
+                simplePrice: 3.00,
+                partyPrice: 2.00,
+                category: "Individual Sample Cups",
+                displayOnMainMenu: true
+            }
+        ];
+
+        // Global variable to hold the current invoice data being worked on
+        let currentInvoiceData = {};
+
+        // Function to display messages to the user
+        function showMessage(message, isError = false) {
+            const messageBox = document.getElementById('messageBox');
+            messageBox.textContent = message;
+            messageBox.className = 'message-box show'; // Reset classes and show
+            if (isError) {
+                messageBox.classList.add('error');
+            } else {
+                messageBox.classList.remove('error');
+            }
+
+            // Hide the message after 3 seconds
+            setTimeout(() => {
+                messageBox.classList.remove('show');
+                // Optional: clear text after fade out
+                setTimeout(() => messageBox.textContent = '', 500);
+            }, 3000);
+        }
+
+        // Function to control which sections are visible
+        function showSection(sectionId) {
+            const allSections = document.querySelectorAll('.form-section, .invoice-display-container, #savedInvoicesSection');
+            allSections.forEach(section => {
+                section.classList.add('hidden'); // Hide all sections
+            });
+
+            const activeSection = document.getElementById(sectionId);
+            if (activeSection) {
+                activeSection.classList.remove('hidden'); // Show the target section
+            }
+        }
+
+        // Function to populate the menu items for selection
+        function populateMenuItems(category = 'All') {
+            const menuItemsContainer = document.getElementById('menuItemsSelection');
+            let htmlContent = '';
+            const filteredSweets = category === 'All' ? sweetsData : sweetsData.filter(sweet => sweet.category === category);
+
+            if (filteredSweets.length === 0) {
+                htmlContent = `<p class="col-span-full text-center text-gray-500">No items found in this category.</p>`;
+            } else {
+                filteredSweets.forEach(sweet => {
+                    // Determine price display based on 'Inquire for Price' or numeric values
+                    const simplePriceDisplay = sweet.simplePrice === 0.00 && sweet.title === "Custom Dipped Strawberries" ? "Inquire for Price" : `$${sweet.simplePrice.toFixed(2)}`;
+                    const partyPriceDisplay = sweet.partyPrice === 0.00 && sweet.title === "Custom Dipped Strawberries" ? "Inquire for Price" : `$${sweet.partyPrice.toFixed(2)}`;
+
+                    htmlContent += `
+                        <div class="bg-white p-3 rounded-lg shadow-sm border border-gray-100 flex flex-col items-center text-center">
+                            <img src="${sweet.img}" alt="${sweet.title}" onerror="this.onerror=null;this.src='https://placehold.co/100x75/F8E6DD/6F4E37?text=Image';" class="w-full h-20 object-cover rounded-md mb-2">
+                            <h4 class="font-semibold text-sm text-[#6F4E37] mb-1">${sweet.title}</h4>
+                            <p class="text-xs text-gray-600 mb-2 price-display">
+                                <span class="font-bold">Simple:</span> ${simplePriceDisplay} |
+                                <span class="font-bold">Party:</span> ${partyPriceDisplay}
+                            </p>
+                            <div class="flex items-center gap-2">
+                                <input type="number" value="1" min="1" class="w-16 p-1 text-center text-sm border border-gray-300 rounded-md item-qty-input">
+                                <select class="w-20 p-1 text-sm border border-gray-300 rounded-md item-price-type">
+                                    <option value="simple">Simple</option>
+                                    <option value="party">Party</option>
+                                </select>
+                                <button type="button" class="btn-secondary px-3 py-1 text-sm rounded-md add-menu-item-btn"
+                                    data-title="${sweet.title}"
+                                    data-simple-price="${sweet.simplePrice}"
+                                    data-party-price="${sweet.partyPrice}"
+                                    data-description="${sweet.description.replace(/"/g, '&quot;')}"
+                                >Add</button>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+            menuItemsContainer.innerHTML = htmlContent;
+            addMenuItemEventListeners(); // Attach event listeners after populating
+            togglePriceVisibility(); // Apply price visibility setting after populating
+        }
+
+        // Attach event listeners to "Add" buttons for menu items
+        function addMenuItemEventListeners() {
+            document.querySelectorAll('.add-menu-item-btn').forEach(button => {
+                button.onclick = function() {
+                    const parentDiv = this.closest('.bg-white');
+                    const qty = parseInt(parentDiv.querySelector('.item-qty-input').value);
+                    const priceType = parentDiv.querySelector('.item-price-type').value;
+                    const title = this.dataset.title;
+                    const description = this.dataset.description;
+                    const unitPrice = parseFloat(this.dataset[priceType + 'Price']);
+
+                    if (isNaN(qty) || qty < 1) {
+                        showMessage("Quantity must be at least 1.", true);
+                        return;
+                    }
+
+                    // Always add as a new item, generate a unique ID
+                    addItemToInvoice(title, description, qty, unitPrice);
+                };
+            });
+        }
+
+        // Function to add an item to the currentInvoiceData.items array and update the list
+        function addItemToInvoice(description, fullDescription, quantity, unitPrice) {
+            const calculatedUnitPrice = parseFloat(unitPrice);
+            const total = calculatedUnitPrice * quantity;
+
+            // Generate a unique ID for each item added using crypto.randomUUID()
+            const newItem = {
+                id: crypto.randomUUID(), // Using crypto.randomUUID() for unique string ID
+                description: description,
+                fullDescription: fullDescription,
+                quantity: quantity,
+                unitPrice: calculatedUnitPrice,
+                total: total
+            };
+
+            currentInvoiceData.items.push(newItem); // Use currentInvoiceData.items
+            updateInvoiceItemsList();
+            calculateAndDisplayCurrentTotals(); // Update totals after adding item
+            showMessage(`Added "${description}" x${quantity} to invoice.`);
+        }
+
+        // Function to remove an item from the currentInvoiceData.items array by its unique ID
+        // Made global for inline onclick
+        window.removeItemFromInvoice = function(itemId) {
+            const initialLength = currentInvoiceData.items.length;
+            currentInvoiceData.items = currentInvoiceData.items.filter(item => item.id !== itemId);
+            if (currentInvoiceData.items.length < initialLength) {
+                updateInvoiceItemsList();
+                calculateAndDisplayCurrentTotals();
+                showMessage(`Removed item from invoice.`);
+            }
+        }
+
+        // Function to update an item's quantity directly in the list by its unique ID
+        // Made global for inline onchange
+        window.updateItemQuantityInList = function(itemId, newQuantity) {
+            newQuantity = parseInt(newQuantity);
+            const itemToUpdate = currentInvoiceData.items.find(item => item.id === itemId);
+
+            if (!itemToUpdate) {
+                showMessage("Item not found.", true);
+                return;
+            }
+
+            if (isNaN(newQuantity) || newQuantity < 1) {
+                showMessage("Quantity must be at least 1.", true);
+                // Revert to previous valid quantity if input is invalid
+                updateInvoiceItemsList(); // This will re-render and reset the input field
+                return;
+            }
+
+            itemToUpdate.quantity = newQuantity;
+            itemToUpdate.total = itemToUpdate.unitPrice * newQuantity;
+            updateInvoiceItemsList();
+            calculateAndDisplayCurrentTotals(); // Update totals after quantity change
+            showMessage(`Quantity for "${itemToUpdate.description}" updated to ${newQuantity}.`);
+        }
+
+        // Function to update the displayed list of invoice items in the form
+        function updateInvoiceItemsList() {
+            const itemsContainer = document.getElementById('itemsContainer');
+            const noItemsMessage = document.getElementById('noItemsMessage');
+            let htmlContent = '';
+            const hidePrices = document.getElementById('hidePricesToggle').checked;
+
+            if (currentInvoiceData.items.length === 0) {
+                if (noItemsMessage) noItemsMessage.style.display = 'block';
+            } else {
+                if (noItemsMessage) noItemsMessage.style.display = 'none';
+                currentInvoiceData.items.forEach(item => {
+                    htmlContent += `
+                        <div class="item-row">
+                            <div>${item.description}</div>
+                            <div class="text-center">
+                                <input type="number" value="${item.quantity}" min="1"
+                                    onchange="updateItemQuantityInList('${item.id}', this.value)"
+                                    class="w-20 p-1 text-center text-sm border border-gray-300 rounded-md">
+                            </div>
+                            <div class="price-column text-right">${hidePrices ? '' : '$' + item.unitPrice.toFixed(2)}</div>
+                            <div class="price-column text-right">${hidePrices ? '' : '$' + item.total.toFixed(2)}</div>
+                            <div class="text-center">
+                                <button type="button" onclick="removeItemFromInvoice('${item.id}')" class="text-red-500 hover:text-red-700 text-lg">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+            if (itemsContainer) itemsContainer.innerHTML = htmlContent;
+            togglePriceVisibility(); // Apply visibility after updating the list
+        }
+
+        // Function to calculate and display current subtotal in the form section
+        function calculateAndDisplayCurrentTotals() {
+            let subtotal = currentInvoiceData.items.reduce((sum, item) => sum + item.total, 0);
+            document.getElementById('currentSubtotal').textContent = `$${subtotal.toFixed(2)}`;
+            // Recalculate and update grand total and amount due based on current inputs
+            const deliveryFee = parseFloat(document.getElementById('deliveryFee').value) || 0;
+            const depositReceived = parseFloat(document.getElementById('depositReceived').value) || 0;
+            const grandTotal = subtotal + deliveryFee;
+            const amountDue = grandTotal - depositReceived;
+
+            // Update the output section's totals (even if hidden)
+            document.getElementById('outputSubtotal').textContent = `$${subtotal.toFixed(2)}`;
+            document.getElementById('outputDeliveryFee').textContent = `$${deliveryFee.toFixed(2)}`;
+            document.getElementById('outputDepositReceived').textContent = `$${depositReceived.toFixed(2)}`;
+            document.getElementById('outputGrandTotal').textContent = `$${grandTotal.toFixed(2)}`;
+            document.getElementById('outputAmountDue').textContent = `$${amountDue.toFixed(2)}`;
+
+            togglePriceVisibility(); // Ensure visibility is correct after calculations
+        }
+
+        // Function to toggle the visibility of price-related elements
+        function togglePriceVisibility() {
+            const hidePrices = document.getElementById('hidePricesToggle').checked;
+
+            // Toggle a class on the body to allow print CSS to react
+            document.body.classList.toggle('hide-prices-active', hidePrices);
+
+            // Toggle visibility in the input form's item list header
+            document.querySelectorAll('.price-column').forEach(el => {
+                el.style.display = hidePrices ? 'none' : 'block';
+            });
+            // Toggle visibility for individual price fields in custom item section
+            document.querySelectorAll('.price-field').forEach(el => {
+                el.style.display = hidePrices ? 'none' : 'block';
+            });
+            // Toggle visibility for the subtotal line in the input form
+            const currentSubtotalLine = document.querySelector('#invoiceItemsList .price-summary-line');
+            if (currentSubtotalLine) {
+                currentSubtotalLine.style.display = hidePrices ? 'none' : 'flex';
+            }
+
+            // Toggle visibility in the invoice output section
+            document.querySelectorAll('.output-price-column').forEach(el => {
+                el.style.display = hidePrices ? 'none' : 'table-cell'; // Use table-cell for table headers/data
+            });
+            document.querySelectorAll('.output-price-summary-line').forEach(el => {
+                el.style.display = hidePrices ? 'none' : 'flex';
+            });
+        }
+
+        /**
+         * Collects invoice data from the form inputs and updates currentInvoiceData.
+         * @returns {object} A deep copy of the updated currentInvoiceData.
+         */
+        function collectFormDataFromForm() {
+            currentInvoiceData.invoiceNumber = document.getElementById('invoiceNumber').value || 'N/A';
+            currentInvoiceData.invoiceDate = document.getElementById('invoiceDate').value || 'N/A';
+            currentInvoiceData.dueDate = document.getElementById('dueDate').value || 'N/A';
+            currentInvoiceData.clientName = document.getElementById('clientName').value || 'N/A';
+            currentInvoiceData.clientEmail = document.getElementById('clientEmail').value || 'N/A';
+            currentInvoiceData.clientPhone = document.getElementById('clientPhone').value || 'N/A';
+            currentInvoiceData.clientAddress = document.getElementById('clientAddress').value || 'N/A';
+            currentInvoiceData.deliveryDate = document.getElementById('deliveryDate').value || 'N/A';
+            currentInvoiceData.deliveryTime = document.getElementById('deliveryTime').value || 'N/A';
+            currentInvoiceData.deliveryLocation = document.getElementById('deliveryLocation').value || 'N/A';
+            currentInvoiceData.deliveryFee = parseFloat(document.getElementById('deliveryFee').value) || 0;
+            currentInvoiceData.depositReceived = parseFloat(document.getElementById('depositReceived').value) || 0;
+            currentInvoiceData.notes = document.getElementById('invoiceNotes').value || 'No additional notes.';
+            currentInvoiceData.hidePrices = document.getElementById('hidePricesToggle').checked;
+
+            // Calculate totals and update currentInvoiceData
+            currentInvoiceData.subtotal = currentInvoiceData.items.reduce((sum, item) => sum + item.total, 0);
+            currentInvoiceData.grandTotal = currentInvoiceData.subtotal + currentInvoiceData.deliveryFee;
+            currentInvoiceData.amountDue = currentInvoiceData.grandTotal - currentInvoiceData.depositReceived;
+
+            return JSON.parse(JSON.stringify(currentInvoiceData)); // Return a deep copy
+        }
+
+        /**
+         * Populates all form input fields and the items list with the given invoice data.
+         * This is used to load an existing invoice (saved or current working) into the form for editing.
+         * @param {object} data - The invoice object to load into the form.
+         */
+        function loadFormDataIntoForm(data) {
+            document.getElementById('invoiceNumber').value = data.invoiceNumber || '';
+            document.getElementById('invoiceDate').value = data.invoiceDate || '';
+            document.getElementById('dueDate').value = data.dueDate || '';
+            document.getElementById('clientName').value = data.clientName || '';
+            document.getElementById('clientEmail').value = data.clientEmail || '';
+            document.getElementById('clientPhone').value = data.clientPhone || '';
+            document.getElementById('clientAddress').value = data.clientAddress || '';
+            document.getElementById('deliveryDate').value = data.deliveryDate || '';
+            document.getElementById('deliveryTime').value = data.deliveryTime || '';
+            document.getElementById('deliveryLocation').value = data.deliveryLocation || '';
+            document.getElementById('deliveryFee').value = (data.deliveryFee || 0).toFixed(2);
+            document.getElementById('depositReceived').value = (data.depositReceived || 0).toFixed(2);
+            document.getElementById('invoiceNotes').value = data.notes || '';
+            document.getElementById('hidePricesToggle').checked = data.hidePrices || false;
+
+            // Update the global currentInvoiceData and its items
+            currentInvoiceData = JSON.parse(JSON.stringify(data)); // Deep copy entire data object
+            if (!currentInvoiceData.items) { // Ensure items array exists
+                currentInvoiceData.items = [];
+            }
+
+            // Update the displayed items list in the form
+            updateInvoiceItemsList();
+            // Recalculate totals based on the loaded data (will update currentSubtotal)
+            calculateAndDisplayCurrentTotals();
+            // Apply price visibility based on loaded data
+            togglePriceVisibility();
+        }
+
+        /**
+         * Populates the invoice output section with the given invoice data.
+         * @param {object} invoiceData - The invoice object to display.
+         * @param {boolean} fromSaved - Flag to indicate if the invoice is being displayed from saved list.
+         */
+        function displayInvoiceInOutput(invoiceData, fromSaved = false) {
+            // Populate business info in header
+            document.getElementById('outputCompanyName').textContent = businessInfo.companyName;
+            document.getElementById('outputCompanyTagline').textContent = businessInfo.tagline;
+            document.getElementById('outputCompanyContact').textContent = `${businessInfo.email} | ${businessInfo.phone}`;
+            document.getElementById('outputCompanyServiceAreas').textContent = businessInfo.serviceAreas;
+            document.getElementById('outputPaymentDetails').textContent = businessInfo.paymentDetails;
+
+
+            // Populate output fields
+            document.getElementById('outputInvoiceNumber').textContent = invoiceData.invoiceNumber;
+            document.getElementById('outputInvoiceDate').textContent = invoiceData.invoiceDate;
+            document.getElementById('outputDueDate').textContent = invoiceData.dueDate;
+            document.getElementById('outputClientName').textContent = invoiceData.clientName;
+            document.getElementById('outputClientAddress').innerHTML = invoiceData.clientAddress.replace(/\n/g, '<br>');
+            document.getElementById('outputClientEmail').textContent = invoiceData.clientEmail;
+            document.getElementById('outputClientPhone').textContent = invoiceData.clientPhone;
+            document.getElementById('outputDeliveryDate').textContent = invoiceData.deliveryDate;
+            document.getElementById('outputDeliveryTime').textContent = invoiceData.deliveryTime;
+            document.getElementById('outputDeliveryLocation').innerHTML = invoiceData.deliveryLocation.replace(/\n/g, '<br>');
+            document.getElementById('outputNotes').textContent = invoiceData.notes;
+
+            // Populate invoice items table
+            const outputItemsTableBody = document.getElementById('outputItemsTableBody');
+            let itemsHtml = '';
+            invoiceData.items.forEach(item => {
+                itemsHtml += `
+                    <tr>
+                        <td>${item.description}</td>
+                        <td class="text-center">${item.quantity}</td>
+                        <td class="output-price-column text-right">${invoiceData.hidePrices ? '' : '$' + item.unitPrice.toFixed(2)}</td>
+                        <td class="output-price-column text-right">${invoiceData.hidePrices ? '' : '$' + item.total.toFixed(2)}</td>
+                    </tr>
+                `;
+            });
+            outputItemsTableBody.innerHTML = itemsHtml;
+
+            // Populate summary
+            document.getElementById('outputSubtotal').textContent = `$${invoiceData.subtotal.toFixed(2)}`;
+            document.getElementById('outputDeliveryFee').textContent = `$${invoiceData.deliveryFee.toFixed(2)}`;
+            document.getElementById('outputDepositReceived').textContent = `$${invoiceData.depositReceived.toFixed(2)}`;
+            document.getElementById('outputGrandTotal').textContent = `$${invoiceData.grandTotal.toFixed(2)}`;
+            document.getElementById('outputAmountDue').textContent = `$${invoiceData.amountDue.toFixed(2)}`;
+
+            // Set the hide prices toggle state for the output section
+            document.getElementById('hidePricesToggle').checked = invoiceData.hidePrices;
+            togglePriceVisibility(); // Apply visibility to the generated invoice
+            showSection('invoiceOutputSection');
+
+            // Get button elements
+            const saveInvoiceBtn = document.getElementById('saveInvoiceBtn');
+            const printInvoiceBtn = document.getElementById('printInvoiceBtn');
+            const backToFormBtn = document.getElementById('backToFormBtn');
+            const viewSavedInvoicesFromOutputBtn = document.getElementById('viewSavedInvoicesFromOutputBtn');
+
+            // Always show Print, View Saved, Back to Form
+            printInvoiceBtn.classList.remove('hidden');
+            viewSavedInvoicesFromOutputBtn.classList.remove('hidden');
+            backToFormBtn.classList.remove('hidden');
+
+            if (fromSaved) {
+                // If viewing a saved invoice, hide the "Save Invoice" button
+                saveInvoiceBtn.classList.add('hidden');
+            } else {
+                // If viewing a newly generated invoice, show the "Save Invoice" button
+                saveInvoiceBtn.classList.remove('hidden');
+            }
+        }
+
+
+        // Function to generate and display the invoice (from form)
+        function generateInvoice() {
+            // First, update currentInvoiceData with latest form inputs
+            collectFormDataFromForm();
+
+            // Basic validation
+            if (!currentInvoiceData.clientName || currentInvoiceData.items.length === 0) {
+                showMessage("Please enter client name and add at least one item to generate invoice.", true);
+                return;
+            }
+
+            displayInvoiceInOutput(currentInvoiceData, false); // Not from saved
+            showMessage("Invoice generated successfully!");
+        }
+
+        // Function to save the current invoice to localStorage
+        function saveInvoice() {
+            // Ensure currentInvoiceData is up-to-date with latest form values before saving
+            const invoiceToSave = collectFormDataFromForm();
+
+            try {
+                // Get existing invoices from localStorage
+                const savedInvoices = JSON.parse(localStorage.getItem('dippedSweetsInvoices')) || [];
+                // Add a new ID if it's a new invoice, or update if it's an existing one being re-saved
+                if (!invoiceToSave.id) {
+                    invoiceToSave.id = crypto.randomUUID();
+                }
+                invoiceToSave.savedAt = new Date().toISOString(); // Update saved timestamp
+
+                // Check if an invoice with this ID already exists and replace it
+                const existingIndex = savedInvoices.findIndex(inv => inv.id === invoiceToSave.id);
+                if (existingIndex > -1) {
+                    savedInvoices[existingIndex] = invoiceToSave;
+                } else {
+                    savedInvoices.push(invoiceToSave);
+                }
+
+                localStorage.setItem('dippedSweetsInvoices', JSON.stringify(savedInvoices));
+                showMessage(`Invoice saved successfully!`);
+            } catch (e) {
+                console.error("Error saving invoice to localStorage: ", e);
+                showMessage(`Error saving invoice: ${e.message}`, true);
+            }
+        }
+
+        // Function to delete an invoice from localStorage
+        function deleteInvoice(invoiceId) {
+            // Create a custom confirmation dialog
+            const confirmDelete = document.createElement('div');
+            confirmDelete.className = 'fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-[1001]';
+            confirmDelete.innerHTML = `
+                <div class="bg-white p-8 rounded-lg shadow-xl text-center">
+                    <p class="text-lg font-semibold mb-4">Are you sure you want to delete this invoice?</p>
+                    <div class="flex justify-center gap-4">
+                        <button id="confirmDeleteBtn" class="btn-primary bg-red-500 hover:bg-red-700">Delete</button>
+                        <button id="cancelDeleteBtn" class="btn-secondary">Cancel</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(confirmDelete);
+
+            document.getElementById('confirmDeleteBtn').onclick = () => {
+                try {
+                    let savedInvoices = JSON.parse(localStorage.getItem('dippedSweetsInvoices')) || [];
+                    const initialLength = savedInvoices.length;
+                    savedInvoices = savedInvoices.filter(invoice => invoice.id !== invoiceId);
+                    localStorage.setItem('dippedSweetsInvoices', JSON.stringify(savedInvoices));
+                    if (savedInvoices.length < initialLength) {
+                        showMessage("Invoice deleted successfully!");
+                    } else {
+                        showMessage("Invoice not found or could not be deleted.", true);
+                    }
+                    loadSavedInvoices(); // Reload the list after deletion
+                } catch (e) {
+                    console.error("Error deleting invoice from localStorage: ", e);
+                    showMessage(`Error deleting invoice: ${e.message}`, true);
+                } finally {
+                    document.body.removeChild(confirmDelete); // Remove the confirmation dialog
+                }
+            };
+
+            document.getElementById('cancelDeleteBtn').onclick = () => {
+                document.body.removeChild(confirmDelete); // Remove the confirmation dialog
+                showMessage("Deletion cancelled.");
+            };
+        }
+
+
+        // Function to load and display saved invoices from localStorage
+        function loadSavedInvoices() {
+            const savedInvoicesList = document.getElementById('savedInvoicesList');
+            const noSavedInvoicesMessage = document.getElementById('noSavedInvoicesMessage');
+            savedInvoicesList.innerHTML = ''; // Clear previous list
+            noSavedInvoicesMessage.classList.add('hidden'); // Hide no invoices message by default
+
+            let savedInvoices = [];
+            try {
+                const storedData = localStorage.getItem('dippedSweetsInvoices');
+                if (storedData) { // Only try to parse if data exists
+                    savedInvoices = JSON.parse(storedData);
+                }
+            } catch (e) {
+                console.error("Error parsing saved invoices from localStorage:", e);
+                showMessage("Error loading saved invoices. Data might be corrupted.", true);
+            }
+
+
+            if (savedInvoices.length === 0) {
+                noSavedInvoicesMessage.classList.remove('hidden');
+                return;
+            }
+
+            savedInvoices.forEach(invoice => {
+                const invoiceId = invoice.id;
+                const hidePrices = invoice.hidePrices || false;
+
+                const listItem = document.createElement('div');
+                listItem.className = 'saved-invoice-item';
+                listItem.dataset.invoiceId = invoiceId;
+
+                listItem.innerHTML = `
+                    <div class="invoice-info">
+                        <span><strong>Invoice #:</strong> ${invoice.invoiceNumber}</span>
+                        <span><strong>Client:</strong> ${invoice.clientName}</span>
+                        <span class="${hidePrices ? 'hidden-price' : ''}"><strong>Total:</strong> $${invoice.grandTotal.toFixed(2)}</span>
+                    </div>
+                    <div class="invoice-actions">
+                        <button type="button" class="view-btn" data-invoice-id="${invoiceId}">View Invoice</button>
+                        <button type="button" class="delete-btn" data-invoice-id="${invoiceId}">Delete</button>
+                    </div>
+                `;
+
+                savedInvoicesList.appendChild(listItem);
+
+                // Attach event listeners to the new buttons
+                listItem.querySelector('.view-btn').addEventListener('click', function() {
+                    const invoiceToView = savedInvoices.find(inv => inv.id === invoiceId);
+                    if (invoiceToView) {
+                        displayInvoiceInOutput(invoiceToView, true); // Pass true for 'fromSaved'
+                        // When viewing a saved invoice, we want its data to become the current working data
+                        currentInvoiceData = JSON.parse(JSON.stringify(invoiceToView)); // Deep copy
+                        showMessage(`Displaying Invoice #${invoiceToView.invoiceNumber}`);
+                    } else {
+                        showMessage("Error: Invoice not found.", true);
+                    }
+                });
+
+                listItem.querySelector('.delete-btn').addEventListener('click', function() {
+                    deleteInvoice(invoiceId);
+                });
+            });
+
+            showMessage("Saved invoices loaded successfully!");
+        }
+
+
+        /**
+         * Resets the form to its initial default state, clearing all inputs and items.
+         * This is intended for starting a completely new invoice.
+         */
+        function resetForm() {
+            setInitialFormValues(); // This will re-initialize currentInvoiceData with defaults
+            populateMenuItems('All'); // Re-populate menu items to ensure they are visible and interactive
+            togglePriceVisibility(); // Ensure prices are visible after reset
+            showMessage("Form has been reset.");
+        }
+
+        /**
+         * Sets the initial default values for the form fields and initializes currentInvoiceData.
+         */
+        function setInitialFormValues() {
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const day = String(today.getDate()).padStart(2, '0');
+
+            currentInvoiceData = { // Initialize currentInvoiceData with default values
+                id: crypto.randomUUID(), // New ID for a fresh invoice
+                invoiceNumber: defaultFormSettings.invoiceNumber,
+                invoiceDate: `${year}-${month}-${day}`, // Set to today's date
+                dueDate: defaultFormSettings.dueDate,
+                clientName: '',
+                clientEmail: '',
+                clientPhone: '',
+                clientAddress: '',
+                deliveryDate: '',
+                deliveryTime: '',
+                deliveryLocation: '',
+                deliveryFee: defaultFormSettings.deliveryFee,
+                depositReceived: defaultFormSettings.depositReceived,
+                notes: defaultFormSettings.notes,
+                hidePrices: defaultFormSettings.hidePrices,
+                items: [], // Initialize items array for the new invoice
+                subtotal: 0.00,
+                grandTotal: 0.00,
+                amountDue: 0.00,
+                savedAt: ''
+            };
+
+            loadFormDataIntoForm(currentInvoiceData); // Load these initial values into the form
+        }
+
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            setInitialFormValues(); // Set initial values on load
+
+            populateMenuItems('All'); // Initial population of menu items
+
+            document.getElementById('itemCategory').addEventListener('change', function() {
+                populateMenuItems(this.value);
+            });
+
+            document.getElementById('addCustomItemBtn').addEventListener('click', function() {
+                const description = document.getElementById('customItemDescription').value.trim();
+                const quantity = parseInt(document.getElementById('customItemQuantity').value);
+                const unitPrice = parseFloat(document.getElementById('customItemUnitPrice').value);
+
+                if (!description) {
+                    showMessage("Please enter a description for the custom item.", true);
+                    return;
+                }
+                if (isNaN(quantity) || quantity < 1) {
+                    showMessage("Quantity for custom item must be at least 1.", true);
+                    return;
+                }
+                if (isNaN(unitPrice) || unitPrice < 0) {
+                    showMessage("Unit price for custom item must be a non-negative number.", true);
+                    return;
+                }
+
+                // Always add as a new item, generate a unique ID
+                addItemToInvoice(description, description, quantity, unitPrice);
+                // Clear custom item fields after adding
+                document.getElementById('customItemDescription').value = '';
+                document.getElementById('customItemQuantity').value = '1';
+                document.getElementById('customItemUnitPrice').value = '0.00';
+            });
+
+            document.getElementById('generateInvoiceBtn').addEventListener('click', generateInvoice);
+            document.getElementById('resetFormBtn').addEventListener('click', resetForm);
+            document.getElementById('printInvoiceBtn').addEventListener('click', function() {
+                window.print();
+            });
+            document.getElementById('backToFormBtn').addEventListener('click', function() {
+                showSection('invoiceFormSection'); // Go back to the main form
+                // Explicitly load currentInvoiceData into the form to ensure it's not blank
+                loadFormDataIntoForm(currentInvoiceData);
+            });
+
+            // Event listener for the Save Invoice button (now using localStorage)
+            document.getElementById('saveInvoiceBtn').addEventListener('click', saveInvoice);
+
+            // Event listener for the View Saved Invoices button (now using localStorage)
+            document.getElementById('viewSavedInvoicesBtn').addEventListener('click', function() {
+                showSection('savedInvoicesSection');
+                loadSavedInvoices(); // Load and display saved invoices
+            });
+
+            // Event listener for the Back to Creator from Saved Invoices button
+            document.getElementById('backToCreatorFromSavedBtn').addEventListener('click', function() {
+                showSection('invoiceFormSection'); // Go back to the main form
+                resetForm(); // Call resetForm to ensure all fields are re-initialized for a new invoice
+            });
+
+            // Event listener for the View Saved Invoices button in the output section
+            document.getElementById('viewSavedInvoicesFromOutputBtn').addEventListener('click', function() {
+                showSection('savedInvoicesSection');
+                loadSavedInvoices(); // Load and display saved invoices
+            });
+
+            // Listen for changes on the delivery fee and deposit input to update totals
+            document.getElementById('deliveryFee').addEventListener('input', calculateAndDisplayCurrentTotals);
+            document.getElementById('depositReceived').addEventListener('input', calculateAndDisplayCurrentTotals);
+
+            // Listen for changes on the hide prices toggle
+            document.getElementById('hidePricesToggle').addEventListener('change', togglePriceVisibility);
+
+            // Initial call to set price visibility based on default toggle state
+            togglePriceVisibility();
+        });
+    </script>
+</body>
+</html>
+",
                 title: "Dipped Churro Bites (Sample)",
                 description: "Crispy churro bites, dipped in chocolate and dusted with cinnamon sugar.",
                 simplePrice: 3.00,
